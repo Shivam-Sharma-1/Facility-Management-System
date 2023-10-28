@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import { Avatar, ListItemIcon } from '@mui/material';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import ApprovalIcon from '@mui/icons-material/Approval';
@@ -9,9 +7,6 @@ import SummarizeIcon from '@mui/icons-material/Summarize';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
-import Collapse from '@mui/material/Collapse';
-import ExpandLess from '@mui/icons-material/ExpandLess';
-import ExpandMore from '@mui/icons-material/ExpandMore';
 
 const navigationData: NavigationData[] = [
   {
@@ -42,11 +37,11 @@ const navigationData: NavigationData[] = [
 ];
 
 function Navigation(): JSX.Element {
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
 
-  const handleClick = () => {
-    setOpen(!open);
-  };
+  // const handleClick = () => {
+  //   setOpen(!open);
+  // };
 
   return (
     <div
@@ -75,14 +70,14 @@ function Navigation(): JSX.Element {
         {/* <ListItemButton onClick={handleClick}>
           <ListItemText primary="Inbox" />
           {open ? <ExpandLess /> : <ExpandMore />}
-        </ListItemButton> */}
+        </ListItemButton>
         <Collapse in={open} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemText primary="Starred" />
             </ListItemButton>
           </List>
-        </Collapse>
+        </Collapse> */}
       </List>
     </div>
   );
