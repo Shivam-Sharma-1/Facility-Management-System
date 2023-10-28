@@ -57,14 +57,12 @@ model Booking {
 }
 
 model Facility {
-  id                Int               @id @default(autoincrement())
-  name              String
-  description       String
-  icon              String
-  groupDirector     GroupDirector[]
-  facilityManager   FacilityManager[]
-  groupDirectorId   Int
-  facilityManagerId Int
+  id              Int               @id @default(autoincrement())
+  name            String
+  description     String
+  icon            String
+  groupDirector   GroupDirector[]
+  facilityManager FacilityManager[]
 }
 
 model GroupDirector {
