@@ -9,6 +9,7 @@ import prisma from "./db/prisma";
 import { errorHandler } from "./middleware/errorHandler";
 import { notFound } from "./middleware/notFound";
 import authRouter from "./routes/auth.routes";
+import dashboardRouter from "./routes/dashboard.routes";
 
 const PORT = process.env.PORT || 3000;
 
@@ -33,6 +34,7 @@ app.use(
 );
 
 app.use("/auth", authRouter);
+app.use("/dashboard", dashboardRouter);
 app.use(notFound);
 app.use(errorHandler);
 
