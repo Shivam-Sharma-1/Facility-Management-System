@@ -4,8 +4,12 @@ export default {
 	theme: {
 		extend: {
 			colors: {
-				primary: "#02447C",
+				primary: "#00275E",
 				bgPrimary: "#ffffff"
+			},
+			boxShadow: {
+				card: "0px 0px 10px 1px rgba(0, 0, 0, 0.25)",
+				cardHover: "0px 0px 16px 1px rgba(0, 0, 0, 0.5)"
 			},
 			screens: {
 				xs: "320px",
@@ -16,5 +20,8 @@ export default {
 			}
 		}
 	},
-	plugins: []
+	plugins: [],
+	corePlugins: {
+		preflight: false
+	}
 };
