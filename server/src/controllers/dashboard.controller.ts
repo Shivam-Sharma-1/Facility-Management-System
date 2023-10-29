@@ -16,7 +16,7 @@ export const getFacilities: RequestHandler = async (
 			},
 			select: {
 				name: true,
-				employee_id: true,
+				employeeId: true,
 			},
 		});
 		if (!user) {
@@ -57,11 +57,18 @@ export const addFacilities: RequestHandler = async (
 	next: NextFunction
 ) => {
 	try {
-		const { name, description, icon, groupDirectorId, facilityManagerId } =
-			req.body;
+		const {
+			name,
+			slug,
+			description,
+			icon,
+			groupDirectorId,
+			facilityManagerId,
+		} = req.body;
 
 		const facility = await prisma.facility.create({
 			data: {
+				slug,
 				name,
 				description,
 				icon,
@@ -77,7 +84,7 @@ export const addFacilities: RequestHandler = async (
 		const transaction = await prisma.$transaction([
 			prisma.groupDirector.create({
 				data: {
-					user: { connect: { employee_id: groupDirectorId } },
+					user: { connect: { employeeId: groupDirectorId } },
 					facility: {
 						connect: { id: facility.id },
 					},
@@ -85,7 +92,7 @@ export const addFacilities: RequestHandler = async (
 			}),
 			prisma.facilityManager.create({
 				data: {
-					user: { connect: { employee_id: facilityManagerId } },
+					user: { connect: { employeeId: facilityManagerId } },
 					facility: {
 						connect: { id: facility.id },
 					},
