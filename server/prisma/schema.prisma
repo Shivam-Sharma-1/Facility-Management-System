@@ -34,8 +34,9 @@ model Session {
 
 model User {
   id              Int               @id @default(autoincrement())
+  image           String?
   name            String
-  employee_id     String            @unique
+  employeeId      String            @unique
   password        String
   role            Role              @default(USER)
   booking         Booking[]
@@ -44,16 +45,18 @@ model User {
 }
 
 model Booking {
-  id        Int            @id @default(autoincrement())
-  title     String
-  purpose   String
-  user      User           @relation(fields: [user_id], references: [id])
-  user_id   Int
-  status    ApprovalStatus @default(PENDING)
-  createdAt DateTime
-  startTime DateTime
-  endTime   DateTime
-  color     String
+  id          Int            @id @default(autoincrement())
+  title       String
+  slug        String         @unique
+  purpose     String
+  requestedBy User           @relation(fields: [userId], references: [id])
+  userId      Int
+  status      ApprovalStatus @default(PENDING)
+  createdAt   DateTime       @default(now())
+  startTime   DateTime
+  endTime     DateTime
+  facility    Facility       @relation(fields: [facilityId], references: [id])
+  facilityId  Int
 }
 
 model Facility {
@@ -61,8 +64,10 @@ model Facility {
   name            String
   description     String
   icon            String
+  slug            String            @unique
   groupDirector   GroupDirector[]
   facilityManager FacilityManager[]
+  bookings        Booking[]
 }
 
 model GroupDirector {

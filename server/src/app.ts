@@ -10,6 +10,7 @@ import { errorHandler } from "./middleware/errorHandler";
 import { notFound } from "./middleware/notFound";
 import authRouter from "./routes/auth.routes";
 import dashboardRouter from "./routes/dashboard.routes";
+import facilityRouter from "./routes/facility.routes";
 
 const PORT = process.env.PORT || 3000;
 
@@ -35,6 +36,7 @@ app.use(
 
 app.use("/auth", authRouter);
 app.use("/dashboard", dashboardRouter);
+app.use("/facility", facilityRouter);
 app.use(notFound);
 app.use(errorHandler);
 
