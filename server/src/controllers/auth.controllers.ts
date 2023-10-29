@@ -2,6 +2,7 @@ import argon2 from "argon2";
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import createHttpError from "http-errors";
 import prisma from "../db/prisma";
+import { authInput } from "../types/types";
 import authSchema from "../utils/validation";
 
 declare module "express-session" {
@@ -16,12 +17,11 @@ export const authLogin: RequestHandler = async (
 	next: NextFunction
 ) => {
 	try {
-		const { employee_id, password } = await authSchema.validateAsync(
-			req.body
-		);
+		const { employeeId, password }: authInput =
+			await authSchema.validateAsync(req.body);
 		const user = await prisma.user.findUnique({
 			where: {
-				employee_id,
+				employeeId,
 			},
 		});
 		if (!user) {
@@ -33,17 +33,19 @@ export const authLogin: RequestHandler = async (
 			req.session.userId = user.id;
 			res.status(200).json({
 				id: user.id,
-				employeeId: user.employee_id,
+				employeeId: user.employeeId,
 				message: "Authenticated",
 			});
 		} else {
 			return next(createHttpError.Unauthorized("Invalid credentials."));
 		}
 	} catch (error) {
-		if (error.isJoi === true)
+		if (error.isJoi === true) {
+			console.error(error);
 			return next(
-				createHttpError.BadRequest("Invalid username/password")
+				createHttpError.BadRequest("Invalid employeeId/password")
 			);
+		}
 		return next(createHttpError.Unauthorized("Invalid credentials."));
 	}
 };
@@ -85,7 +87,7 @@ export const getUser: RequestHandler = async (
 		const data = {
 			id: user.id,
 			name: user.name,
-			employeeId: user.employee_id,
+			employeeId: user.employeeId,
 		};
 		res.status(200).json(data);
 	} catch (error) {
@@ -104,12 +106,11 @@ export const authRegister: RequestHandler = async (
 	next: NextFunction
 ) => {
 	try {
-		const { name, employee_id, password } = await authSchema.validateAsync(
-			req.body
-		);
+		const { image, name, employeeId, password }: authInput =
+			await authSchema.validateAsync(req.body);
 		const userExists = await prisma.user.findUnique({
 			where: {
-				employee_id,
+				employeeId,
 			},
 		});
 		if (userExists) {
@@ -119,8 +120,9 @@ export const authRegister: RequestHandler = async (
 
 		const user = await prisma.user.create({
 			data: {
+				image,
 				name: name,
-				employee_id: employee_id,
+				employeeId: employeeId,
 				password: hashedPassword,
 			},
 		});
