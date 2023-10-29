@@ -1,11 +1,11 @@
-import React, { FC, useState } from "react";
+import { FC, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import AddEventModal from "./AddEventModal";
 
-function handleEventClick(clickInfo: any): void {
+function handleEventClick(clickInfo: unknown): void {
   console.log(clickInfo);
 }
 
