@@ -1,4 +1,4 @@
-import Facilities from './components/Facilities'
+import Calendar from './components/Calender'
 import Navigation from './components/Navigation'
 
 function App() {
@@ -6,7 +6,7 @@ function App() {
   return (
     <div className='w-full h-full flex'>
       <Navigation />
-      <Facilities />
+      <Calendar />
     </div>
   )
 }
