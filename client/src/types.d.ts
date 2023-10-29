@@ -5,6 +5,11 @@ interface FacilityCardProps {
   icon: string;
 }
 
+interface AddEventModalProps {
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+}
+
 // ----------TYPES-----------
 
 type FacilityData = {
