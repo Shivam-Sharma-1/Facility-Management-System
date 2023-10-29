@@ -1,4 +1,3 @@
-import React from "react";
 import { Avatar, ListItemIcon } from "@mui/material";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import ApprovalIcon from "@mui/icons-material/Approval";
