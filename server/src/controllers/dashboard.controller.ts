@@ -18,7 +18,7 @@ export const getFacilities: RequestHandler = async (
 		const data = [];
 		const user = await prisma.user.findUnique({
 			where: {
-				id: userId,
+				employeeId: userId,
 			},
 			select: {
 				name: true,

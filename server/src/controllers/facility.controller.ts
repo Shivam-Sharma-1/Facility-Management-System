@@ -65,12 +65,12 @@ export const addBookings: RequestHandler = async (
 			slug,
 			purpose,
 			color,
-			employeeId,
 			date,
 			startTime,
 			endTime,
 		}: BookingInput = req.body;
 		const facilitySlug = req.params.slug;
+		const employeeId = req.session.userId;
 		const event = await prisma.booking.create({
 			data: {
 				title,

@@ -7,7 +7,7 @@ import authSchema from "../utils/validation";
 
 declare module "express-session" {
 	export interface SessionData {
-		userId: number;
+		userId: string;
 	}
 }
 
@@ -36,7 +36,7 @@ export const authLogin: RequestHandler = async (
 		const validPassword = await argon2.verify(user.password, password);
 
 		if (validPassword) {
-			req.session.userId = user.id;
+			req.session.userId = user.employeeId;
 			res.status(200).json({
 				name: user.name,
 				employeeId: user.employeeId,
@@ -96,7 +96,7 @@ export const getUser: RequestHandler = async (
 		const userId = req.session.userId;
 		const user = await prisma.user.findUnique({
 			where: {
-				id: userId,
+				employeeId: userId,
 			},
 		});
 		if (!user) {
