@@ -1,14 +1,25 @@
-import Calendar from './components/Calender'
-import Navigation from './components/Navigation'
+import {
+  createRoutesFromElements,
+  createBrowserRouter,
+  Route,
+  RouterProvider,
+} from "react-router-dom";
+import DashboardPage from "./pages/DashboardPage";
+import LoginPage from "./pages/LoginPage";
+import FacilityPage from "./pages/FacilityPage";
+
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route path="/">
+      <Route index element={<DashboardPage />} />
+      <Route path="auth/login" element={<LoginPage />} />
+      <Route path="facility/:id" element={<FacilityPage />} />
+    </Route>
+  )
+);
 
 function App() {
-
-  return (
-    <div className='w-full h-full flex'>
-      <Navigation />
-      <Calendar />
-    </div>
-  )
+  return <RouterProvider router={router} />;
 }
 
-export default App
+export default App;
