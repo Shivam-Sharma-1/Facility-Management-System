@@ -61,6 +61,12 @@ const Calendar: FC = (): JSX.Element => {
               color: "red",
               allDay: false,
             },
+            {
+              title: "test",
+              date: "2023-11-11T18:30:00.000Z",
+              color: "blue",
+              allDay: false,
+            },
           ]}
           headerToolbar={{
             left: "prev,next,today,addEventButton",
