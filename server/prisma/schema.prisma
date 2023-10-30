@@ -49,6 +49,7 @@ model Booking {
   title       String
   slug        String         @unique
   purpose     String
+  color       String?
   requestedBy User           @relation(fields: [userId], references: [id])
   userId      Int
   status      ApprovalStatus @default(PENDING)
