@@ -2,6 +2,12 @@ import { NextFunction, Request, RequestHandler, Response } from "express";
 import createHttpError from "http-errors";
 import prisma from "../db/prisma";
 
+/**
+ * @description Get all facilities
+ * @method GET
+ * @access private
+ * @returns [{name, employeeId, role}, [facilities]]
+ */
 export const getFacilities: RequestHandler = async (
 	req: Request,
 	res: Response,
@@ -17,6 +23,7 @@ export const getFacilities: RequestHandler = async (
 			select: {
 				name: true,
 				employeeId: true,
+				role: true,
 			},
 		});
 		if (!user) {
@@ -51,6 +58,12 @@ export const getFacilities: RequestHandler = async (
 	}
 };
 
+/**
+ * @description Add facilities
+ * @method POST
+ * @access private
+ * @returns {Facility, transaction}
+ */
 export const addFacilities: RequestHandler = async (
 	req: Request,
 	res: Response,

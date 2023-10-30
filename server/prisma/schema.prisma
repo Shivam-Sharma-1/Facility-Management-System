@@ -40,8 +40,8 @@ model User {
   password        String
   role            Role              @default(USER)
   booking         Booking[]
-  GroupDirector   GroupDirector[]
-  FacilityManager FacilityManager[]
+  groupDirector   GroupDirector[]
+  facilityManager FacilityManager[]
 }
 
 model Booking {
@@ -53,6 +53,7 @@ model Booking {
   userId      Int
   status      ApprovalStatus @default(PENDING)
   createdAt   DateTime       @default(now())
+  date        DateTime
   startTime   DateTime
   endTime     DateTime
   facility    Facility       @relation(fields: [facilityId], references: [id])
