@@ -9,13 +9,6 @@ function handleEventClick(clickInfo: unknown): void {
   console.log(clickInfo);
 }
 
-interface EventContentProps {
-  backgroundColor: string;
-  event: {
-    title: string;
-  };
-}
-
 const handleEventContent: FC<EventContentProps> = (eventInfo): JSX.Element => {
   return (
     <div
