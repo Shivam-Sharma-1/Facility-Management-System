@@ -1,4 +1,6 @@
 import { FC, FormEvent, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
 
 import { Button, TextField } from "@mui/material";
 
@@ -8,7 +10,21 @@ const LoginPage: FC = (): JSX.Element => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log("submitted");
+    console.log(id, password);
+    mutation.mutate({ employeeId: id, password: password });
   };
+
+  const mutation = useMutation({
+    mutationFn: (data: LoginData) =>
+      axios.post("http://localhost:3000/auth/login", data),
+    onSuccess: (data) => {
+      console.log(data);
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
 
   return (
     <div className="w-full h-full min-h-screen flex justify-center items-center">
