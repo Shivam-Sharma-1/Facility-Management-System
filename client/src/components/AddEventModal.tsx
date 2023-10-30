@@ -1,7 +1,7 @@
-import { FC, MouseEvent, useState } from "react";
-import { Dayjs } from "dayjs";
+import { FC, FormEvent, useState } from "react";
+import dayjs from "dayjs";
 
-import { Box, Button, Modal, TextField, Typography } from "@mui/material";
+import { Button, Modal, TextField, Typography } from "@mui/material";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -14,9 +14,9 @@ const AddEventModal: FC<AddEventModalProps> = ({ isOpen, setIsOpen }) => {
   const [formData, setFormData] = useState<{
     title: string;
     purpose: string;
-    date: Dayjs | null;
-    startTime: Dayjs | null;
-    endTime: Dayjs | null;
+    date: string | null;
+    startTime: string | null;
+    endTime: string | null;
     color: string;
   }>({
     title: "",
@@ -27,7 +27,7 @@ const AddEventModal: FC<AddEventModalProps> = ({ isOpen, setIsOpen }) => {
     color: "#000000",
   });
 
-  const handleClick = (e: MouseEvent<HTMLButtonElement>): void => {
+  const handleClick = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     console.log(formData);
   };
@@ -43,11 +43,10 @@ const AddEventModal: FC<AddEventModalProps> = ({ isOpen, setIsOpen }) => {
         <Typography id="modal-modal-title" variant="h6" component="h2">
           New event
         </Typography>
-        <Box
-          component="form"
-          noValidate
+        <form
           autoComplete="off"
           className="flex flex-col gap-4"
+          onSubmit={handleClick}
         >
           <TextField
             id="title"
@@ -82,7 +81,10 @@ const AddEventModal: FC<AddEventModalProps> = ({ isOpen, setIsOpen }) => {
                 label="Enter the date"
                 value={formData.date}
                 onChange={(newValue) =>
-                  setFormData({ ...formData, date: newValue })
+                  setFormData({
+                    ...formData,
+                    date: newValue ? dayjs(newValue).toISOString() : null,
+                  })
                 }
                 disablePast={true}
                 className="w-full"
@@ -96,7 +98,10 @@ const AddEventModal: FC<AddEventModalProps> = ({ isOpen, setIsOpen }) => {
                 label="Pick start time"
                 value={formData.startTime}
                 onChange={(newValue) =>
-                  setFormData({ ...formData, startTime: newValue })
+                  setFormData({
+                    ...formData,
+                    startTime: newValue ? dayjs(newValue).toISOString() : null,
+                  })
                 }
                 sx={{ minWidth: "40% !important" }}
                 slotProps={{ textField: { required: true, size: "small" } }}
@@ -105,7 +110,10 @@ const AddEventModal: FC<AddEventModalProps> = ({ isOpen, setIsOpen }) => {
                 label="Pick end time"
                 value={formData.endTime}
                 onChange={(newValue) =>
-                  setFormData({ ...formData, endTime: newValue })
+                  setFormData({
+                    ...formData,
+                    endTime: newValue ? dayjs(newValue).toISOString() : null,
+                  })
                 }
                 sx={{ minWidth: "40% !important" }}
                 slotProps={{ textField: { required: true, size: "small" } }}
@@ -130,7 +138,6 @@ const AddEventModal: FC<AddEventModalProps> = ({ isOpen, setIsOpen }) => {
               variant="contained"
               color="success"
               sx={{ minWidth: "40%" }}
-              onClick={handleClick}
             >
               Add
             </Button>
@@ -143,7 +150,7 @@ const AddEventModal: FC<AddEventModalProps> = ({ isOpen, setIsOpen }) => {
               Cancel
             </Button>
           </div>
-        </Box>
+        </form>
       </div>
     </Modal>
   );
