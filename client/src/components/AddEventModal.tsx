@@ -1,5 +1,7 @@
 import { FC, FormEvent, useState } from "react";
 import dayjs from "dayjs";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
 
 import { Button, Modal, TextField, Typography } from "@mui/material";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
@@ -10,15 +12,28 @@ import { TimePicker } from "@mui/x-date-pickers";
 
 import "dayjs/locale/en-gb";
 
+interface AddEventDataProps {
+  title: string;
+  purpose: string;
+  date: string | null;
+  startTime: string | null;
+  endTime: string | null;
+  color: string;
+}
+
+interface temp {
+  title: string;
+  purpose: string;
+  date: string | null;
+  startTime: string | null;
+  endTime: string | null;
+  color: string;
+  employeeId: string;
+  slug: string;
+}
+
 const AddEventModal: FC<AddEventModalProps> = ({ isOpen, setIsOpen }) => {
-  const [formData, setFormData] = useState<{
-    title: string;
-    purpose: string;
-    date: string | null;
-    startTime: string | null;
-    endTime: string | null;
-    color: string;
-  }>({
+  const [formData, setFormData] = useState<AddEventDataProps>({
     title: "",
     purpose: "",
     date: null,
@@ -27,9 +42,32 @@ const AddEventModal: FC<AddEventModalProps> = ({ isOpen, setIsOpen }) => {
     color: "#000000",
   });
 
-  const handleClick = (e: FormEvent<HTMLFormElement>): void => {
+  const mutation = useMutation({
+    mutationFn: (data: temp) =>
+      axios.post("http://localhost:3000/facility/facility-1", data, {
+        withCredentials: true,
+      }),
+    onSuccess: (data) => {
+      console.log(data);
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    console.log(formData);
+    const data: temp = {
+      title: formData.title,
+      purpose: formData.purpose,
+      date: formData.date,
+      startTime: formData.startTime,
+      endTime: formData.endTime,
+      color: formData.color,
+      employeeId: "6632",
+      slug: `${formData.title.toLowerCase()}${formData.startTime}`,
+    };
+    mutation.mutate(data);
   };
 
   return (
@@ -46,7 +84,7 @@ const AddEventModal: FC<AddEventModalProps> = ({ isOpen, setIsOpen }) => {
         <form
           autoComplete="off"
           className="flex flex-col gap-4"
-          onSubmit={handleClick}
+          onSubmit={handleSubmit}
         >
           <TextField
             id="title"
