@@ -2,7 +2,7 @@ import argon2 from "argon2";
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import createHttpError from "http-errors";
 import prisma from "../db/prisma";
-import { authInput } from "../types/types";
+import { AuthInput } from "../types/types";
 import authSchema from "../utils/validation";
 
 declare module "express-session" {
@@ -11,13 +11,19 @@ declare module "express-session" {
 	}
 }
 
+/**
+ * @description Employee login
+ * @method POST
+ * @access public
+ * @returns {name, employeeId, message}
+ */
 export const authLogin: RequestHandler = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
 ) => {
 	try {
-		const { employeeId, password }: authInput =
+		const { employeeId, password }: AuthInput =
 			await authSchema.validateAsync(req.body);
 		const user = await prisma.user.findUnique({
 			where: {
@@ -32,7 +38,7 @@ export const authLogin: RequestHandler = async (
 		if (validPassword) {
 			req.session.userId = user.id;
 			res.status(200).json({
-				id: user.id,
+				name: user.name,
 				employeeId: user.employeeId,
 				message: "Authenticated",
 			});
@@ -50,6 +56,12 @@ export const authLogin: RequestHandler = async (
 	}
 };
 
+/**
+ * @description Employee Logout
+ * @method POST
+ * @access public
+ * @returns {message}
+ */
 export const authLogout: RequestHandler = async (
 	req: Request,
 	res: Response,
@@ -69,6 +81,12 @@ export const authLogout: RequestHandler = async (
 	});
 };
 
+/**
+ * @description acess employee
+ * @method GET
+ * @access private
+ * @returns {id, name, employeeId}
+ */
 export const getUser: RequestHandler = async (
 	req: Request,
 	res: Response,
@@ -100,13 +118,19 @@ export const getUser: RequestHandler = async (
 	}
 };
 
+/**
+ * @description Employee register
+ * @method POST
+ * @access public
+ * @returns {id, image, name, employeeId, password}
+ */
 export const authRegister: RequestHandler = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
 ) => {
 	try {
-		const { image, name, employeeId, password }: authInput =
+		const { image, name, employeeId, password }: AuthInput =
 			await authSchema.validateAsync(req.body);
 		const userExists = await prisma.user.findUnique({
 			where: {

@@ -1,8 +1,14 @@
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import createHttpError from "http-errors";
-import { bookingInput } from "src/types/types";
+import { BookingInput } from "src/types/types";
 import prisma from "../db/prisma";
 
+/**
+ * @description Get all approved bookings
+ * @method GET
+ * @access private
+ * @returns [bookings]
+ */
 export const getBookings: RequestHandler = async (
 	req: Request,
 	res: Response,
@@ -42,6 +48,12 @@ export const getBookings: RequestHandler = async (
 	}
 };
 
+/**
+ * @description Book a slot
+ * @method POST
+ * @access private
+ * @returns {booking}
+ */
 export const addBookings: RequestHandler = async (
 	req: Request,
 	res: Response,
@@ -53,15 +65,17 @@ export const addBookings: RequestHandler = async (
 			slug,
 			purpose,
 			employeeId,
+			date,
 			startTime,
 			endTime,
-		}: bookingInput = req.body;
+		}: BookingInput = req.body;
 		const facilitySlug = req.params.slug;
 		const event = await prisma.booking.create({
 			data: {
 				title,
 				slug,
 				purpose,
+				date,
 				startTime,
 				endTime,
 				requestedBy: { connect: { employeeId } },
