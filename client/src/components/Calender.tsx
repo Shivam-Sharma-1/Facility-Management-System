@@ -13,7 +13,11 @@ const handleEventContent: FC<EventContentProps> = (eventInfo): JSX.Element => {
   return (
     <div
       className={`px-1 w-full rounded-sm text-white cursor-pointer`}
-      style={{ backgroundColor: eventInfo.backgroundColor }}
+      style={{
+        backgroundColor: eventInfo.backgroundColor
+          ? eventInfo.backgroundColor
+          : "red",
+      }}
     >
       <i>{eventInfo.event.title}</i>
     </div>
