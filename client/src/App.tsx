@@ -1,14 +1,31 @@
-import Calendar from './components/Calender'
-import Navigation from './components/Navigation'
+import {
+  createRoutesFromElements,
+  createBrowserRouter,
+  Route,
+  RouterProvider,
+} from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import DashboardPage from "./pages/DashboardPage";
+import LoginPage from "./pages/LoginPage";
+import FacilityPage from "./pages/FacilityPage";
 
-function App() {
-
-  return (
-    <div className='w-full h-full flex'>
-      <Navigation />
-      <Calendar />
-    </div>
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route path="/">
+      <Route index element={<DashboardPage />} />
+      <Route path="auth/login" element={<LoginPage />} />
+      <Route path="facility/:id" element={<FacilityPage />} />
+    </Route>
   )
+);
+
+const queryClient = new QueryClient();
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
+  );
 }
 
-export default App
+export default App;

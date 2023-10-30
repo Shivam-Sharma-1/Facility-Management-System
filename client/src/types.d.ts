@@ -10,6 +10,13 @@ interface AddEventModalProps {
   setIsOpen: (isOpen: boolean) => void;
 }
 
+interface EventContentProps {
+  backgroundColor: string;
+  event: {
+    title: string;
+  };
+}
+
 // ----------TYPES-----------
 
 type FacilityData = {
@@ -21,4 +28,9 @@ type NavigationData = {
   label: string;
   icon: ReactNode;
   key: string;
+};
+
+type LoginData = {
+  employeeId: string;
+  password: string;
 };

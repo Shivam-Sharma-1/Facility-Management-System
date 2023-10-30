@@ -9,13 +9,6 @@ function handleEventClick(clickInfo: unknown): void {
   console.log(clickInfo);
 }
 
-interface EventContentProps {
-  backgroundColor: string;
-  event: {
-    title: string;
-  };
-}
-
 const handleEventContent: FC<EventContentProps> = (eventInfo): JSX.Element => {
   return (
     <div
@@ -59,6 +52,12 @@ const Calendar: FC = (): JSX.Element => {
               title: "event 2",
               date: "2023-10-30",
               color: "red",
+              allDay: false,
+            },
+            {
+              title: "test",
+              date: "2023-11-11T18:30:00.000Z",
+              color: "blue",
               allDay: false,
             },
           ]}
