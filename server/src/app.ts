@@ -14,10 +14,15 @@ import dashboardRouter from "./routes/dashboard.routes";
 import facilityRouter from "./routes/facility.routes";
 
 const PORT = process.env.PORT || 3000;
+const corsOptions = {
+	origin: "http://localhost:5173",
+	methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+	credentials: true,
+};
 
 const app: Express = express();
 
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(
 	expressSession({

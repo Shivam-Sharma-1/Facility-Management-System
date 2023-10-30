@@ -8,7 +8,7 @@
 		"start": "node dist/app.js",
 		"dev": "nodemon dist/app.js",
 		"startT": "ts-node src/app.ts",
-		"devT": "nodemon --exec ts-node src/app.js"
+		"devT": "nodemon --exec ts-node src/app.ts"
 	},
 	"keywords": [],
 	"author": "",
