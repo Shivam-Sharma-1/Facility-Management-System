@@ -40,7 +40,8 @@ export const authLogin: RequestHandler = async (
 			res.status(200).json({
 				name: user.name,
 				employeeId: user.employeeId,
-				message: "Authenticated",
+				image: user.image,
+				role: user.role,
 			});
 		} else {
 			return next(createHttpError.Unauthorized("Invalid credentials."));
