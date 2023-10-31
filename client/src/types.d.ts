@@ -58,6 +58,7 @@ type NavigationData = {
   label: string;
   icon: ReactNode;
   key: string;
+  onClick: () => void;
 };
 
 type LoginData = {
