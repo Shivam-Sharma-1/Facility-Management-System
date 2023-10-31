@@ -16,7 +16,6 @@ function Facilities(): JSX.Element {
       return response.data;
     },
   });
-  console.log(data);
 
   return (
     <div className="w-[80%] h-full flex flex-col items-center justify-center text-black px-6 pt-12">

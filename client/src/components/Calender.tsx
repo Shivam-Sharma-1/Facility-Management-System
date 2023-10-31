@@ -37,7 +37,6 @@ const Calendar: FC = (): JSX.Element => {
       return response.data;
     },
   });
-  console.log(data);
 
   useEffect(() => {
     if (!isPending) {
