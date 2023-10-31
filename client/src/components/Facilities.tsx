@@ -3,7 +3,7 @@ import axios from "axios";
 
 import FacilityCard from "./FacilityCard";
 
-function Facilities(): JSX.Element {
+const Facilities = (): JSX.Element => {
   const { data, isPending } = useQuery({
     queryKey: ["facilities"],
     queryFn: async () => {
@@ -32,6 +32,6 @@ function Facilities(): JSX.Element {
       </div>
     </div>
   );
-}
+};
 
 export default Facilities;
