@@ -12,26 +12,6 @@ import { TimePicker } from "@mui/x-date-pickers";
 
 import "dayjs/locale/en-gb";
 
-interface AddEventDataProps {
-  title: string;
-  purpose: string;
-  date: string | null;
-  startTime: string | null;
-  endTime: string | null;
-  color: string;
-}
-
-interface temp {
-  title: string;
-  purpose: string;
-  date: string | null;
-  startTime: string | null;
-  endTime: string | null;
-  color: string;
-  employeeId: string;
-  slug: string;
-}
-
 const AddEventModal: FC<AddEventModalProps> = ({ isOpen, setIsOpen }) => {
   const [formData, setFormData] = useState<AddEventDataProps>({
     title: "",
@@ -39,16 +19,19 @@ const AddEventModal: FC<AddEventModalProps> = ({ isOpen, setIsOpen }) => {
     date: null,
     startTime: null,
     endTime: null,
-    color: "#000000",
+    color: "red",
+    slug: "",
+    employeeId: "6632",
   });
 
   const mutation = useMutation({
-    mutationFn: (data: temp) =>
+    mutationFn: (data: AddEventDataProps) =>
       axios.post("http://localhost:3000/facility/facility-1", data, {
         withCredentials: true,
       }),
     onSuccess: (data) => {
       console.log(data);
+      setIsOpen(false);
     },
     onError: (error) => {
       console.log(error);
@@ -57,7 +40,7 @@ const AddEventModal: FC<AddEventModalProps> = ({ isOpen, setIsOpen }) => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    const data: temp = {
+    const data: AddEventDataProps = {
       title: formData.title,
       purpose: formData.purpose,
       date: formData.date,
