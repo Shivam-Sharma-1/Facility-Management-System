@@ -47,6 +47,23 @@ interface AddEventDataProps {
   slug: string;
 }
 
+interface User {
+  name: string;
+  employeeId: string;
+  image: string;
+  role: string;
+}
+
+interface AuthContextType {
+  user: User | null;
+  login: (newUser: User) => void;
+  logout: () => void;
+}
+
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
 // ----------TYPES-----------
 
 type FacilityData = {
