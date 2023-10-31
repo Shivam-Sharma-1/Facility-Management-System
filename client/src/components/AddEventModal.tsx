@@ -13,7 +13,10 @@ import { TimePicker } from "@mui/x-date-pickers";
 import "dayjs/locale/en-gb";
 import { useAuth } from "./hooks/useAuth";
 
-const AddEventModal: FC<AddEventModalProps> = ({ isOpen, setIsOpen }) => {
+const AddEventModal: FC<AddEventModalProps> = ({
+  isOpen,
+  setIsOpen,
+}): JSX.Element => {
   const auth = useAuth();
   const [formData, setFormData] = useState<AddEventDataProps>({
     title: "",

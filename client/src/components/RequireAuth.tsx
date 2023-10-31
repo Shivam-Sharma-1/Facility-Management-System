@@ -3,7 +3,9 @@ import { FC } from "react";
 
 import { useAuth } from "./hooks/useAuth";
 
-export const RequireAuth: FC<AuthProviderProps> = ({ children }) => {
+export const RequireAuth: FC<AuthProviderProps> = ({
+  children,
+}): JSX.Element => {
   const location = useLocation();
   const auth = useAuth();
 

@@ -22,7 +22,7 @@ const handleEventContent: FC<EventContentProps> = (eventInfo): JSX.Element => {
 };
 
 const Calendar: FC = (): JSX.Element => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isAddOpen, setIsAddOpen] = useState(false);
   const [bookingsData, setBookingsData] = useState<BookingDataProps[]>();
 
   const { data, isPending } = useQuery<BookingDataProps[]>({
@@ -49,7 +49,9 @@ const Calendar: FC = (): JSX.Element => {
 
   return (
     <div className="w-[80%] h-full flex flex-col items-center justify-center text-black px-6 pt-12">
-      {isOpen && <AddEventModal isOpen={isOpen} setIsOpen={setIsOpen} />}
+      {isAddOpen && (
+        <AddEventModal isOpen={isAddOpen} setIsOpen={setIsAddOpen} />
+      )}
       <h1 className="uppercase">CALENDER</h1>
       <div className="w-[90%]">
         <FullCalendar
@@ -65,7 +67,7 @@ const Calendar: FC = (): JSX.Element => {
           customButtons={{
             addEventButton: {
               text: "Add event",
-              click: () => setIsOpen(true),
+              click: () => setIsAddOpen(true),
             },
           }}
         />
