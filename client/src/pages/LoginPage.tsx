@@ -1,12 +1,19 @@
 import { FC, FormEvent, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import { Button, TextField } from "@mui/material";
+import { useAuth } from "../hooks/useAuth";
 
 const LoginPage: FC = (): JSX.Element => {
   const [id, setId] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const auth = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const redirectPath = location.state?.path || "/";
 
   const mutation = useMutation({
     mutationFn: (data: LoginData) =>
@@ -15,6 +22,9 @@ const LoginPage: FC = (): JSX.Element => {
       }),
     onSuccess: (data) => {
       console.log(data);
+      auth?.login(data.data);
+      localStorage.setItem("token-info", JSON.stringify(data.data));
+      navigate(redirectPath, { replace: true, preventScrollReset: true });
     },
     onError: (error) => {
       console.log(error);

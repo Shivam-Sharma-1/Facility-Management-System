@@ -10,6 +10,12 @@ interface AddEventModalProps {
   setIsOpen: (isOpen: boolean) => void;
 }
 
+interface EventModalProps {
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+  eventInfo: EventInfoProps;
+}
+
 interface EventContentProps {
   backgroundColor: string;
   event: {
@@ -47,11 +53,40 @@ interface AddEventDataProps {
   slug: string;
 }
 
+interface User {
+  name: string;
+  employeeId: string;
+  image: string;
+  role: string;
+}
+
+interface AuthContextType {
+  user: User | null;
+  login: (newUser: User) => void;
+  logout: () => void;
+}
+
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+interface EventInfoProps {
+  title: string;
+  purpose: string;
+  start: string;
+  end: string;
+  date: string;
+  requestBy: string;
+}
+
 // ----------TYPES-----------
 
 type FacilityData = {
+  id: string;
   name: string;
+  description: string;
   icon: string;
+  slug: string;
 };
 
 type NavigationData = {
