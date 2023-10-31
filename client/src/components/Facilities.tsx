@@ -14,7 +14,6 @@ const Facilities = (): JSX.Element => {
           withCredentials: true,
         }
       );
-      console.log(response.data);
       return response.data;
     },
   });
