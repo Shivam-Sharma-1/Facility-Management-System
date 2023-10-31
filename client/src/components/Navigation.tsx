@@ -11,6 +11,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
+import { useAuth } from "./hooks/useAuth";
 
 const Navigation = (): JSX.Element => {
   // const [open, setOpen] = useState(false);
@@ -18,6 +19,7 @@ const Navigation = (): JSX.Element => {
   // const handleClick = () => {
   //   setOpen(!open);
   // };
+  const auth = useAuth();
 
   const navigationData: NavigationData[] = [
     {
@@ -68,7 +70,10 @@ const Navigation = (): JSX.Element => {
         <LogoutIcon sx={{ width: "26px", height: "26px", color: "white" }} />
       ),
       key: "logout",
-      onClick: () => mutation.mutate(),
+      onClick: () => {
+        mutation.mutate();
+        auth?.logout();
+      },
     },
   ];
 
