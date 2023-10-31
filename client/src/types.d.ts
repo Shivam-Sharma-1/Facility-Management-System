@@ -17,6 +17,36 @@ interface EventContentProps {
   };
 }
 
+interface BookingDataProps {
+  title: string;
+  purpose: string;
+  date: string | null;
+  startTime: string | null;
+  endTime: string | null;
+  color: string;
+  requested_by: {
+    name: string;
+    employeeId: string;
+  };
+  createdAt: string;
+  facilityId: number;
+  id: string;
+  slug: string;
+  status: string;
+  userId: number;
+}
+
+interface AddEventDataProps {
+  title: string;
+  purpose: string;
+  date: string | null;
+  startTime: string | null;
+  endTime: string | null;
+  color: string;
+  employeeId: string;
+  slug: string;
+}
+
 // ----------TYPES-----------
 
 type FacilityData = {
