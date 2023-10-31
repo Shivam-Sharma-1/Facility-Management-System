@@ -1,3 +1,4 @@
+import { PrismaClientValidationError } from "@prisma/client/runtime/library";
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import createHttpError from "http-errors";
 import { BookingInput } from "src/types/types";
@@ -93,6 +94,17 @@ export const addBookings: RequestHandler = async (
 		}
 		res.status(201).json(event);
 	} catch (error) {
+		console.error(error);
+		if (error instanceof PrismaClientValidationError) {
+			return next(createHttpError.BadRequest("Missing data fields."));
+		}
+		if (error.code === "P2002") {
+			return next(
+				createHttpError.Conflict(
+					`Field ${error.meta.target} must be unique.`
+				)
+			);
+		}
 		return next(
 			createHttpError.InternalServerError(
 				"Something went wrong. Please try again."

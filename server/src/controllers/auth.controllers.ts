@@ -31,18 +31,12 @@ export const authLogin: RequestHandler = async (
 			},
 		});
 		if (!user) {
-			return next(createHttpError.NotFound("User does not exist."));
+			return next(createHttpError.Unauthorized("User does not exist."));
 		}
 		const validPassword = await argon2.verify(user.password, password);
 
 		if (validPassword) {
 			req.session.userId = user.employeeId;
-			res.status(200).json({
-				name: user.name,
-				employeeId: user.employeeId,
-				image: user.image,
-				role: user.role,
-			});
 		} else {
 			return next(createHttpError.Unauthorized("Invalid credentials."));
 		}
