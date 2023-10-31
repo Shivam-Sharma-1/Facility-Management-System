@@ -30,7 +30,9 @@ const AddEventModal: FC<AddEventModalProps> = ({
     employeeId: "",
   });
   const location = useLocation();
+
   const slug = location.pathname.split("/")[2];
+  // const eightAM = dayjs().set("hour", 8).startOf("hour");
 
   const mutation = useMutation({
     mutationFn: (data: AddEventDataProps) =>
@@ -135,6 +137,10 @@ const AddEventModal: FC<AddEventModalProps> = ({
                 sx={{ minWidth: "40% !important" }}
                 slotProps={{ textField: { required: true, size: "small" } }}
                 ampm={true}
+                reduceAnimations={true}
+                timeSteps={{ minutes: 30 }}
+                // minTime={eightAM}
+                closeOnSelect={false}
               />
               <TimePicker
                 label="Pick end time"
