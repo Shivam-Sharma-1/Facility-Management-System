@@ -23,6 +23,7 @@ const LoginPage: FC = (): JSX.Element => {
     onSuccess: (data) => {
       console.log(data);
       auth?.login(data.data);
+      localStorage.setItem("token-info", JSON.stringify(data.data));
       navigate(redirectPath, { replace: true, preventScrollReset: true });
     },
     onError: (error) => {
