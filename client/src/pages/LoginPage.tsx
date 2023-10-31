@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import { Button, TextField } from "@mui/material";
-import { useAuth } from "../components/hooks/useAuth";
+import { useAuth } from "../hooks/useAuth";
 
 const LoginPage: FC = (): JSX.Element => {
   const [id, setId] = useState<string>("");

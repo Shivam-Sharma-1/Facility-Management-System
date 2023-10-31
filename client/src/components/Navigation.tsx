@@ -3,7 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 
 import { Avatar, Collapse, ListItemIcon } from "@mui/material";
-import { useAuth } from "./hooks/useAuth";
+import { useAuth } from "../hooks/useAuth";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import ApprovalIcon from "@mui/icons-material/Approval";
 import BookmarksIcon from "@mui/icons-material/Bookmarks";

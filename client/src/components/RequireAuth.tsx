@@ -1,7 +1,7 @@
 import { Navigate, useLocation } from "react-router-dom";
 import { FC } from "react";
 
-import { useAuth } from "./hooks/useAuth";
+import { useAuth } from "../hooks/useAuth";
 
 export const RequireAuth: FC<AuthProviderProps> = ({
   children,
