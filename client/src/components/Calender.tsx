@@ -8,6 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { EventClickArg, EventSourceInput } from "@fullcalendar/core/index.js";
 import EventModal from "./EventModal";
+import { useLocation } from "react-router-dom";
 
 const handleEventContent: FC<EventContentProps> = (eventInfo): JSX.Element => {
   return (
@@ -34,12 +35,14 @@ const Calendar: FC = (): JSX.Element => {
     date: "",
     requestBy: "",
   });
+  const location = useLocation();
+  const slug = location.pathname.split("/")[2];
 
   const { data, isPending } = useQuery<BookingDataProps[]>({
     queryKey: ["bookings"],
     queryFn: async () => {
       const response = await axios.get<BookingDataProps[]>(
-        "http://localhost:3000/facility/facility-1",
+        `http://localhost:3000/facility/${slug}`,
         {
           withCredentials: true,
         }

@@ -12,6 +12,7 @@ import { TimePicker } from "@mui/x-date-pickers";
 
 import "dayjs/locale/en-gb";
 import { useAuth } from "../hooks/useAuth";
+import { useLocation } from "react-router-dom";
 
 const AddEventModal: FC<AddEventModalProps> = ({
   isOpen,
@@ -28,10 +29,12 @@ const AddEventModal: FC<AddEventModalProps> = ({
     slug: "",
     employeeId: "",
   });
+  const location = useLocation();
+  const slug = location.pathname.split("/")[2];
 
   const mutation = useMutation({
     mutationFn: (data: AddEventDataProps) =>
-      axios.post("http://localhost:3000/facility/facility-1", data, {
+      axios.post(`http://localhost:3000/facility/${slug}`, data, {
         withCredentials: true,
       }),
     onSuccess: (data) => {
@@ -131,6 +134,7 @@ const AddEventModal: FC<AddEventModalProps> = ({
                 }
                 sx={{ minWidth: "40% !important" }}
                 slotProps={{ textField: { required: true, size: "small" } }}
+                ampm={true}
               />
               <TimePicker
                 label="Pick end time"
