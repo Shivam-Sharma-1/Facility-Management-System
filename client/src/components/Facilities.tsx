@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
 import axios from "axios";
 
 import FacilityCard from "./FacilityCard";
@@ -13,6 +14,7 @@ const Facilities = (): JSX.Element => {
           withCredentials: true,
         }
       );
+      console.log(response.data);
       return response.data;
     },
   });
@@ -23,11 +25,9 @@ const Facilities = (): JSX.Element => {
       <div className="w-full flex justify-center items-center flex-wrap pt-4">
         {!isPending &&
           data?.map((facility: FacilityData) => (
-            <FacilityCard
-              key={facility.name}
-              name={facility.name}
-              icon={facility.icon}
-            />
+            <Link to={`/facility/${facility.slug}`} key={facility.name}>
+              <FacilityCard name={facility.name} icon={facility.icon} />
+            </Link>
           ))}
       </div>
     </div>
