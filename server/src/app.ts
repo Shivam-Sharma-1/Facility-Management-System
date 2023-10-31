@@ -9,6 +9,7 @@ import expressSession from "express-session";
 import prisma from "./db/prisma";
 import { errorHandler } from "./middleware/errorHandler";
 import { notFound } from "./middleware/notFound";
+import approvalRouter from "./routes/approval.routes";
 import authRouter from "./routes/auth.routes";
 import dashboardRouter from "./routes/dashboard.routes";
 import facilityRouter from "./routes/facility.routes";
@@ -45,6 +46,7 @@ app.use(
 app.use("/auth", authRouter);
 app.use("/dashboard", dashboardRouter);
 app.use("/facility", facilityRouter);
+app.use("/employee", approvalRouter);
 app.use(notFound);
 app.use(errorHandler);
 
