@@ -14,30 +14,6 @@ export const getFacilities: RequestHandler = async (
 	next: NextFunction
 ) => {
 	try {
-		const userId = req.session.userId;
-		const data = [];
-		const user = await prisma.user.findUnique({
-			where: {
-				employeeId: userId,
-			},
-			select: {
-				name: true,
-				employeeId: true,
-				role: true,
-			},
-		});
-		if (!user) {
-			req.session.destroy((err) => {
-				if (err) {
-					console.log(err);
-				}
-				res.clearCookie("sid");
-			});
-			return next(
-				createHttpError.Unauthorized("Please login and try again.")
-			);
-		}
-		data.push(user);
 		const facilities = await prisma.facility.findMany();
 		if (!facilities) {
 			return next(
@@ -46,8 +22,7 @@ export const getFacilities: RequestHandler = async (
 				)
 			);
 		}
-		data.push(facilities);
-		res.status(200).json(data);
+		res.status(200).json({ facilities });
 	} catch (error) {
 		console.error(error);
 		return next(
