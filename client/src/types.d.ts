@@ -10,6 +10,12 @@ interface AddEventModalProps {
   setIsOpen: (isOpen: boolean) => void;
 }
 
+interface EventModalProps {
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+  eventInfo: EventInfoProps;
+}
+
 interface EventContentProps {
   backgroundColor: string;
   event: {
@@ -62,6 +68,15 @@ interface AuthContextType {
 
 interface AuthProviderProps {
   children: ReactNode;
+}
+
+interface EventInfoProps {
+  title: string;
+  purpose: string;
+  start: string;
+  end: string;
+  date: string;
+  requestBy: string;
 }
 
 // ----------TYPES-----------
