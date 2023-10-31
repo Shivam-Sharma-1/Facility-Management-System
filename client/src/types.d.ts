@@ -67,8 +67,11 @@ interface AuthProviderProps {
 // ----------TYPES-----------
 
 type FacilityData = {
+  id: string;
   name: string;
+  description: string;
   icon: string;
+  slug: string;
 };
 
 type NavigationData = {
