@@ -11,8 +11,10 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { TimePicker } from "@mui/x-date-pickers";
 
 import "dayjs/locale/en-gb";
+import { useAuth } from "./hooks/useAuth";
 
 const AddEventModal: FC<AddEventModalProps> = ({ isOpen, setIsOpen }) => {
+  const auth = useAuth();
   const [formData, setFormData] = useState<AddEventDataProps>({
     title: "",
     purpose: "",
@@ -21,7 +23,7 @@ const AddEventModal: FC<AddEventModalProps> = ({ isOpen, setIsOpen }) => {
     endTime: null,
     color: "red",
     slug: "",
-    employeeId: "6632",
+    employeeId: "",
   });
 
   const mutation = useMutation({
@@ -47,7 +49,7 @@ const AddEventModal: FC<AddEventModalProps> = ({ isOpen, setIsOpen }) => {
       startTime: formData.startTime,
       endTime: formData.endTime,
       color: formData.color,
-      employeeId: "6632",
+      employeeId: auth?.user?.employeeId || "",
       slug: `${formData.title.toLowerCase()}${formData.startTime}`,
     };
     mutation.mutate(data);
@@ -60,7 +62,7 @@ const AddEventModal: FC<AddEventModalProps> = ({ isOpen, setIsOpen }) => {
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <div className="w-[450px] h-[450px] bg-bgPrimary text-black p-10 absolute left-[50%] top-[50%] -translate-x-[50%] -translate-y-[50%] rounded-md">
+      <div className="bg-bgPrimary text-black px-16 py-10 absolute left-[50%] top-[50%] -translate-x-[50%] -translate-y-[50%] rounded-md">
         <Typography id="modal-modal-title" variant="h6" component="h2">
           New event
         </Typography>
