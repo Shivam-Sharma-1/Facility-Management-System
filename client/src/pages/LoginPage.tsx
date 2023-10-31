@@ -8,16 +8,11 @@ const LoginPage: FC = (): JSX.Element => {
   const [id, setId] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("submitted");
-    console.log(id, password);
-    mutation.mutate({ employeeId: id, password: password });
-  };
-
   const mutation = useMutation({
     mutationFn: (data: LoginData) =>
-      axios.post("http://localhost:3000/auth/login", data),
+      axios.post("http://localhost:3000/auth/login", data, {
+        withCredentials: true,
+      }),
     onSuccess: (data) => {
       console.log(data);
     },
@@ -25,6 +20,13 @@ const LoginPage: FC = (): JSX.Element => {
       console.log(error);
     },
   });
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log("submitted");
+    console.log(id, password);
+    mutation.mutate({ employeeId: id, password: password });
+  };
 
   return (
     <div className="w-full h-full min-h-screen flex justify-center items-center">
