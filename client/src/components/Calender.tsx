@@ -61,8 +61,6 @@ const Calendar: FC = (): JSX.Element => {
   }, [data, isPending]);
 
   const handleEventClick = (info: EventClickArg): void => {
-    console.log(info);
-    console.log(info.event._def);
     setEventInfo({
       title: info.event._def.title,
       purpose: info.event._def.extendedProps.purpose,
