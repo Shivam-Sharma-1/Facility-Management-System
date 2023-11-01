@@ -4,10 +4,9 @@ import axios from "axios";
 
 import { Avatar, Collapse, Divider, ListItemIcon } from "@mui/material";
 import { useAuth } from "../hooks/useAuth";
-import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import ApprovalIcon from "@mui/icons-material/Approval";
 import BookmarksIcon from "@mui/icons-material/Bookmarks";
-import EventIcon from "@mui/icons-material/Event";
+import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
 import SummarizeIcon from "@mui/icons-material/Summarize";
 import LogoutIcon from "@mui/icons-material/Logout";
 import List from "@mui/material/List";
@@ -25,62 +24,6 @@ const Navigation = (): JSX.Element => {
   };
   const auth = useAuth();
 
-  const navigationData: NavigationData[] = [
-    {
-      label: "Admin",
-      icon: (
-        <AdminPanelSettingsIcon
-          sx={{ width: "26px", height: "26px", color: "white" }}
-        />
-      ),
-      key: "admin",
-      onClick: () => console.log("admin"),
-    },
-    // {
-    //   label: "Approval Status",
-    //   icon: (
-    //     <ApprovalIcon sx={{ width: "26px", height: "26px", color: "white" }} />
-    //   ),
-    //   key: "approval",
-    //   onClick: () => console.log("approval"),
-    // },
-    {
-      label: "Bookings",
-      icon: (
-        <BookmarksIcon sx={{ width: "26px", height: "26px", color: "white" }} />
-      ),
-      key: "bookings",
-      onClick: () => console.log("bookings"),
-    },
-    {
-      label: "Calender",
-      icon: (
-        <EventIcon sx={{ width: "26px", height: "26px", color: "white" }} />
-      ),
-      key: "calender",
-      onClick: () => console.log("calender"),
-    },
-    {
-      label: "Report",
-      icon: (
-        <SummarizeIcon sx={{ width: "26px", height: "26px", color: "white" }} />
-      ),
-      key: "report",
-      onClick: () => console.log("report"),
-    },
-    {
-      label: "Logout",
-      icon: (
-        <LogoutIcon sx={{ width: "26px", height: "26px", color: "white" }} />
-      ),
-      key: "logout",
-      onClick: () => {
-        mutation.mutate();
-        auth?.logout();
-      },
-    },
-  ];
-
   const mutation = useMutation({
     mutationFn: () =>
       axios.post("http://localhost:3000/auth/logout", {
@@ -96,7 +39,7 @@ const Navigation = (): JSX.Element => {
 
   return (
     <div className="w-[20%] h-full min-h-[100dvh] bg-primary text-white pt-8 overflow-y-hidden sticky top-0">
-      <div className="w-full flex justify-center px-4 pt-4 gap-4 flex-wrap">
+      <div className="w-full flex justify-center px-4 pt-4 pb-8 gap-4 flex-wrap">
         <Avatar
           sx={{ width: "80px", height: "80px" }}
           src={auth?.user?.image}
@@ -107,9 +50,18 @@ const Navigation = (): JSX.Element => {
           <h4 className="font-normal">ID: {auth?.user?.employeeId}</h4>
         </div>
       </div>
-      <div className="w-[92%] h-[1px] bg-slate-400 rounded-full mx-auto mt-6"></div>
-      <List component="nav" aria-labelledby="nested-list-subheader">
-        <ListItemButton onClick={handleClick} className="flex gap-4">
+      <Divider color="#0c0051" />
+
+      <List
+        component="nav"
+        aria-labelledby="nested-list-subheader"
+        sx={{ paddingInline: "1em" }}
+      >
+        <ListItemButton
+          onClick={handleClick}
+          className="flex gap-4"
+          sx={{ paddingBlock: "1em" }}
+        >
           <ListItemIcon sx={{ minWidth: "0px" }}>
             <ApprovalIcon
               sx={{ width: "26px", height: "26px", color: "white" }}
@@ -124,6 +76,7 @@ const Navigation = (): JSX.Element => {
               <ListItemText primary="My Bookings" />
             </ListItemButton>
           </List>
+          <Divider color="#0c0051" />
           {auth?.user!.role !== "USER" && (
             <Link
               to={`/employee/approvals/${
@@ -143,28 +96,56 @@ const Navigation = (): JSX.Element => {
             </Link>
           )}
         </Collapse>
-        <Divider />
-        {navigationData.map((item) => {
-          if (item.key === "admin" && auth?.user?.role !== "admin") {
-            return null;
-          } else {
-            return (
-              <>
-                <ListItemButton
-                  key={item.key}
-                  className="flex gap-4"
-                  onClick={() => item.onClick()}
-                >
-                  <ListItemIcon sx={{ minWidth: "0px" }}>
-                    {item.icon}
-                  </ListItemIcon>
-                  <ListItemText primary={item.label} />
-                </ListItemButton>
-                <Divider />
-              </>
-            );
-          }
-        })}
+        <Divider color="#0c0051" />
+
+        <ListItemButton className="flex gap-4" sx={{ paddingBlock: "1em" }}>
+          <ListItemIcon sx={{ minWidth: "0px" }}>
+            <BookmarksIcon
+              sx={{ width: "26px", height: "26px", color: "white" }}
+            />
+          </ListItemIcon>
+          <ListItemText primary="Bookings" />
+        </ListItemButton>
+        <Divider color="#0c0051" />
+
+        <Link to="/" className="text-white">
+          <ListItemButton className="flex gap-4" sx={{ paddingBlock: "1em" }}>
+            <ListItemIcon sx={{ minWidth: "0px" }}>
+              <WorkspacePremiumIcon
+                sx={{ width: "26px", height: "26px", color: "white" }}
+              />
+            </ListItemIcon>
+            <ListItemText primary="Facilities" />
+          </ListItemButton>
+        </Link>
+        <Divider color="#0c0051" />
+
+        <ListItemButton className="flex gap-4" sx={{ paddingBlock: "1em" }}>
+          <ListItemIcon sx={{ minWidth: "0px" }}>
+            <SummarizeIcon
+              sx={{ width: "26px", height: "26px", color: "white" }}
+            />
+          </ListItemIcon>
+          <ListItemText primary="Report" />
+        </ListItemButton>
+        <Divider color="#0c0051" />
+
+        <ListItemButton
+          className="flex gap-4"
+          sx={{ paddingBlock: "1em" }}
+          onClick={() => {
+            mutation.mutate();
+            auth?.logout();
+          }}
+        >
+          <ListItemIcon sx={{ minWidth: "0px" }}>
+            <LogoutIcon
+              sx={{ width: "26px", height: "26px", color: "white" }}
+            />
+          </ListItemIcon>
+          <ListItemText primary="Logout" />
+        </ListItemButton>
+        <Divider color="#0c0051" />
       </List>
     </div>
   );
