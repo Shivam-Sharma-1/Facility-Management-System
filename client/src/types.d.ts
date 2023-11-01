@@ -99,6 +99,11 @@ interface ApprovalProps {
   approvedAtAdmin: string | null;
 }
 
+interface ApprovalStatusProps {
+  GD: boolean;
+  FM: boolean;
+}
+
 // ----------TYPES-----------
 
 type FacilityData = {
