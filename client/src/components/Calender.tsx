@@ -11,6 +11,7 @@ import axios from "axios";
 import { EventClickArg, EventSourceInput } from "@fullcalendar/core/index.js";
 import EventModal from "./EventModal";
 import { useLocation } from "react-router-dom";
+import { Alert, Snackbar } from "@mui/material";
 
 const handleEventContent: FC<EventContentProps> = (eventInfo): JSX.Element => {
   return (
@@ -28,6 +29,7 @@ const handleEventContent: FC<EventContentProps> = (eventInfo): JSX.Element => {
 const Calendar: FC = (): JSX.Element => {
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   const [bookingsData, setBookingsData] = useState<BookingDataProps[]>([]);
   const [eventInfo, setEventInfo] = useState<EventInfoProps>({
@@ -40,6 +42,10 @@ const Calendar: FC = (): JSX.Element => {
   });
   const location = useLocation();
   const slug = location.pathname.split("/")[2];
+
+  const handleCloseSnackbar = (): void => {
+    setOpenSnackbar(false);
+  };
 
   const { data, isPending } = useQuery<BookingDataProps[]>({
     queryKey: ["bookings"],
@@ -86,6 +92,7 @@ const Calendar: FC = (): JSX.Element => {
         <AddEventModal
           isOpen={isAddOpen}
           setIsOpen={setIsAddOpen}
+          setOpenSnackbar={setOpenSnackbar}
           bookingsData={bookingsData}
         />
       )}
@@ -119,6 +126,19 @@ const Calendar: FC = (): JSX.Element => {
           }}
         />
       </div>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          Event requested successfully!
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

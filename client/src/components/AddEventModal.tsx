@@ -13,7 +13,6 @@ import {
   Modal,
   Select,
   SelectChangeEvent,
-  Snackbar,
   TextField,
   Typography,
 } from "@mui/material";
@@ -25,9 +24,20 @@ import { useAuth } from "../hooks/useAuth";
 
 import "dayjs/locale/en-gb";
 
+const colors = [
+  "#D50000",
+  "#F4511E",
+  "#F6BF26",
+  "#33B679",
+  "#039BE5",
+  "#7986CB",
+  "#8E24AA",
+];
+
 const AddEventModal: FC<AddEventModalProps> = ({
   isOpen,
   setIsOpen,
+  setOpenSnackbar,
   bookingsData,
 }): JSX.Element => {
   const auth = useAuth();
@@ -44,8 +54,27 @@ const AddEventModal: FC<AddEventModalProps> = ({
   const location = useLocation();
   const [validationError, setValidationError] = useState<string>("");
   const [availableEndTimes, setAvailableEndTimes] = useState<string[]>([]);
-  const [openSnackbar, setOpenSnackbar] = useState(false);
   const slug = location.pathname.split("/")[2];
+
+  const ColorPicker = (): JSX.Element => {
+    return (
+      <div
+        id="color-picker"
+        className="w-[60%] flex justify-center items-center gap-2"
+      >
+        {colors.map((color) => (
+          <div
+            key={color}
+            className={`${
+              formData.color === color && "scale-125"
+            } w-6 h-6 rounded-full cursor-pointer transition-all duration-700 ease-in-out`}
+            style={{ backgroundColor: color }}
+            onClick={() => setFormData({ ...formData, color: color })}
+          />
+        ))}
+      </div>
+    );
+  };
 
   const possibleTimeSlots: string[] = [];
   const minTime = dayjs().set("hour", 8).set("minute", 0);
@@ -155,10 +184,6 @@ const AddEventModal: FC<AddEventModalProps> = ({
     }
   };
 
-  const handleCloseSnackbar = () => {
-    setOpenSnackbar(false);
-  };
-
   useEffect(() => {
     if (formData.start) {
       updateAvailableEndTimes();
@@ -174,7 +199,7 @@ const AddEventModal: FC<AddEventModalProps> = ({
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <div className="bg-bgPrimary w-full max-w-[500px] text-black px-16 py-14 absolute left-[50%] top-[50%] -translate-x-[50%] -translate-y-[50%] rounded-md flex flex-col gap-4 shadow-cardHover">
+        <div className="bg-bgPrimary w-full max-w-[500px] text-black px-10 py-14 absolute left-[50%] top-[50%] -translate-x-[50%] -translate-y-[50%] rounded-md flex flex-col gap-4 shadow-cardHover">
           <Typography id="modal-modal-title" variant="h5" component="h2">
             New event
           </Typography>
@@ -289,19 +314,13 @@ const AddEventModal: FC<AddEventModalProps> = ({
                 </FormControl>
               </div>
             </FormControl>
-            <div className="w-full flex items-center gap-6">
-              <label htmlFor="color-picker">Select a color:</label>
-              <input
-                id="color-picker"
-                name="color-picker"
-                type="color"
-                className="rounded-sm w-10 h-10 bg-bgPrimary"
-                onChange={(e) =>
-                  setFormData({ ...formData, color: e.target.value })
-                }
-              />
+            <div className="w-full flex items-center gap-6 pl-2 ">
+              <label htmlFor="color-picker" className="text-[#666666]">
+                Select a color:
+              </label>
+              <ColorPicker />
             </div>
-            <div className="w-full flex items-center justify-between">
+            <div className="w-full flex items-center justify-between mt-2">
               <Button
                 type="submit"
                 variant="contained"
@@ -329,15 +348,6 @@ const AddEventModal: FC<AddEventModalProps> = ({
               </Typography>
             </Grid>
           )}
-          <Snackbar
-            open={openSnackbar}
-            autoHideDuration={3000}
-            onClose={handleCloseSnackbar}
-          >
-            <Typography variant="body1" color="success">
-              Event added
-            </Typography>
-          </Snackbar>
         </div>
       </Modal>
     </>
