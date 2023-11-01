@@ -79,13 +79,17 @@ export const getAllGDApprovals: RequestHandler = async (
 			select: {
 				facility: {
 					select: {
-						name: true,
 						bookings: {
 							where: {
 								status: "PENDING",
 							},
 							include: {
 								requestedBy: {
+									select: {
+										name: true,
+									},
+								},
+								facility: {
 									select: {
 										name: true,
 									},
@@ -133,15 +137,18 @@ export const getAllFMApprovals: RequestHandler = async (
 			},
 			select: {
 				facility: {
-					select: {
-						name: true,
+					include: {
 						bookings: {
 							where: {
 								status: "APPROVED_BY_GD",
 							},
-
 							include: {
 								requestedBy: {
+									select: {
+										name: true,
+									},
+								},
+								facility: {
 									select: {
 										name: true,
 									},
