@@ -10,7 +10,7 @@ import LoginPage from "./pages/LoginPage";
 import FacilityPage from "./pages/FacilityPage";
 import { AuthProvider } from "./utils/auth";
 import { RequireAuth } from "./components/RequireAuth";
-import ApprovalStatus from "./components/ApprovalStatus";
+import ApprovalsPage from "./pages/ApprovalsPage";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -36,7 +36,7 @@ const router = createBrowserRouter(
         path="employee/approvals/gd"
         element={
           <RequireAuth GD={true} FM={false}>
-            <ApprovalStatus />
+            <ApprovalsPage />
           </RequireAuth>
         }
       />
