@@ -11,7 +11,7 @@ import axios from "axios";
 import { EventClickArg, EventSourceInput } from "@fullcalendar/core/index.js";
 import EventModal from "./EventModal";
 import { useLocation } from "react-router-dom";
-import { Alert, Snackbar } from "@mui/material";
+import { Alert, Button, Snackbar, Typography } from "@mui/material";
 
 const handleEventContent: FC<EventContentProps> = (eventInfo): JSX.Element => {
   return (
@@ -103,26 +103,38 @@ const Calendar: FC = (): JSX.Element => {
           eventInfo={eventInfo}
         />
       )}
-      <h1 className="uppercase">CALENDER</h1>
+      <div className="w-[90%] flex justify-between items-center pb-4">
+        <Typography
+          variant="h4"
+          component={"h1"}
+          className="uppercase "
+          sx={{ fontWeight: "bold" }}
+        >
+          CALENDER
+        </Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{ width: "150px", height: "45px" }}
+          size="large"
+          onClick={() => setIsAddOpen(true)}
+        >
+          Add event
+        </Button>
+      </div>
       <div className="w-[90%]">
         <FullCalendar
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
           initialView="dayGridMonth"
           events={bookingsData as EventSourceInput}
           headerToolbar={{
-            left: "prev,next,today,addEventButton",
+            left: "prev,next today",
             center: "title",
             right: "dayGridMonth,timeGridWeek,timeGridDay",
           }}
           eventContent={() => handleEventContent}
           eventClick={(info) => {
             handleEventClick(info);
-          }}
-          customButtons={{
-            addEventButton: {
-              text: "Add event",
-              click: () => setIsAddOpen(true),
-            },
           }}
         />
       </div>
