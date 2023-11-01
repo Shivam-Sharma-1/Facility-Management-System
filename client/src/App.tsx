@@ -1,35 +1,66 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import {
+  createRoutesFromElements,
+  createBrowserRouter,
+  Route,
+  RouterProvider,
+} from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import DashboardPage from "./pages/DashboardPage";
+import LoginPage from "./pages/LoginPage";
+import FacilityPage from "./pages/FacilityPage";
+import { AuthProvider } from "./utils/auth";
+import { RequireAuth } from "./components/RequireAuth";
+import ApprovalsPage from "./pages/ApprovalsPage";
 
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route path="/">
+      <Route
+        index
+        element={
+          <RequireAuth GD={false} FM={false}>
+            <DashboardPage />
+          </RequireAuth>
+        }
+      />
+      <Route path="auth/login" element={<LoginPage />} />
+      <Route
+        path="facility/:id"
+        element={
+          <RequireAuth GD={false} FM={false}>
+            <FacilityPage />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="employee/approvals/gd"
+        element={
+          <RequireAuth GD={true} FM={false}>
+            <ApprovalsPage GD={true} FM={false} />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="employee/approvals/fm"
+        element={
+          <RequireAuth GD={false} FM={true}>
+            <ApprovalsPage GD={false} FM={true} />
+          </RequireAuth>
+        }
+      />
+    </Route>
   )
+);
+
+const queryClient = new QueryClient();
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
+    </QueryClientProvider>
+  );
 }
 
-export default App
+export default App;
