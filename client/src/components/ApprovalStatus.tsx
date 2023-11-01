@@ -36,6 +36,7 @@ const ApprovalStatus: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
               date={approval.date}
               start={approval.start}
               end={approval.end}
+              facility={approval.facility.name}
               requestedBy={approval.requestedBy.name}
               approvedAtAdmin={approval.approvedAtAdmin}
               approvedAtFM={approval.approvedAtFM}

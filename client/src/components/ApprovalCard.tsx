@@ -14,6 +14,7 @@ const ApprovalCard: FC<ApprovalProps> = ({
   date,
   start,
   end,
+  facility,
   requestedBy,
   approvedAtAdmin,
   approvedAtFM,
@@ -47,6 +48,7 @@ const ApprovalCard: FC<ApprovalProps> = ({
           {isoToTime(start)} - {isoToTime(end)}
         </Typography>
         <Typography variant="body1">Requested By - {requestedBy}</Typography>
+        <Typography variant="body1">Facility- {facility}</Typography>
         {approvedAtGD && (
           <Typography variant="body1">Approved by GD</Typography>
         )}
