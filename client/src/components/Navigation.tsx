@@ -94,7 +94,7 @@ const Navigation = (): JSX.Element => {
   });
 
   return (
-    <div className="w-[20%] h-full min-h-[100dvh] bg-primary text-white pt-8 overflow-y-hidden">
+    <div className="w-[20%] h-full min-h-[100dvh] bg-primary text-white pt-8 overflow-y-hidden sticky top-0">
       <div className="w-full flex justify-center px-4 pt-4 gap-4 flex-wrap">
         <Avatar
           sx={{ width: "80px", height: "80px" }}
