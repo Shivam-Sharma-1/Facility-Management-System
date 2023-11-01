@@ -86,6 +86,19 @@ interface EventInfoProps {
   requestBy: string;
 }
 
+interface ApprovalProps {
+  title: string;
+  purpose: string;
+  slug: string;
+  date: string;
+  start: string;
+  end: string;
+  requestedBy: string;
+  approvedAtGD: string | null;
+  approvedAtFM: string | null;
+  approvedAtAdmin: string | null;
+}
+
 // ----------TYPES-----------
 
 type FacilityData = {
@@ -106,4 +119,30 @@ type NavigationData = {
 type LoginData = {
   employeeId: string;
   password: string;
+};
+
+type ApprovalData = {
+  id: number;
+  title: string;
+  slug: string;
+  purpose: string;
+  color: string;
+  userId: number;
+  status: string;
+  createdAt: string;
+  date: string;
+  start: string;
+  end: string;
+  facilityId: 1;
+  approvedAtGD: string | null;
+  approvedAtFM: string | null;
+  approvedAtAdmin: string | null;
+  requestedBy: {
+    name: string;
+  };
+};
+
+type ApprovalType = {
+  slug: string;
+  approved: boolean;
 };
