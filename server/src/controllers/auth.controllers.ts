@@ -47,12 +47,13 @@ export const authLogin: RequestHandler = async (
 		});
 	} catch (error) {
 		if (error.isJoi === true) {
-			console.error(error);
 			return next(
-				createHttpError.BadRequest("Invalid employeeId/password")
+				createHttpError.BadRequest(`Invalid ${error.details[0].path}`)
 			);
 		}
 		return next(createHttpError.Unauthorized("Invalid credentials."));
+	} finally {
+		prisma.$disconnect();
 	}
 };
 
@@ -115,6 +116,8 @@ export const getUser: RequestHandler = async (
 				"Something went wrong. Please try again."
 			)
 		);
+	} finally {
+		prisma.$disconnect();
 	}
 };
 
@@ -159,5 +162,7 @@ export const authRegister: RequestHandler = async (
 				createHttpError.BadRequest("Invalid employee ID/password")
 			);
 		next(error);
+	} finally {
+		prisma.$disconnect();
 	}
 };

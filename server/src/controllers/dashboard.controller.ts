@@ -9,7 +9,7 @@ import prisma from "../db/prisma";
  * @returns [{name, employeeId, role}, [facilities]]
  */
 export const getFacilities: RequestHandler = async (
-	req: Request,
+	_req: Request,
 	res: Response,
 	next: NextFunction
 ) => {
@@ -17,7 +17,7 @@ export const getFacilities: RequestHandler = async (
 		const facilities = await prisma.facility.findMany();
 		if (!facilities) {
 			return next(
-				createHttpError.InternalServerError(
+				createHttpError.NotFound(
 					"Something went wrong. Please try again."
 				)
 			);
@@ -30,11 +30,13 @@ export const getFacilities: RequestHandler = async (
 				"Something went wrong. Please try again."
 			)
 		);
+	} finally {
+		prisma.$disconnect();
 	}
 };
 
 /**
- * @description Add facilities
+ * @description Add facilities (temp route)
  * @method POST
  * @access private
  * @returns {Facility, transaction}
@@ -102,5 +104,7 @@ export const addFacilities: RequestHandler = async (
 				"Something went wrong. Please try again."
 			)
 		);
+	} finally {
+		prisma.$disconnect();
 	}
 };
