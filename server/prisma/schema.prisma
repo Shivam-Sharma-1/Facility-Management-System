@@ -55,8 +55,8 @@ model Booking {
   status          ApprovalStatus @default(PENDING)
   createdAt       DateTime       @default(now())
   date            DateTime
-  startTime       DateTime
-  endTime         DateTime
+  start           DateTime
+  end             DateTime
   facility        Facility       @relation(fields: [facilityId], references: [id])
   facilityId      Int
   approvedAtGD    DateTime?

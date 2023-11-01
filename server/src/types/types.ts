@@ -1,8 +1,11 @@
+import { Role } from "@prisma/client";
+
 export type AuthInput = {
 	image: string;
 	name: string;
 	employeeId: string;
 	password: string;
+	role: Role;
 };
 
 export type BookingInput = {
