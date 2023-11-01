@@ -93,6 +93,7 @@ interface ApprovalProps {
   date: string;
   start: string;
   end: string;
+  facility: string;
   requestedBy: string;
   approvedAtGD: string | null;
   approvedAtFM: string | null;
@@ -114,13 +115,6 @@ type FacilityData = {
   slug: string;
 };
 
-type NavigationData = {
-  label: string;
-  icon: ReactNode;
-  key: string;
-  onClick: () => void;
-};
-
 type LoginData = {
   employeeId: string;
   password: string;
@@ -138,7 +132,10 @@ type ApprovalData = {
   date: string;
   start: string;
   end: string;
-  facilityId: 1;
+  facility: {
+    name: string;
+  };
+  facilityId: number;
   approvedAtGD: string | null;
   approvedAtFM: string | null;
   approvedAtAdmin: string | null;
