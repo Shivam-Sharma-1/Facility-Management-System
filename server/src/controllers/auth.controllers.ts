@@ -35,11 +35,15 @@ export const authLogin: RequestHandler = async (
 		}
 		const validPassword = await argon2.verify(user.password, password);
 
-		if (validPassword) {
-			req.session.userId = user.employeeId;
-		} else {
+		if (!validPassword) {
 			return next(createHttpError.Unauthorized("Invalid credentials."));
 		}
+		res.status(200).json({
+			name: user.name,
+			employeeId: user.employeeId,
+			image: user.image,
+			role: user.role,
+		});
 	} catch (error) {
 		if (error.isJoi === true) {
 			console.error(error);
