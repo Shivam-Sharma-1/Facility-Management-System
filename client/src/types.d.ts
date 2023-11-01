@@ -71,6 +71,12 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
+interface RequireAuthProps {
+  children: ReactNode;
+  GD: boolean;
+  FM: boolean;
+}
+
 interface EventInfoProps {
   title: string;
   purpose: string;
@@ -78,6 +84,25 @@ interface EventInfoProps {
   end: string;
   date: string;
   requestBy: string;
+}
+
+interface ApprovalProps {
+  title: string;
+  purpose: string;
+  slug: string;
+  date: string;
+  start: string;
+  end: string;
+  facility: string;
+  requestedBy: string;
+  approvedAtGD: string | null;
+  approvedAtFM: string | null;
+  approvedAtAdmin: string | null;
+}
+
+interface ApprovalStatusProps {
+  GD: boolean;
+  FM: boolean;
 }
 
 // ----------TYPES-----------
@@ -90,14 +115,36 @@ type FacilityData = {
   slug: string;
 };
 
-type NavigationData = {
-  label: string;
-  icon: ReactNode;
-  key: string;
-  onClick: () => void;
-};
-
 type LoginData = {
   employeeId: string;
   password: string;
+};
+
+type ApprovalData = {
+  id: number;
+  title: string;
+  slug: string;
+  purpose: string;
+  color: string;
+  userId: number;
+  status: string;
+  createdAt: string;
+  date: string;
+  start: string;
+  end: string;
+  facility: {
+    name: string;
+  };
+  facilityId: number;
+  approvedAtGD: string | null;
+  approvedAtFM: string | null;
+  approvedAtAdmin: string | null;
+  requestedBy: {
+    name: string;
+  };
+};
+
+type ApprovalType = {
+  slug: string;
+  approved: boolean;
 };

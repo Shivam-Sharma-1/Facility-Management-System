@@ -81,7 +81,7 @@ const Calendar: FC = (): JSX.Element => {
   };
 
   return (
-    <div className="w-[80%] h-full flex flex-col items-center justify-center text-black px-6 pt-12">
+    <div className="w-[80%] h-full flex flex-col items-center justify-center text-black px-6 py-12">
       {isAddOpen && (
         <AddEventModal
           isOpen={isAddOpen}

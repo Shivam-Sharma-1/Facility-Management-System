@@ -10,6 +10,7 @@ import LoginPage from "./pages/LoginPage";
 import FacilityPage from "./pages/FacilityPage";
 import { AuthProvider } from "./utils/auth";
 import { RequireAuth } from "./components/RequireAuth";
+import ApprovalsPage from "./pages/ApprovalsPage";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -17,7 +18,7 @@ const router = createBrowserRouter(
       <Route
         index
         element={
-          <RequireAuth>
+          <RequireAuth GD={false} FM={false}>
             <DashboardPage />
           </RequireAuth>
         }
@@ -26,8 +27,24 @@ const router = createBrowserRouter(
       <Route
         path="facility/:id"
         element={
-          <RequireAuth>
+          <RequireAuth GD={false} FM={false}>
             <FacilityPage />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="employee/approvals/gd"
+        element={
+          <RequireAuth GD={true} FM={false}>
+            <ApprovalsPage GD={true} FM={false} />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="employee/approvals/fm"
+        element={
+          <RequireAuth GD={false} FM={true}>
+            <ApprovalsPage GD={false} FM={true} />
           </RequireAuth>
         }
       />
