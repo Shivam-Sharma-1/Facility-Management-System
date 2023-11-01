@@ -8,6 +8,7 @@ interface FacilityCardProps {
 interface AddEventModalProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
+  bookingsData: BookingDataProps[];
 }
 
 interface EventModalProps {
@@ -27,10 +28,10 @@ interface BookingDataProps {
   title: string;
   purpose: string;
   date: string | null;
-  startTime: string | null;
-  endTime: string | null;
+  start: string | null;
+  end: string | null;
   color: string;
-  requested_by: {
+  requestedBy: {
     name: string;
     employeeId: string;
   };
@@ -46,8 +47,8 @@ interface AddEventDataProps {
   title: string;
   purpose: string;
   date: string | null;
-  startTime: string | null;
-  endTime: string | null;
+  start: string | null;
+  end: string | null;
   color: string;
   employeeId: string;
   slug: string;

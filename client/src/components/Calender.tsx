@@ -1,4 +1,6 @@
 import { FC, useEffect, useState } from "react";
+import dayjs from "dayjs";
+
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
@@ -26,7 +28,8 @@ const handleEventContent: FC<EventContentProps> = (eventInfo): JSX.Element => {
 const Calendar: FC = (): JSX.Element => {
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [bookingsData, setBookingsData] = useState<BookingDataProps[]>();
+
+  const [bookingsData, setBookingsData] = useState<BookingDataProps[]>([]);
   const [eventInfo, setEventInfo] = useState<EventInfoProps>({
     title: "",
     purpose: "",
@@ -61,13 +64,18 @@ const Calendar: FC = (): JSX.Element => {
   }, [data, isPending]);
 
   const handleEventClick = (info: EventClickArg): void => {
+    const clickData = bookingsData.find(
+      (event: BookingDataProps) =>
+        event.slug === info.event._def.extendedProps.slug
+    ) as BookingDataProps;
+
     setEventInfo({
-      title: info.event._def.title,
-      purpose: info.event._def.extendedProps.purpose,
-      start: info.event._instance!.range.start.toLocaleString().slice(11, 22),
-      end: info.event._instance!.range.end.toLocaleString().slice(11, 22),
-      date: info.event._instance!.range.start.toDateString(),
-      requestBy: info.event._def.extendedProps.requestedBy.name,
+      title: clickData.title,
+      purpose: clickData.purpose,
+      start: clickData.start ? dayjs(clickData.start).format("hh:mm A") : "",
+      end: clickData.end ? dayjs(clickData.end).format("hh:mm A") : "",
+      date: new Date(clickData.date!).toDateString(),
+      requestBy: clickData.requestedBy.name,
     });
     setIsOpen(true);
   };
@@ -75,7 +83,11 @@ const Calendar: FC = (): JSX.Element => {
   return (
     <div className="w-[80%] h-full flex flex-col items-center justify-center text-black px-6 pt-12">
       {isAddOpen && (
-        <AddEventModal isOpen={isAddOpen} setIsOpen={setIsAddOpen} />
+        <AddEventModal
+          isOpen={isAddOpen}
+          setIsOpen={setIsAddOpen}
+          bookingsData={bookingsData}
+        />
       )}
       {isOpen && (
         <EventModal
