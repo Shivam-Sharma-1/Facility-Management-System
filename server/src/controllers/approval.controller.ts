@@ -3,6 +3,12 @@ import { NextFunction, Request, RequestHandler, Response } from "express";
 import createHttpError from "http-errors";
 import prisma from "../db/prisma";
 
+/**
+ * @description Get all bookings done by user
+ * @method GET
+ * @access private
+ * @returns {booking[]}
+ */
 export const getAllUserBookings: RequestHandler = async (
 	req: Request,
 	res: Response,
@@ -46,9 +52,17 @@ export const getAllUserBookings: RequestHandler = async (
 				"Something went wrong. Please try again."
 			)
 		);
+	} finally {
+		prisma.$disconnect();
 	}
 };
 
+/**
+ * @description Get all bookings for approval by Group Director
+ * @method GET
+ * @access private
+ * @returns {booking[]}
+ */
 export const getAllGDApprovals: RequestHandler = async (
 	req: Request,
 	res: Response,
@@ -65,9 +79,17 @@ export const getAllGDApprovals: RequestHandler = async (
 			select: {
 				facility: {
 					select: {
+						name: true,
 						bookings: {
 							where: {
 								status: "PENDING",
+							},
+							include: {
+								requestedBy: {
+									select: {
+										name: true,
+									},
+								},
 							},
 						},
 					},
@@ -85,9 +107,17 @@ export const getAllGDApprovals: RequestHandler = async (
 	} catch (error) {
 		console.error(error);
 		return next(createHttpError.InternalServerError(error.message));
+	} finally {
+		prisma.$disconnect();
 	}
 };
 
+/**
+ * @description Get all bookings for approval by Facility Manager
+ * @method GET
+ * @access private
+ * @returns {booking[]}
+ */
 export const getAllFMApprovals: RequestHandler = async (
 	req: Request,
 	res: Response,
@@ -104,9 +134,18 @@ export const getAllFMApprovals: RequestHandler = async (
 			select: {
 				facility: {
 					select: {
+						name: true,
 						bookings: {
 							where: {
 								status: "APPROVED_BY_GD",
+							},
+
+							include: {
+								requestedBy: {
+									select: {
+										name: true,
+									},
+								},
 							},
 						},
 					},
@@ -124,9 +163,17 @@ export const getAllFMApprovals: RequestHandler = async (
 	} catch (error) {
 		console.error(error);
 		return next(createHttpError.InternalServerError(error.message));
+	} finally {
+		prisma.$disconnect();
 	}
 };
 
+/**
+ * @description Approve a booking slot by Group Director
+ * @method POST
+ * @access private
+ * @returns {booking}
+ */
 export const approveByGD: RequestHandler = async (
 	req: Request,
 	res: Response,
@@ -161,9 +208,17 @@ export const approveByGD: RequestHandler = async (
 	} catch (error) {
 		console.error(error);
 		return next(createHttpError.InternalServerError(error.message));
+	} finally {
+		prisma.$disconnect();
 	}
 };
 
+/**
+ * @description Approve a booking slot by Facility Manager
+ * @method POST
+ * @access private
+ * @returns {booking}
+ */
 export const approveByFM: RequestHandler = async (
 	req: Request,
 	res: Response,
@@ -198,5 +253,7 @@ export const approveByFM: RequestHandler = async (
 	} catch (error) {
 		console.error(error);
 		return next(createHttpError.InternalServerError(error.message));
+	} finally {
+		prisma.$disconnect();
 	}
 };
