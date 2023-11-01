@@ -55,7 +55,7 @@ const Navigation = (): JSX.Element => {
       <List
         component="nav"
         aria-labelledby="nested-list-subheader"
-        sx={{ paddingInline: "1em" }}
+        disablePadding
       >
         <ListItemButton
           onClick={handleClick}
