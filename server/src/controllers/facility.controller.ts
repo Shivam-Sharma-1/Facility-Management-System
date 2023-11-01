@@ -8,7 +8,7 @@ import prisma from "../db/prisma";
  * @description Get all approved bookings
  * @method GET
  * @access private
- * @returns [bookings]
+ * @returns {bookings[]}
  */
 export const getBookings: RequestHandler = async (
 	req: Request,
@@ -28,7 +28,7 @@ export const getBookings: RequestHandler = async (
 				],
 			},
 			orderBy: {
-				start: "desc", // Or 'desc' for descending order
+				start: "desc",
 			},
 			include: {
 				requestedBy: {
@@ -46,6 +46,8 @@ export const getBookings: RequestHandler = async (
 				"Something went wrong. Please try again."
 			)
 		);
+	} finally {
+		prisma.$disconnect();
 	}
 };
 
@@ -103,5 +105,7 @@ export const addBookings: RequestHandler = async (
 				"Something went wrong. Please try again."
 			)
 		);
+	} finally {
+		prisma.$disconnect();
 	}
 };
