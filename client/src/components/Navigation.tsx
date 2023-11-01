@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 
-import { Avatar, Collapse, ListItemIcon } from "@mui/material";
+import { Avatar, Collapse, Divider, ListItemIcon } from "@mui/material";
 import { useAuth } from "../hooks/useAuth";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import ApprovalIcon from "@mui/icons-material/Approval";
@@ -15,6 +15,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
+import { Link } from "react-router-dom";
 
 const Navigation = (): JSX.Element => {
   const [open, setOpen] = useState(false);
@@ -123,27 +124,44 @@ const Navigation = (): JSX.Element => {
               <ListItemText primary="My Bookings" />
             </ListItemButton>
           </List>
-          <List component="div" disablePadding>
-            <ListItemButton sx={{ pl: 4 }}>
-              <ListItemText primary="Approval Requests" />
-            </ListItemButton>
-          </List>
+          {auth?.user!.role !== "USER" && (
+            <Link
+              to={`/employee/approvals/${
+                auth?.user!.role === "GROUP_DIRECTOR"
+                  ? "gd"
+                  : auth?.user!.role === "FACILITY_MANAGER"
+                  ? "fm"
+                  : "admin"
+              }`}
+              className="text-white"
+            >
+              <List component="div" disablePadding>
+                <ListItemButton sx={{ pl: 4 }}>
+                  <ListItemText primary="Approval Requests" />
+                </ListItemButton>
+              </List>
+            </Link>
+          )}
         </Collapse>
+        <Divider />
         {navigationData.map((item) => {
           if (item.key === "admin" && auth?.user?.role !== "admin") {
             return null;
           } else {
             return (
-              <ListItemButton
-                key={item.key}
-                className="flex gap-4"
-                onClick={() => item.onClick()}
-              >
-                <ListItemIcon sx={{ minWidth: "0px" }}>
-                  {item.icon}
-                </ListItemIcon>
-                <ListItemText primary={item.label} />
-              </ListItemButton>
+              <>
+                <ListItemButton
+                  key={item.key}
+                  className="flex gap-4"
+                  onClick={() => item.onClick()}
+                >
+                  <ListItemIcon sx={{ minWidth: "0px" }}>
+                    {item.icon}
+                  </ListItemIcon>
+                  <ListItemText primary={item.label} />
+                </ListItemButton>
+                <Divider />
+              </>
             );
           }
         })}
