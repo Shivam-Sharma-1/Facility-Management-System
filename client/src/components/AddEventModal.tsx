@@ -33,8 +33,8 @@ const AddEventModal: FC<AddEventModalProps> = ({
     title: "",
     purpose: "",
     date: null,
-    startTime: "",
-    endTime: "",
+    start: "",
+    end: "",
     color: "red",
     slug: "",
     employeeId: "",
@@ -69,9 +69,10 @@ const AddEventModal: FC<AddEventModalProps> = ({
       if (
         dayjs(event.date).format("YYYY-MM-DD") ===
           dayjs(formData.date).format("YYYY-MM-DD") &&
-        ((event.start! <= selectedStartTime &&
-          event.end! >= selectedStartTime) ||
-          (event.start! <= selectedEndTime && event.end! >= selectedEndTime))
+        ((dayjs(event.start).format("hh:mm A")! <= selectedStartTime &&
+          dayjs(event.end).format("hh:mm A") >= selectedStartTime) ||
+          (dayjs(event.start).format("hh:mm A") <= selectedEndTime &&
+            dayjs(event.end).format("hh:mm A") >= selectedEndTime))
       ) {
         return true;
       }
@@ -82,7 +83,7 @@ const AddEventModal: FC<AddEventModalProps> = ({
   const getAvailableTimeSlots = () => {
     const availableTimeSlots: string[] = [];
     for (const timeSlot of possibleTimeSlots) {
-      if (!isTimeSlotOverlapping(timeSlot, formData.endTime!)) {
+      if (!isTimeSlotOverlapping(timeSlot, formData.end!)) {
         availableTimeSlots.push(timeSlot);
       }
     }
@@ -91,9 +92,7 @@ const AddEventModal: FC<AddEventModalProps> = ({
 
   const updateAvailableEndTimes = () => {
     const availableTimes = getAvailableTimeSlots();
-    const index = availableTimes.findIndex(
-      (time) => time === formData.startTime
-    );
+    const index = availableTimes.findIndex((time) => time === formData.start);
     setAvailableEndTimes(availableTimes.slice(index + 1));
   };
 
@@ -114,25 +113,24 @@ const AddEventModal: FC<AddEventModalProps> = ({
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     if (
-      formData.startTime &&
-      formData.endTime &&
+      formData.start &&
+      formData.end &&
       formData.title &&
       formData.purpose &&
       formData.color
     ) {
-      if (isTimeSlotOverlapping(formData.startTime, formData.endTime)) {
+      if (isTimeSlotOverlapping(formData.start, formData.end)) {
         setValidationError(
           "Selected time slot overlaps with an existing event."
         );
       } else {
-        console.log(formData.startTime, formData.endTime);
         const selectedDate = dayjs(formData.date);
         const isoStartTime = dayjs(
-          `${selectedDate.format("YYYY-MM-DD")} ${formData.startTime}`,
+          `${selectedDate.format("YYYY-MM-DD")} ${formData.start}`,
           "YYYY-MM-DD hh:mm A"
         ).toISOString();
         const isoEndTime = dayjs(
-          `${selectedDate.format("YYYY-MM-DD")} ${formData.endTime}`,
+          `${selectedDate.format("YYYY-MM-DD")} ${formData.end}`,
           "YYYY-MM-DD hh:mm A"
         ).toISOString();
 
@@ -140,8 +138,8 @@ const AddEventModal: FC<AddEventModalProps> = ({
           title: formData.title,
           purpose: formData.purpose,
           date: formData.date,
-          startTime: isoStartTime,
-          endTime: isoEndTime,
+          start: isoStartTime,
+          end: isoEndTime,
           color: formData.color,
           employeeId: auth?.user?.employeeId || "",
           slug: `${formData.title.toLowerCase()}${formData.date}`,
@@ -159,11 +157,11 @@ const AddEventModal: FC<AddEventModalProps> = ({
     //   title: formData.title,
     //   purpose: formData.purpose,
     //   date: formData.date,
-    //   startTime: formData.startTime,
-    //   endTime: formData.endTime,
+    //   start: formData.start,
+    //   end: formData.end,
     //   color: formData.color,
     //   employeeId: auth?.user?.employeeId || "",
-    //   slug: `${formData.title.toLowerCase()}${formData.startTime}`,
+    //   slug: `${formData.title.toLowerCase()}${formData.start}`,
     // };
     // mutation.mutate(data);
   };
@@ -173,10 +171,11 @@ const AddEventModal: FC<AddEventModalProps> = ({
   };
 
   useEffect(() => {
-    if (formData.startTime) {
+    if (formData.start) {
       updateAvailableEndTimes();
     }
-  }, [formData.startTime]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formData.start]);
 
   return (
     <>
@@ -242,9 +241,9 @@ const AddEventModal: FC<AddEventModalProps> = ({
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={["TimePicker", "TimePicker"]}>
                 <Select
-                  value={formData.startTime}
+                  value={formData.start}
                   onChange={(e: SelectChangeEvent<string | null>) => {
-                    setFormData({ ...formData, startTime: e.target.value });
+                    setFormData({ ...formData, start: e.target.value });
                   }}
                   placeholder="Select a start time"
                 >
@@ -259,13 +258,13 @@ const AddEventModal: FC<AddEventModalProps> = ({
                   )}
                 </Select>
                 <Select
-                  value={formData.endTime}
+                  value={formData.end}
                   onChange={(e: SelectChangeEvent<string | null>) =>
-                    setFormData({ ...formData, endTime: e.target.value })
+                    setFormData({ ...formData, end: e.target.value })
                   }
                   placeholder="Select an end time"
                 >
-                  {formData.startTime && formData.startTime !== "" ? (
+                  {formData.start && formData.start !== "" ? (
                     availableEndTimes.length > 0 ? (
                       availableEndTimes.map((time) => (
                         <MenuItem key={time} value={time}>
@@ -312,24 +311,24 @@ const AddEventModal: FC<AddEventModalProps> = ({
               </Button>
             </div>
           </form>
+          {validationError && (
+            <Grid item xs={12}>
+              <Typography variant="body1" color="error">
+                {validationError}
+              </Typography>
+            </Grid>
+          )}
+          <Snackbar
+            open={openSnackbar}
+            autoHideDuration={3000}
+            onClose={handleCloseSnackbar}
+          >
+            <Typography variant="body1" color="success">
+              Event added
+            </Typography>
+          </Snackbar>
         </div>
       </Modal>
-      {validationError && (
-        <Grid item xs={12}>
-          <Typography variant="body1" color="error">
-            {validationError}
-          </Typography>
-        </Grid>
-      )}
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={3000}
-        onClose={handleCloseSnackbar}
-      >
-        <Typography variant="body1" color="success">
-          Event added
-        </Typography>
-      </Snackbar>
     </>
   );
 };
