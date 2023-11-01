@@ -8,6 +8,7 @@ interface FacilityCardProps {
 interface AddEventModalProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
+  setOpenSnackbar: (isOpen: boolean) => void;
   bookingsData: BookingDataProps[];
 }
 
