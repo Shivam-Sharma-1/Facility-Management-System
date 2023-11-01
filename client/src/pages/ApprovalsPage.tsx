@@ -1,11 +1,12 @@
+import { FC } from "react";
 import ApprovalStatus from "../components/ApprovalStatus";
 import Navigation from "../components/Navigation";
 
-const ApprovalsPage = (): JSX.Element => {
+const ApprovalsPage: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
   return (
     <div className="w-full h-full flex">
       <Navigation />
-      <ApprovalStatus />
+      <ApprovalStatus GD={GD} FM={FM} />
     </div>
   );
 };

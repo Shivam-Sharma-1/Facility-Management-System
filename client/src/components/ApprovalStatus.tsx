@@ -2,13 +2,16 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import ApprovalCard from "./ApprovalCard";
 import { Divider, Typography } from "@mui/material";
+import { FC } from "react";
 
-const ApprovalStatus = (): JSX.Element => {
+const ApprovalStatus: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
   const { data: approvalData } = useQuery<ApprovalData[]>({
     queryKey: ["bookings"],
     queryFn: async () => {
       const response = await axios.get<ApprovalData[]>(
-        `http://localhost:3000/employee/approvals/gd`,
+        `http://localhost:3000/employee/approvals/${
+          GD ? "gd" : FM ? "fm" : "admin"
+        }`,
         {
           withCredentials: true,
         }

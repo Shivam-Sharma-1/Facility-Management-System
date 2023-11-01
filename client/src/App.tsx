@@ -36,7 +36,15 @@ const router = createBrowserRouter(
         path="employee/approvals/gd"
         element={
           <RequireAuth GD={true} FM={false}>
-            <ApprovalsPage />
+            <ApprovalsPage GD={true} FM={false} />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="employee/approvals/fm"
+        element={
+          <RequireAuth GD={false} FM={true}>
+            <ApprovalsPage GD={false} FM={true} />
           </RequireAuth>
         }
       />
