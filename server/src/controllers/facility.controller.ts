@@ -28,7 +28,7 @@ export const getBookings: RequestHandler = async (
 				],
 			},
 			orderBy: {
-				startTime: "desc", // Or 'desc' for descending order
+				start: "desc", // Or 'desc' for descending order
 			},
 			include: {
 				requestedBy: {
@@ -61,15 +61,8 @@ export const addBookings: RequestHandler = async (
 	next: NextFunction
 ) => {
 	try {
-		const {
-			title,
-			slug,
-			purpose,
-			color,
-			date,
-			startTime,
-			endTime,
-		}: BookingInput = req.body;
+		const { title, slug, purpose, color, date, start, end }: BookingInput =
+			req.body;
 		const facilitySlug = req.params.slug;
 		const employeeId = req.session.userId;
 		const event = await prisma.booking.create({
@@ -79,8 +72,8 @@ export const addBookings: RequestHandler = async (
 				purpose,
 				date,
 				color,
-				startTime,
-				endTime,
+				start,
+				end,
 				requestedBy: { connect: { employeeId } },
 				facility: { connect: { slug: facilitySlug } },
 			},
