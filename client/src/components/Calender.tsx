@@ -104,13 +104,8 @@ const Calendar: FC = (): JSX.Element => {
         />
       )}
       <div className="w-[90%] flex justify-between items-center pb-4">
-        <Typography
-          variant="h4"
-          component={"h1"}
-          className="uppercase "
-          sx={{ fontWeight: "bold" }}
-        >
-          CALENDER
+        <Typography variant="h4" component="h1">
+          Calender
         </Typography>
         <Button
           variant="contained"

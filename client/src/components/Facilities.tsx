@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 
 import FacilityCard from "./FacilityCard";
+import { Typography } from "@mui/material";
 
 const Facilities = (): JSX.Element => {
   const { data, isPending } = useQuery({
@@ -20,7 +21,9 @@ const Facilities = (): JSX.Element => {
 
   return (
     <div className="w-[80%] h-full flex flex-col items-center justify-center text-black px-6 pt-12">
-      <h1 className="uppercase">FACILITIES</h1>
+      <Typography variant="h3" component="h1">
+        Facilities
+      </Typography>
       <div className="w-full flex justify-center items-center flex-wrap pt-4">
         {!isPending &&
           data?.map((facility: FacilityData) => (

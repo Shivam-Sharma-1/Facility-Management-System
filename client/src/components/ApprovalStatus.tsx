@@ -1,8 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
+import { FC, Fragment } from "react";
 import axios from "axios";
-import ApprovalCard from "./ApprovalCard";
+
 import { Divider, Typography } from "@mui/material";
-import { FC } from "react";
+import ApprovalCard from "./ApprovalCard";
 
 const ApprovalStatus: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
   const { data: approvalData } = useQuery<ApprovalData[]>({
@@ -26,10 +27,9 @@ const ApprovalStatus: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
         Approval Status
       </Typography>
       <div className="w-[60%] h-full flex flex-col mt-10 text-black rounded-md bg-white shadow-card">
-        {approvalData?.map((approval) => (
-          <>
+        {approvalData?.map((approval, index) => (
+          <Fragment key={approval.slug}>
             <ApprovalCard
-              key={approval.id}
               title={approval.title}
               purpose={approval.purpose}
               slug={approval.slug}
@@ -37,13 +37,13 @@ const ApprovalStatus: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
               start={approval.start}
               end={approval.end}
               facility={approval.facility.name}
-              requestedBy={approval.requestedBy.name}
+              requestedBy={approval.requestedBy.name!}
               approvedAtAdmin={approval.approvedAtAdmin}
               approvedAtFM={approval.approvedAtFM}
               approvedAtGD={approval.approvedAtGD}
             />
-            <Divider color="gray" />
-          </>
+            {index !== approvalData.length - 1 && <Divider color="gray" />}
+          </Fragment>
         ))}
       </div>
     </div>
