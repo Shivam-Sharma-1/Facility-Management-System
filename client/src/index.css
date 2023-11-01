@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: sans-serif, Inter, system-ui, Avenir, Helvetica, Arial;
   line-height: 1.5;
   color-scheme: light dark;
   font-synthesis: none;
@@ -11,12 +11,31 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+  --fc-today-bg-color: #e6f3ff;
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+*::-webkit-scrollbar {
+  width: 2px;
+}
+
+body::-webkit-scrollbar {
+  width: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+  width: 0px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #7171719d;
+  border-radius: 14px;
 }
 
 a {
@@ -27,4 +46,41 @@ a {
 body {
   background-color: white;
   color: black;
+}
+
+.fc-day {
+  max-height: 100px !important;
+  overflow-y: auto !important;
+}
+
+.fc-daygrid-day-events {
+  overflow-y: auto !important;
+  height: 89px !important;
+}
+
+.fc-col-header-cell-cushion {
+  margin: auto !important;
+  height: 40px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.fc-view-harness {
+  box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.25) !important;
+}
+
+.fc-toolbar-title {
+  font-weight: normal !important;
+}
+
+.fc-button-primary {
+  background-color: #00275e !important;
+  border: none !important;
+  padding: 0.6em 1em !important;
+}
+
+.fc-button-primary:hover {
+  opacity: 0.9 !important;
+  transition: all 0.2s ease-in-out !important;
 }
