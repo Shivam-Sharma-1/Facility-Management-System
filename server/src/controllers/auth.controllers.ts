@@ -38,6 +38,7 @@ export const authLogin: RequestHandler = async (
 		if (!validPassword) {
 			return next(createHttpError.Unauthorized("Invalid credentials."));
 		}
+		req.session.userId = employeeId;
 		res.status(200).json({
 			name: user.name,
 			employeeId: user.employeeId,
@@ -129,7 +130,7 @@ export const authRegister: RequestHandler = async (
 	next: NextFunction
 ) => {
 	try {
-		const { image, name, employeeId, password }: AuthInput =
+		const { image, name, employeeId, password, role }: AuthInput =
 			await authSchema.validateAsync(req.body);
 		const userExists = await prisma.user.findUnique({
 			where: {
@@ -147,6 +148,7 @@ export const authRegister: RequestHandler = async (
 				name: name,
 				employeeId: employeeId,
 				password: hashedPassword,
+				role: role,
 			},
 		});
 		return res.status(200).json(user);

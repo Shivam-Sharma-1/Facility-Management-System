@@ -8,6 +8,7 @@ const authSchema = Joi.object({
 		.pattern(new RegExp("^[a-zA-Z0-9]{5,30}$"))
 		.required()
 		.min(8),
+	role: Joi.string(),
 }).with("employeeId", "password");
 
 export default authSchema;
