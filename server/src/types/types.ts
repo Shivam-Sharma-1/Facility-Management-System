@@ -15,6 +15,6 @@ export type BookingInput = {
 	color: string;
 	employeeId: string;
 	date: Date;
-	startTime: Date;
-	endTime: Date;
+	start: Date;
+	end: Date;
 };
