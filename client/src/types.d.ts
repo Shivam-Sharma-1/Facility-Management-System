@@ -71,6 +71,12 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
+interface RequireAuthProps {
+  children: ReactNode;
+  GD: boolean;
+  FM: boolean;
+}
+
 interface EventInfoProps {
   title: string;
   purpose: string;
