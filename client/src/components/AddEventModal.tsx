@@ -1,11 +1,14 @@
 import { ChangeEvent, FC, FormEvent, useEffect, useState } from "react";
-import dayjs from "dayjs";
 import { useMutation } from "@tanstack/react-query";
+import { useLocation } from "react-router-dom";
+import dayjs from "dayjs";
 import axios from "axios";
 
 import {
   Button,
+  FormControl,
   Grid,
+  InputLabel,
   MenuItem,
   Modal,
   Select,
@@ -18,10 +21,9 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { useAuth } from "../hooks/useAuth";
 
 import "dayjs/locale/en-gb";
-import { useAuth } from "../hooks/useAuth";
-import { useLocation } from "react-router-dom";
 
 const AddEventModal: FC<AddEventModalProps> = ({
   isOpen,
@@ -44,7 +46,6 @@ const AddEventModal: FC<AddEventModalProps> = ({
   const [availableEndTimes, setAvailableEndTimes] = useState<string[]>([]);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const slug = location.pathname.split("/")[2];
-  // const eightAM = dayjs().set("hour", 8).startOf("hour");
 
   const possibleTimeSlots: string[] = [];
   const minTime = dayjs().set("hour", 8).set("minute", 0);
@@ -146,24 +147,12 @@ const AddEventModal: FC<AddEventModalProps> = ({
         };
         setValidationError("");
         setAvailableEndTimes([]);
-        // Show a success snackbar
         setOpenSnackbar(true);
         mutation.mutate(data);
       }
     } else {
       setValidationError("All fields are required.");
     }
-    // const data: AddEventDataProps = {
-    //   title: formData.title,
-    //   purpose: formData.purpose,
-    //   date: formData.date,
-    //   start: formData.start,
-    //   end: formData.end,
-    //   color: formData.color,
-    //   employeeId: auth?.user?.employeeId || "",
-    //   slug: `${formData.title.toLowerCase()}${formData.start}`,
-    // };
-    // mutation.mutate(data);
   };
 
   const handleCloseSnackbar = () => {
@@ -185,8 +174,8 @@ const AddEventModal: FC<AddEventModalProps> = ({
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <div className="bg-bgPrimary w-full max-w-[500px] text-black px-16 py-10 absolute left-[50%] top-[50%] -translate-x-[50%] -translate-y-[50%] rounded-md">
-          <Typography id="modal-modal-title" variant="h6" component="h2">
+        <div className="bg-bgPrimary w-full max-w-[500px] text-black px-16 py-14 absolute left-[50%] top-[50%] -translate-x-[50%] -translate-y-[50%] rounded-md flex flex-col gap-4 shadow-cardHover">
+          <Typography id="modal-modal-title" variant="h5" component="h2">
             New event
           </Typography>
           <form
@@ -194,92 +183,112 @@ const AddEventModal: FC<AddEventModalProps> = ({
             className="flex flex-col gap-4"
             onSubmit={handleSubmit}
           >
-            <TextField
-              id="title"
-              label="Title"
-              variant="outlined"
-              className="w-full"
-              value={formData.title}
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                setFormData({ ...formData, title: e.target.value })
-              }
-              required
-              size="small"
-            />
-            <TextField
-              id="purpose"
-              label="Purpose"
-              variant="outlined"
-              className="w-full"
-              value={formData.purpose}
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                setFormData({ ...formData, purpose: e.target.value })
-              }
-              required
-              size="small"
-            />
-            <LocalizationProvider
-              dateAdapter={AdapterDayjs}
-              adapterLocale="en-gb"
-            >
-              <DemoContainer components={["DatePicker"]}>
-                <DatePicker
-                  label="Enter the date"
-                  value={formData.date}
-                  onChange={(newValue) =>
-                    setFormData({
-                      ...formData,
-                      date: newValue ? dayjs(newValue).toISOString() : null,
-                    })
-                  }
-                  disablePast={true}
-                  className="w-full"
-                  slotProps={{ textField: { required: true, size: "small" } }}
-                />
-              </DemoContainer>
-            </LocalizationProvider>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DemoContainer components={["TimePicker", "TimePicker"]}>
-                <Select
-                  value={formData.start}
-                  onChange={(e: SelectChangeEvent<string | null>) => {
-                    setFormData({ ...formData, start: e.target.value });
-                  }}
-                  placeholder="Select a start time"
+            <FormControl className="flex gap-4" size="small">
+              <TextField
+                id="title"
+                label="Title"
+                variant="outlined"
+                className="w-full"
+                value={formData.title}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  setFormData({ ...formData, title: e.target.value })
+                }
+                required
+                size="small"
+              />
+              <TextField
+                id="purpose"
+                label="Purpose"
+                variant="outlined"
+                className="w-full"
+                value={formData.purpose}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  setFormData({ ...formData, purpose: e.target.value })
+                }
+                required
+                size="small"
+                multiline
+              />
+              <LocalizationProvider
+                dateAdapter={AdapterDayjs}
+                adapterLocale="en-gb"
+              >
+                <DemoContainer
+                  components={["DatePicker"]}
+                  sx={{ padding: "0" }}
                 >
-                  {formData.date && formData.date !== "" ? (
-                    possibleTimeSlots.map((time) => (
-                      <MenuItem key={time} value={time}>
-                        {time}
-                      </MenuItem>
-                    ))
-                  ) : (
-                    <MenuItem value="">Please select a date</MenuItem>
-                  )}
-                </Select>
-                <Select
-                  value={formData.end}
-                  onChange={(e: SelectChangeEvent<string | null>) =>
-                    setFormData({ ...formData, end: e.target.value })
-                  }
-                  placeholder="Select an end time"
-                >
-                  {formData.start && formData.start !== "" ? (
-                    availableEndTimes.length > 0 ? (
-                      availableEndTimes.map((time) => (
+                  <DatePicker
+                    label="Enter the date"
+                    value={formData.date}
+                    onChange={(newValue) =>
+                      setFormData({
+                        ...formData,
+                        date: newValue ? dayjs(newValue).toISOString() : null,
+                      })
+                    }
+                    disablePast={true}
+                    className="w-full"
+                    slotProps={{
+                      textField: {
+                        required: true,
+                        size: "small",
+                      },
+                    }}
+                    defaultValue={dayjs().toISOString()}
+                  />
+                </DemoContainer>
+              </LocalizationProvider>
+              <div className="flex w-full gap-2">
+                <FormControl size="small" sx={{ flex: 1 }}>
+                  <InputLabel id="start-time">Start time</InputLabel>
+                  <Select
+                    value={formData.start}
+                    onChange={(e: SelectChangeEvent<string | null>) => {
+                      setFormData({ ...formData, start: e.target.value });
+                    }}
+                    label="Select a start time"
+                    size="small"
+                    required
+                  >
+                    {formData.date && formData.date !== "" ? (
+                      possibleTimeSlots.map((time) => (
                         <MenuItem key={time} value={time}>
                           {time}
                         </MenuItem>
                       ))
                     ) : (
-                      <MenuItem value="">No available time slots</MenuItem>
-                    )
-                  ) : (
-                    <MenuItem value="">Please select a start time</MenuItem>
-                  )}
-                </Select>
-              </DemoContainer>
-            </LocalizationProvider>
+                      <MenuItem value="">Please select a date</MenuItem>
+                    )}
+                  </Select>
+                </FormControl>
+                <FormControl size="small" sx={{ flex: 1 }}>
+                  <InputLabel id="start-time">End time</InputLabel>
+                  <Select
+                    value={formData.end}
+                    onChange={(e: SelectChangeEvent<string | null>) =>
+                      setFormData({ ...formData, end: e.target.value })
+                    }
+                    label="Select an end time"
+                    size="small"
+                    required
+                  >
+                    {formData.start && formData.start !== "" ? (
+                      availableEndTimes.length > 0 ? (
+                        availableEndTimes.map((time) => (
+                          <MenuItem key={time} value={time}>
+                            {time}
+                          </MenuItem>
+                        ))
+                      ) : (
+                        <MenuItem value="">No available time slots</MenuItem>
+                      )
+                    ) : (
+                      <MenuItem value="">Please select a start time</MenuItem>
+                    )}
+                  </Select>
+                </FormControl>
+              </div>
+            </FormControl>
             <div className="w-full flex items-center gap-6">
               <label htmlFor="color-picker">Select a color:</label>
               <input
@@ -292,19 +301,21 @@ const AddEventModal: FC<AddEventModalProps> = ({
                 }
               />
             </div>
-            <div className="w-full flex items-center gap-6">
+            <div className="w-full flex items-center justify-between">
               <Button
                 type="submit"
                 variant="contained"
                 color="success"
-                sx={{ minWidth: "40%" }}
+                sx={{ minWidth: "47%" }}
+                size="large"
               >
                 Add
               </Button>
               <Button
                 variant="contained"
                 color="error"
-                sx={{ minWidth: "40%" }}
+                sx={{ minWidth: "47%" }}
+                size="large"
                 onClick={() => setIsOpen(false)}
               >
                 Cancel
