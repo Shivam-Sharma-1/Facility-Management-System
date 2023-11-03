@@ -39,24 +39,42 @@ const ApprovalCard: FC<ApprovalProps> = ({
   return (
     <div className="w-full flex justify-between items-center px-10 py-5">
       <div className="flex flex-col justify-center">
-        <Typography variant="h4" component="h2">
-          {title}
+        <Typography
+          variant="h4"
+          component="p"
+          sx={{ marginBottom: ".3em", fontWeight: 600 }}
+        >
+          {facility} - {title}
         </Typography>
-        <Typography variant="body1">{purpose}</Typography>
-        <Typography variant="body1">{isoToDate(date)}</Typography>
-        <Typography variant="body1">
+        <Typography variant="h5" component="p">
+          <span className="font-bold tracking-wide">Purpose: </span> {purpose}
+        </Typography>
+        <Typography variant="h5" component="p">
+          <span className="font-bold tracking-wide">Date:</span>{" "}
+          {isoToDate(date)}
+        </Typography>
+        <Typography variant="h5" component="p">
+          <span className="font-bold tracking-wide">Time:</span>{" "}
           {isoToTime(start)} - {isoToTime(end)}
         </Typography>
-        <Typography variant="body1">Requested By - {requestedBy}</Typography>
-        <Typography variant="body1">Facility- {facility}</Typography>
+        <Typography variant="h5" component="p">
+          <span className="font-bold tracking-wide">Requested By: </span>{" "}
+          {requestedBy}
+        </Typography>
         {approvedAtGD && (
-          <Typography variant="body1">Approved by GD</Typography>
+          <Typography variant="h5" component="p">
+            Approved by GD
+          </Typography>
         )}
         {approvedAtFM && (
-          <Typography variant="body1">Approved by FM</Typography>
+          <Typography variant="h5" component="p">
+            Approved by FM
+          </Typography>
         )}
         {approvedAtAdmin && (
-          <Typography variant="body1">Approved by Admin</Typography>
+          <Typography variant="h5" component="p">
+            Approved by Admin
+          </Typography>
         )}
       </div>
       <div className="flex items-center gap-4">
@@ -64,6 +82,7 @@ const ApprovalCard: FC<ApprovalProps> = ({
           variant="contained"
           startIcon={<TaskAltIcon />}
           color="success"
+          size="large"
           sx={{ minWidth: "40%" }}
           onClick={() => handleClick.mutate({ slug: slug, approved: true })}
         >
@@ -73,6 +92,7 @@ const ApprovalCard: FC<ApprovalProps> = ({
           variant="contained"
           startIcon={<DeleteIcon />}
           color="error"
+          size="large"
           sx={{ minWidth: "40%" }}
           onClick={() => handleClick.mutate({ slug: slug, approved: false })}
         >

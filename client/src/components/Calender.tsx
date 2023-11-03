@@ -3,6 +3,8 @@ import { useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { EventClickArg, EventSourceInput } from "@fullcalendar/core/index.js";
 import { Alert, Button, Snackbar, Typography } from "@mui/material";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import InsertInvitationIcon from "@mui/icons-material/InsertInvitation";
 import axios from "axios";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -85,7 +87,7 @@ const Calendar: FC = (): JSX.Element => {
       eventData.status === "APPROVED_BY_FM" ||
       eventData.status === "APPROVED_BY_ADMIN"
         ? "#449c47"
-        : "#f44336";
+        : "#039BE5";
 
     return (
       <div
@@ -127,12 +129,18 @@ const Calendar: FC = (): JSX.Element => {
         />
       )}
       <div className="w-[90%] flex justify-between items-center pb-2">
-        <Typography variant="h3" component="h1">
-          Bookings Calender
-        </Typography>
+        <div className="flex gap-4 items-center">
+          <Typography variant="h3" component="h1">
+            Bookings Calender
+          </Typography>
+          <CalendarMonthIcon sx={{ width: "40px", height: "40px" }} />
+        </div>
         <Button
           variant="contained"
           color="primary"
+          endIcon={
+            <InsertInvitationIcon sx={{ height: "20px", width: "20px" }} />
+          }
           sx={{ paddingX: "2em", height: "45px" }}
           size="large"
           onClick={() => setIsAddOpen(true)}
