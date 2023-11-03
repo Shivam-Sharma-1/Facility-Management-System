@@ -22,10 +22,12 @@
 
 *::-webkit-scrollbar {
   width: 2px;
+  height: 2px;
 }
 
 body::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
 }
 
 *::-webkit-scrollbar-track {
@@ -44,8 +46,8 @@ a {
 }
 
 body {
-  background-color: white;
-  color: black;
+  background-color: #faf9f6;
+  color: #212427;
 }
 
 .fc-day {
@@ -55,7 +57,7 @@ body {
 
 .fc-daygrid-day-events {
   overflow-y: auto !important;
-  height: 89px !important;
+  height: 100px !important;
 }
 
 .fc-col-header-cell-cushion {
@@ -72,6 +74,7 @@ body {
 
 .fc-toolbar-title {
   font-weight: normal !important;
+  font-size: 2.5rem !important;
 }
 
 .fc-button-primary {
