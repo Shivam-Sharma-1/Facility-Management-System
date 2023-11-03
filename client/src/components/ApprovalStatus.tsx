@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { FC, Fragment } from "react";
+import { FC } from "react";
 import axios from "axios";
 
-import { Divider, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import ApprovalCard from "./ApprovalCard";
 
 const ApprovalStatus: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
@@ -31,25 +31,23 @@ const ApprovalStatus: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
           No booking requests at the moment!
         </Typography>
       ) : (
-        <div className="w-[60%] h-full flex flex-col mt-10 rounded-md bg-white shadow-cardHover">
+        <div className="w-full flex flex-col items-center">
           {!isPending &&
-            approvalData?.map((approval, index) => (
-              <Fragment key={approval.slug}>
-                <ApprovalCard
-                  title={approval.title}
-                  purpose={approval.purpose}
-                  slug={approval.slug}
-                  date={approval.date}
-                  start={approval.start}
-                  end={approval.end}
-                  facility={approval.facility.name}
-                  requestedBy={approval.requestedBy.name}
-                  approvedAtAdmin={approval.approvedAtAdmin}
-                  approvedAtFM={approval.approvedAtFM}
-                  approvedAtGD={approval.approvedAtGD}
-                />
-                {index !== approvalData.length - 1 && <Divider color="gray" />}
-              </Fragment>
+            approvalData?.map((approval) => (
+              <ApprovalCard
+                key={approval.slug}
+                title={approval.title}
+                purpose={approval.purpose}
+                slug={approval.slug}
+                date={approval.date}
+                start={approval.start}
+                end={approval.end}
+                facility={approval.facility.name}
+                requestedBy={approval.requestedBy.name}
+                approvedAtAdmin={approval.approvedAtAdmin}
+                approvedAtFM={approval.approvedAtFM}
+                approvedAtGD={approval.approvedAtGD}
+              />
             ))}
         </div>
       )}

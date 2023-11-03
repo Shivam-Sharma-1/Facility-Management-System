@@ -37,7 +37,7 @@ const ApprovalCard: FC<ApprovalProps> = ({
   });
 
   return (
-    <div className="w-full flex justify-between items-center px-10 py-5">
+    <div className="justify-between items-center px-10 py-8 w-[60%] h-full flex mt-10 rounded-md bg-bgPrimary shadow-cardHover border-0 border-l-[10px] border-primary border-solid">
       <div className="flex flex-col justify-center">
         <Typography
           variant="h4"
