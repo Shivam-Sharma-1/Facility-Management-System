@@ -7,7 +7,7 @@ import authSchema from "../utils/validation";
 
 declare module "express-session" {
 	export interface SessionData {
-		userId: string;
+		userId: number;
 	}
 }
 
@@ -89,26 +89,17 @@ export const authLogout: RequestHandler = async (
  * @returns {id, name, employeeId}
  */
 export const getUser: RequestHandler = async (
-	req: Request,
+	_req: Request,
 	res: Response,
 	next: NextFunction
 ) => {
 	try {
-		const userId = req.session.userId;
-		const user = await prisma.user.findUnique({
-			where: {
-				employeeId: userId,
-			},
-		});
-		if (!user) {
+		const users = await prisma.user.findMany({});
+		if (!users) {
 			return next(createHttpError.NotFound("User not found."));
 		}
-		const data = {
-			id: user.id,
-			name: user.name,
-			employeeId: user.employeeId,
-		};
-		res.status(200).json(data);
+
+		res.status(200).json(users);
 	} catch (error) {
 		console.error(error);
 		return next(

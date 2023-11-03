@@ -14,7 +14,19 @@ export const getFacilities: RequestHandler = async (
 	next: NextFunction
 ) => {
 	try {
-		const facilities = await prisma.facility.findMany();
+		const facilities = await prisma.facility.findMany({
+			include: {
+				facilityManager: {
+					select: {
+						user: {
+							select: {
+								name: true,
+							},
+						},
+					},
+				},
+			},
+		});
 		if (!facilities) {
 			return next(
 				createHttpError.NotFound(
@@ -47,14 +59,7 @@ export const addFacilities: RequestHandler = async (
 	next: NextFunction
 ) => {
 	try {
-		const {
-			name,
-			slug,
-			description,
-			icon,
-			groupDirectorId,
-			facilityManagerId,
-		} = req.body;
+		const { name, slug, description, icon, facilityManagerId } = req.body;
 
 		const facility = await prisma.facility.create({
 			data: {
@@ -71,32 +76,19 @@ export const addFacilities: RequestHandler = async (
 				)
 			);
 		}
-		const transaction = await prisma.$transaction([
-			prisma.groupDirector.create({
-				data: {
-					user: { connect: { employeeId: groupDirectorId } },
-					facility: {
-						connect: { id: facility.id },
+		const updateFM = await prisma.user.update({
+			where: {
+				employeeId: facilityManagerId,
+			},
+			data: {
+				facilityManager: {
+					create: {
+						facilityId: facility.id,
 					},
 				},
-			}),
-			prisma.facilityManager.create({
-				data: {
-					user: { connect: { employeeId: facilityManagerId } },
-					facility: {
-						connect: { id: facility.id },
-					},
-				},
-			}),
-		]);
-		if (!transaction) {
-			return next(
-				createHttpError.InternalServerError(
-					"Group Director / Facility Manager could not be updated. Please try again."
-				)
-			);
-		}
-		res.status(200).json({ facility, transaction });
+			},
+		});
+		res.status(200).json({ facility, updateFM });
 	} catch (error) {
 		console.error(error);
 		return next(

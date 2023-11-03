@@ -27,11 +27,15 @@ export const getAllUserBookings: RequestHandler = async (
 				purpose: true,
 				status: true,
 				createdAt: true,
-				start: true,
-				end: true,
-				approvedAtGD: true,
-				approvedAtFM: true,
-				approvedAtAdmin: true,
+				time: {
+					select: {
+						start: true,
+						end: true,
+					},
+				},
+				statusUpdateAtGD: true,
+				statusUpdateAtFM: true,
+				statusUpdateAtAdmin: true,
 				requestedBy: {
 					select: {
 						name: true,
@@ -77,23 +81,22 @@ export const getAllGDApprovals: RequestHandler = async (
 				},
 			},
 			select: {
-				facility: {
-					select: {
-						bookings: {
-							where: {
-								status: "PENDING",
+				bookings: {
+					include: {
+						facility: {
+							select: {
+								name: true,
 							},
-							include: {
-								requestedBy: {
-									select: {
-										name: true,
-									},
-								},
-								facility: {
-									select: {
-										name: true,
-									},
-								},
+						},
+						requestedBy: {
+							select: {
+								name: true,
+							},
+						},
+						time: {
+							select: {
+								start: true,
+								end: true,
 							},
 						},
 					},
@@ -107,7 +110,7 @@ export const getAllGDApprovals: RequestHandler = async (
 				)
 			);
 		}
-		res.status(200).json(events.facility.bookings);
+		res.status(200).json(events.bookings);
 	} catch (error) {
 		console.error(error);
 		return next(createHttpError.InternalServerError(error.message));
@@ -143,6 +146,15 @@ export const getAllFMApprovals: RequestHandler = async (
 								status: "APPROVED_BY_GD",
 							},
 							include: {
+								statusUpdateByGD: {
+									select: {
+										user: {
+											select: {
+												name: true,
+											},
+										},
+									},
+								},
 								requestedBy: {
 									select: {
 										name: true,
@@ -188,12 +200,28 @@ export const approveByGD: RequestHandler = async (
 ) => {
 	try {
 		const { slug, approved } = req.body;
+		const employeeId = req.session.userId;
 		const time = new Date().toISOString();
 		let status: ApprovalStatus = "PENDING";
 		if (approved === true) {
 			status = "APPROVED_BY_GD";
 		} else {
-			status = "REJECTED";
+			status = "REJECTED_BY_GD";
+		}
+		const user = await prisma.user.findUnique({
+			where: {
+				employeeId,
+			},
+			select: {
+				id: true,
+			},
+		});
+		if (!user) {
+			return next(
+				createHttpError.InternalServerError(
+					"Something went wrong. Please try again."
+				)
+			);
 		}
 		const booking = await prisma.booking.update({
 			where: {
@@ -201,9 +229,15 @@ export const approveByGD: RequestHandler = async (
 			},
 			data: {
 				status,
-				approvedAtGD: time,
+				statusUpdateAtGD: time,
+				statusUpdateByGD: {
+					connect: {
+						userId: user?.id,
+					},
+				},
 			},
 		});
+
 		if (!booking) {
 			return next(
 				createHttpError.InternalServerError(
@@ -233,22 +267,44 @@ export const approveByFM: RequestHandler = async (
 ) => {
 	try {
 		const { slug, approved } = req.body;
+		const employeeId = req.session.userId;
 		const time = new Date().toISOString();
 		let status: ApprovalStatus = "PENDING";
 		if (approved === true) {
 			status = "APPROVED_BY_FM";
 		} else {
-			status = "REJECTED";
+			status = "REJECTED_BY_FM";
+		}
+		const user = await prisma.user.findUnique({
+			where: {
+				employeeId,
+			},
+			select: {
+				id: true,
+			},
+		});
+		if (!user) {
+			return next(
+				createHttpError.InternalServerError(
+					"Something went wrong. Please try again."
+				)
+			);
 		}
 		const booking = await prisma.booking.update({
 			where: {
-				slug: slug,
+				slug,
 			},
 			data: {
 				status,
-				approvedAtFM: time,
+				statusUpdateAtFM: time,
+				statusUpdateByFM: {
+					connect: {
+						userId: user?.id,
+					},
+				},
 			},
 		});
+
 		if (!booking) {
 			return next(
 				createHttpError.InternalServerError(
