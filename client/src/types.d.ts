@@ -50,7 +50,7 @@ interface BookingDataProps {
 interface AddEventDataProps {
   title: string;
   purpose: string;
-  date: string | null;
+  date: Dayjs | null;
   start: string | null;
   end: string | null;
   employeeId: string;
