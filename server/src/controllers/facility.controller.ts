@@ -77,6 +77,14 @@ export const addBookings: RequestHandler = async (
 			req.body;
 		const facilitySlug = req.params.slug;
 		const employeeId = req.session.userId;
+		const user = await prisma.user.findUnique({
+			where: {
+				employeeId,
+			},
+			select: {
+				groupId: true,
+			},
+		});
 		const event = await prisma.booking.create({
 			data: {
 				title,
@@ -89,6 +97,11 @@ export const addBookings: RequestHandler = async (
 						date,
 						start,
 						end,
+					},
+				},
+				Group: {
+					connect: {
+						id: user?.groupId!,
 					},
 				},
 			},

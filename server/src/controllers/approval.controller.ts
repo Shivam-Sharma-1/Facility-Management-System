@@ -74,43 +74,51 @@ export const getAllGDApprovals: RequestHandler = async (
 ) => {
 	try {
 		const employeeId = req.session.userId;
-		const events = await prisma.groupDirector.findFirst({
+		const bookings = await prisma.booking.findMany({
 			where: {
-				user: {
-					employeeId: employeeId,
-				},
+				AND: [
+					{
+						Group: {
+							groupDirector: {
+								user: {
+									employeeId,
+								},
+							},
+						},
+					},
+					{
+						status: "PENDING",
+					},
+				],
 			},
-			select: {
-				bookings: {
-					include: {
-						facility: {
-							select: {
-								name: true,
-							},
-						},
-						requestedBy: {
-							select: {
-								name: true,
-							},
-						},
-						time: {
-							select: {
-								start: true,
-								end: true,
-							},
-						},
+			include: {
+				requestedBy: {
+					select: {
+						name: true,
+					},
+				},
+				facility: {
+					select: {
+						name: true,
+					},
+				},
+				time: {
+					select: {
+						date: true,
+						start: true,
+						end: true,
 					},
 				},
 			},
 		});
-		if (!events) {
+		if (!bookings) {
 			return next(
 				createHttpError.Forbidden(
 					"You do not have permission to access this resource."
 				)
 			);
 		}
-		res.status(200).json(events.bookings);
+		res.status(200).json(bookings);
 	} catch (error) {
 		console.error(error);
 		return next(createHttpError.InternalServerError(error.message));
@@ -132,7 +140,7 @@ export const getAllFMApprovals: RequestHandler = async (
 ) => {
 	try {
 		const employeeId = req.session.userId;
-		const events = await prisma.facilityManager.findFirst({
+		const bookings = await prisma.facilityManager.findFirst({
 			where: {
 				user: {
 					employeeId,
@@ -140,7 +148,7 @@ export const getAllFMApprovals: RequestHandler = async (
 			},
 			select: {
 				facility: {
-					include: {
+					select: {
 						bookings: {
 							where: {
 								status: "APPROVED_BY_GD",
@@ -171,14 +179,14 @@ export const getAllFMApprovals: RequestHandler = async (
 				},
 			},
 		});
-		if (!events) {
+		if (!bookings) {
 			return next(
 				createHttpError.Forbidden(
 					"You do not have permission to access this resource."
 				)
 			);
 		}
-		res.status(200).json(events.facility.bookings);
+		res.status(200).json(bookings.facility.bookings);
 	} catch (error) {
 		console.error(error);
 		return next(createHttpError.InternalServerError(error.message));
