@@ -22,11 +22,11 @@ const ApprovalStatus: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
   });
 
   return (
-    <div className="w-[80%] h-full flex flex-col items-center justify-center text-black px-6 py-12">
+    <div className="w-[80%] h-full flex flex-col items-center justify-center px-6 py-12">
       <Typography variant="h3" component="h1">
         Approval Status
       </Typography>
-      <div className="w-[60%] h-full flex flex-col mt-10 text-black rounded-md bg-white shadow-card">
+      <div className="w-[60%] h-full flex flex-col mt-10 rounded-md bg-white shadow-card">
         {approvalData?.map((approval, index) => (
           <Fragment key={approval.slug}>
             <ApprovalCard

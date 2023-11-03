@@ -199,7 +199,7 @@ const AddEventModal: FC<AddEventModalProps> = ({
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <div className="bg-bgPrimary w-full max-w-[500px] text-black px-10 py-14 absolute left-[50%] top-[50%] -translate-x-[50%] -translate-y-[50%] rounded-md flex flex-col gap-4 shadow-cardHover">
+        <div className="bg-bgPrimary w-full max-w-[500px] px-10 py-14 absolute left-[50%] top-[50%] -translate-x-[50%] -translate-y-[50%] rounded-md flex flex-col gap-4 shadow-cardHover">
           <Typography id="modal-modal-title" variant="h5" component="h2">
             New event
           </Typography>

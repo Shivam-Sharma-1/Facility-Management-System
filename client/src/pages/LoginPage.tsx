@@ -41,7 +41,7 @@ const LoginPage: FC = (): JSX.Element => {
   return (
     <div className="w-full h-full min-h-screen flex justify-center items-center">
       <div className="w-[400px] bg-bgPrimary shadow-cardHover rounded-lg flex flex-col justify-center p-10 gap-6">
-        <h1 className="text-black">Employee Login</h1>
+        <h1>Employee Login</h1>
         <form
           onSubmit={handleSubmit}
           autoComplete="off"

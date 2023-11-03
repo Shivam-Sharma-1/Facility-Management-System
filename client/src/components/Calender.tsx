@@ -1,30 +1,18 @@
 import { FC, useEffect, useState } from "react";
-import dayjs from "dayjs";
-
+import { useLocation } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { EventClickArg, EventSourceInput } from "@fullcalendar/core/index.js";
+import { Alert, Button, Snackbar, Typography } from "@mui/material";
+import axios from "axios";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import AddEventModal from "./AddEventModal";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import { EventClickArg, EventSourceInput } from "@fullcalendar/core/index.js";
-import EventModal from "./EventModal";
-import { useLocation } from "react-router-dom";
-import { Alert, Button, Snackbar, Typography } from "@mui/material";
 
-const handleEventContent: FC<EventContentProps> = (eventInfo): JSX.Element => {
-  return (
-    <div
-      className={`px-1 w-full rounded-sm text-white cursor-pointer`}
-      style={{
-        backgroundColor: eventInfo.backgroundColor,
-      }}
-    >
-      <i>{eventInfo.event.title}</i>
-    </div>
-  );
-};
+import AddEventModal from "./AddEventModal";
+import EventModal from "./EventModal";
+import isoToTime from "../utils/isoToTime";
+import isoToDate from "../utils/isoToDate";
 
 const Calendar: FC = (): JSX.Element => {
   const [isAddOpen, setIsAddOpen] = useState(false);
@@ -71,23 +59,58 @@ const Calendar: FC = (): JSX.Element => {
 
   const handleEventClick = (info: EventClickArg): void => {
     const clickData = bookingsData.find(
-      (event: BookingDataProps) =>
-        event.slug === info.event._def.extendedProps.slug
+      (event: BookingDataProps) => event.slug === info.event.extendedProps.slug
     ) as BookingDataProps;
 
     setEventInfo({
       title: clickData.title,
       purpose: clickData.purpose,
-      start: clickData.start ? dayjs(clickData.start).format("hh:mm A") : "",
-      end: clickData.end ? dayjs(clickData.end).format("hh:mm A") : "",
-      date: new Date(clickData.date!).toDateString(),
+      start: clickData.start ? isoToTime(clickData.start!) : "",
+      end: clickData.end ? isoToTime(clickData.end!) : "",
+      date: isoToDate(clickData.date!),
       requestBy: clickData.requestedBy.name,
     });
     setIsOpen(true);
   };
 
+  const handleEventContent: FC<EventContentProps> = (
+    eventInfo
+  ): JSX.Element => {
+    const eventData = bookingsData.find(
+      (event: BookingDataProps) =>
+        event.slug === eventInfo.event.extendedProps.slug
+    ) as BookingDataProps;
+
+    const bgColor =
+      eventData.status === "APPROVED_BY_FM" ||
+      eventData.status === "APPROVED_BY_ADMIN"
+        ? "#449c47"
+        : "#f44336";
+
+    return (
+      <div
+        className={`px-1 min-w-[160px] rounded-sm flex flex-col text-white cursor-pointer`}
+        style={{
+          backgroundColor: bgColor,
+        }}
+      >
+        <Typography
+          variant="body2"
+          component="p"
+          className="italic"
+          sx={{ fontWeight: "bold" }}
+        >
+          {eventData.title}
+        </Typography>
+        <Typography variant="body2" component="p" className="italic w-full">
+          {isoToTime(eventData.start!)} - {isoToTime(eventData.end!)}
+        </Typography>
+      </div>
+    );
+  };
+
   return (
-    <div className="w-[80%] h-full flex flex-col items-center justify-center text-black px-6 py-12">
+    <div className="w-[80%] h-full flex flex-col items-center justify-center px-6 py-12">
       {isAddOpen && (
         <AddEventModal
           isOpen={isAddOpen}
@@ -103,18 +126,18 @@ const Calendar: FC = (): JSX.Element => {
           eventInfo={eventInfo}
         />
       )}
-      <div className="w-[90%] flex justify-between items-center pb-4">
-        <Typography variant="h4" component="h1">
-          Calender
+      <div className="w-[90%] flex justify-between items-center pb-2">
+        <Typography variant="h3" component="h1">
+          Bookings Calender
         </Typography>
         <Button
           variant="contained"
           color="primary"
-          sx={{ width: "150px", height: "45px" }}
+          sx={{ paddingX: "2em", height: "45px" }}
           size="large"
           onClick={() => setIsAddOpen(true)}
         >
-          Add event
+          Add booking
         </Button>
       </div>
       <div className="w-[90%]">
@@ -128,9 +151,7 @@ const Calendar: FC = (): JSX.Element => {
             right: "dayGridMonth,timeGridWeek,timeGridDay",
           }}
           eventContent={() => handleEventContent}
-          eventClick={(info) => {
-            handleEventClick(info);
-          }}
+          eventClick={(info) => handleEventClick(info)}
         />
       </div>
       <Snackbar
@@ -143,7 +164,7 @@ const Calendar: FC = (): JSX.Element => {
           severity="success"
           sx={{ width: "100%" }}
         >
-          Event requested successfully!
+          Booking requested successfully!
         </Alert>
       </Snackbar>
     </div>
