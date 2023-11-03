@@ -1,7 +1,11 @@
 import { FC, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { EventClickArg, EventSourceInput } from "@fullcalendar/core/index.js";
+import {
+  DateSelectArg,
+  EventClickArg,
+  EventSourceInput,
+} from "@fullcalendar/core/index.js";
 import { Alert, Button, Snackbar, Typography } from "@mui/material";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import InsertInvitationIcon from "@mui/icons-material/InsertInvitation";
@@ -17,9 +21,10 @@ import isoToTime from "../utils/isoToTime";
 import isoToDate from "../utils/isoToDate";
 
 const Calendar: FC = (): JSX.Element => {
-  const [isAddOpen, setIsAddOpen] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
-  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [isAddOpen, setIsAddOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
+  const [defaultDate, setDefaultDate] = useState<string | null>(null);
 
   const [bookingsData, setBookingsData] = useState<BookingDataProps[]>([]);
   const [eventInfo, setEventInfo] = useState<EventInfoProps>({
@@ -75,6 +80,11 @@ const Calendar: FC = (): JSX.Element => {
     setIsOpen(true);
   };
 
+  const handleSelect = (info: DateSelectArg): void => {
+    setDefaultDate(info.startStr);
+    setIsAddOpen(true);
+  };
+
   const handleEventContent: FC<EventContentProps> = (
     eventInfo
   ): JSX.Element => {
@@ -118,7 +128,9 @@ const Calendar: FC = (): JSX.Element => {
           isOpen={isAddOpen}
           setIsOpen={setIsAddOpen}
           setOpenSnackbar={setOpenSnackbar}
+          setDefaultDate={setDefaultDate}
           bookingsData={bookingsData}
+          defaultDate={defaultDate}
         />
       )}
       {isOpen && (
@@ -160,6 +172,8 @@ const Calendar: FC = (): JSX.Element => {
           }}
           eventContent={() => handleEventContent}
           eventClick={(info) => handleEventClick(info)}
+          selectable={true}
+          select={(info) => handleSelect(info)}
         />
       </div>
       <Snackbar

@@ -35,9 +35,6 @@ const Navigation = (): JSX.Element => {
       axios.post("http://localhost:3000/auth/logout", {
         withCredentials: true,
       }),
-    onSuccess: () => {
-      console.log("logout");
-    },
     onError: (error) => {
       console.log(error);
     },

@@ -9,7 +9,9 @@ interface AddEventModalProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
   setOpenSnackbar: (isOpen: boolean) => void;
+  setDefaultDate: (message: string | null) => void;
   bookingsData: BookingDataProps[];
+  defaultDate: string | null;
 }
 
 interface EventModalProps {

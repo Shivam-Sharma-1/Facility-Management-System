@@ -21,7 +21,6 @@ const LoginPage: FC = (): JSX.Element => {
         withCredentials: true,
       }),
     onSuccess: (data) => {
-      console.log(data);
       auth?.login(data.data);
       localStorage.setItem("token-info", JSON.stringify(data.data));
       navigate(redirectPath, { replace: true, preventScrollReset: true });
@@ -33,7 +32,6 @@ const LoginPage: FC = (): JSX.Element => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("submitted");
     console.log(id, password);
     mutation.mutate({ employeeId: id, password: password });
   };

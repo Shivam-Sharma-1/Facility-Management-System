@@ -1,7 +1,7 @@
 import { ChangeEvent, FC, FormEvent, useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useLocation } from "react-router-dom";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import axios from "axios";
 
 import {
@@ -24,21 +24,13 @@ import { useAuth } from "../hooks/useAuth";
 
 import "dayjs/locale/en-gb";
 
-const colors = [
-  "#D50000",
-  "#F4511E",
-  "#F6BF26",
-  "#33B679",
-  "#039BE5",
-  "#7986CB",
-  "#8E24AA",
-];
-
 const AddEventModal: FC<AddEventModalProps> = ({
   isOpen,
   setIsOpen,
   setOpenSnackbar,
+  setDefaultDate,
   bookingsData,
+  defaultDate,
 }): JSX.Element => {
   const auth = useAuth();
   const [formData, setFormData] = useState<AddEventDataProps>({
@@ -54,27 +46,10 @@ const AddEventModal: FC<AddEventModalProps> = ({
   const location = useLocation();
   const [validationError, setValidationError] = useState<string>("");
   const [availableEndTimes, setAvailableEndTimes] = useState<string[]>([]);
+  const [selectedDate, setSelectedDate] = useState<Dayjs | null | undefined>(
+    defaultDate ? dayjs(defaultDate) : null
+  );
   const slug = location.pathname.split("/")[2];
-
-  const ColorPicker = (): JSX.Element => {
-    return (
-      <div
-        id="color-picker"
-        className="w-[60%] flex justify-center items-center gap-2"
-      >
-        {colors.map((color) => (
-          <div
-            key={color}
-            className={`${
-              formData.color === color && "scale-125"
-            } w-6 h-6 rounded-full cursor-pointer transition-all duration-700 ease-in-out`}
-            style={{ backgroundColor: color }}
-            onClick={() => setFormData({ ...formData, color: color })}
-          />
-        ))}
-      </div>
-    );
-  };
 
   const possibleTimeSlots: string[] = [];
   const minTime = dayjs().set("hour", 8).set("minute", 0);
@@ -132,7 +107,6 @@ const AddEventModal: FC<AddEventModalProps> = ({
         withCredentials: true,
       }),
     onSuccess: (data) => {
-      console.log(data);
       setIsOpen(false);
     },
     onError: (error) => {
@@ -195,9 +169,10 @@ const AddEventModal: FC<AddEventModalProps> = ({
     <>
       <Modal
         open={isOpen}
-        onClose={() => setIsOpen(false)}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
+        onClose={() => {
+          setDefaultDate(null);
+          setIsOpen(false);
+        }}
       >
         <div className="bg-bgPrimary w-full max-w-[500px] px-10 py-14 absolute left-[50%] top-[50%] -translate-x-[50%] -translate-y-[50%] rounded-md flex flex-col gap-4 shadow-cardHover">
           <Typography id="modal-modal-title" variant="h5" component="h2">
@@ -244,13 +219,15 @@ const AddEventModal: FC<AddEventModalProps> = ({
                 >
                   <DatePicker
                     label="Enter the date"
-                    value={formData.date}
-                    onChange={(newValue) =>
+                    value={selectedDate && dayjs(selectedDate)}
+                    onChange={(newValue) => {
+                      setSelectedDate(newValue);
                       setFormData({
                         ...formData,
                         date: newValue ? dayjs(newValue).toISOString() : null,
-                      })
-                    }
+                      });
+                      console.log(formData, newValue, defaultDate);
+                    }}
                     disablePast={true}
                     className="w-full"
                     slotProps={{
@@ -259,7 +236,6 @@ const AddEventModal: FC<AddEventModalProps> = ({
                         size: "small",
                       },
                     }}
-                    defaultValue={dayjs().toISOString()}
                   />
                 </DemoContainer>
               </LocalizationProvider>
@@ -314,12 +290,6 @@ const AddEventModal: FC<AddEventModalProps> = ({
                 </FormControl>
               </div>
             </FormControl>
-            <div className="w-full flex items-center gap-6 pl-2 ">
-              <label htmlFor="color-picker" className="text-[#666666]">
-                Select a color:
-              </label>
-              <ColorPicker />
-            </div>
             <div className="w-full flex items-center justify-between mt-2">
               <Button
                 type="submit"
