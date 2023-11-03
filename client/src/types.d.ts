@@ -19,9 +19,10 @@ interface EventModalProps {
 }
 
 interface EventContentProps {
-  backgroundColor: string;
   event: {
-    title: string;
+    extendedProps: {
+      slug: string;
+    };
   };
 }
 
