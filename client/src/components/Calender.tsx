@@ -101,7 +101,7 @@ const Calendar: FC = (): JSX.Element => {
 
     return (
       <div
-        className={`px-1 min-w-[160px] rounded-sm flex flex-col text-white cursor-pointer`}
+        className={`px-1 min-w-[165px] rounded-sm flex flex-col text-white cursor-pointer`}
         style={{
           backgroundColor: bgColor,
         }}
@@ -122,7 +122,7 @@ const Calendar: FC = (): JSX.Element => {
   };
 
   return (
-    <div className="w-[80%] h-full flex flex-col items-center justify-center px-6 py-12">
+    <div className="w-[80%] h-full flex flex-col items-center justify-center px-0 py-12">
       {isAddOpen && (
         <AddEventModal
           isOpen={isAddOpen}
