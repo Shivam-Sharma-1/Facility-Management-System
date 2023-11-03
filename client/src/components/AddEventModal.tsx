@@ -39,7 +39,6 @@ const AddEventModal: FC<AddEventModalProps> = ({
     date: null,
     start: "",
     end: "",
-    color: "red",
     slug: "",
     employeeId: "",
   });
@@ -106,7 +105,7 @@ const AddEventModal: FC<AddEventModalProps> = ({
       axios.post(`http://localhost:3000/facility/${slug}`, data, {
         withCredentials: true,
       }),
-    onSuccess: (data) => {
+    onSuccess: () => {
       setIsOpen(false);
     },
     onError: (error) => {
@@ -116,13 +115,7 @@ const AddEventModal: FC<AddEventModalProps> = ({
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    if (
-      formData.start &&
-      formData.end &&
-      formData.title &&
-      formData.purpose &&
-      formData.color
-    ) {
+    if (formData.start && formData.end && formData.title && formData.purpose) {
       if (isTimeSlotOverlapping(formData.start, formData.end)) {
         setValidationError(
           "Selected time slot overlaps with an existing event."
@@ -144,7 +137,6 @@ const AddEventModal: FC<AddEventModalProps> = ({
           date: formData.date,
           start: isoStartTime,
           end: isoEndTime,
-          color: formData.color,
           employeeId: auth?.user?.employeeId || "",
           slug: `${formData.title.toLowerCase()}${formData.date}`,
         };

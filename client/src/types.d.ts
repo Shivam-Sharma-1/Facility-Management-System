@@ -53,7 +53,6 @@ interface AddEventDataProps {
   date: string | null;
   start: string | null;
   end: string | null;
-  color: string;
   employeeId: string;
   slug: string;
 }
