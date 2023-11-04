@@ -40,39 +40,39 @@ const ApprovalCard: FC<ApprovalProps> = ({
     <div className="justify-between items-center px-10 py-8 w-[60%] h-full flex mt-10 rounded-md bg-bgPrimary shadow-cardHover border-0 border-l-[10px] border-primary border-solid">
       <div className="flex flex-col justify-center">
         <Typography
-          variant="h4"
+          variant="h5"
           component="p"
           sx={{ marginBottom: ".3em", fontWeight: 600 }}
         >
           {facility} - {title}
         </Typography>
-        <Typography variant="h5" component="p">
+        <Typography variant="h6" component="p">
           <span className="font-bold tracking-wide">Purpose: </span> {purpose}
         </Typography>
-        <Typography variant="h5" component="p">
+        <Typography variant="h6" component="p">
           <span className="font-bold tracking-wide">Date:</span>{" "}
           {isoToDate(date)}
         </Typography>
-        <Typography variant="h5" component="p">
+        <Typography variant="h6" component="p">
           <span className="font-bold tracking-wide">Time:</span>{" "}
           {isoToTime(start)} - {isoToTime(end)}
         </Typography>
-        <Typography variant="h5" component="p">
+        <Typography variant="h6" component="p">
           <span className="font-bold tracking-wide">Requested By: </span>{" "}
           {requestedBy}
         </Typography>
         {approvedAtGD && (
-          <Typography variant="h5" component="p">
+          <Typography variant="h6" component="p">
             Approved by GD
           </Typography>
         )}
         {approvedAtFM && (
-          <Typography variant="h5" component="p">
+          <Typography variant="h6" component="p">
             Approved by FM
           </Typography>
         )}
         {approvedAtAdmin && (
-          <Typography variant="h5" component="p">
+          <Typography variant="h6" component="p">
             Approved by Admin
           </Typography>
         )}
