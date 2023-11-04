@@ -68,6 +68,8 @@ model Booking {
   statusUpdateAtAdmin DateTime?
   time                BookingTime      @relation(references: [id], fields: [timeId])
   timeId              String           @unique
+  group               Group?           @relation(references: [id], fields: [groupId])
+  groupId             String?
 }
 
 model BookingTime {
@@ -102,6 +104,7 @@ model Group {
   name          String
   groupDirector GroupDirector?
   users         User[]
+  Booking       Booking[]
 }
 
 model FacilityManager {
