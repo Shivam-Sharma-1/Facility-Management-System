@@ -78,7 +78,7 @@ export const getAllGDApprovals: RequestHandler = async (
 			where: {
 				AND: [
 					{
-						Group: {
+						group: {
 							groupDirector: {
 								user: {
 									employeeId,
