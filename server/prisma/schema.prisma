@@ -7,7 +7,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("DATABASE_URL_DEV")
 }
 
 enum Role {
@@ -68,6 +68,8 @@ model Booking {
   statusUpdateAtAdmin DateTime?
   time                BookingTime      @relation(references: [id], fields: [timeId])
   timeId              String           @unique
+  group               Group?           @relation(fields: [groupId], references: [id])
+  groupId             String?
 }
 
 model BookingTime {
@@ -84,6 +86,10 @@ model Facility {
   description     String
   icon            String
   slug            String            @unique
+  isActive        Boolean           @default(true)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  deletedAt       DateTime?
   facilityManager FacilityManager[]
   bookings        Booking[]
 }
@@ -102,6 +108,7 @@ model Group {
   name          String
   groupDirector GroupDirector?
   users         User[]
+  bookings      Booking[]
 }
 
 model FacilityManager {

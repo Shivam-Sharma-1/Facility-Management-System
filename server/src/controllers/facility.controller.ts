@@ -99,7 +99,7 @@ export const addBookings: RequestHandler = async (
 						end,
 					},
 				},
-				Group: {
+				group: {
 					connect: {
 						id: user?.groupId!,
 					},
