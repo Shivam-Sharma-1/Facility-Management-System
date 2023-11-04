@@ -19,6 +19,7 @@ import AddEventModal from "./AddEventModal";
 import EventModal from "./EventModal";
 import isoToTime from "../utils/isoToTime";
 import isoToDate from "../utils/isoToDate";
+import Loader from "./Loader";
 
 const Calendar: FC = (): JSX.Element => {
   const [isAddOpen, setIsAddOpen] = useState<boolean>(false);
@@ -53,6 +54,7 @@ const Calendar: FC = (): JSX.Element => {
       );
       return response.data;
     },
+    refetchInterval: 5 * 1000,
   });
 
   useEffect(() => {
@@ -120,6 +122,13 @@ const Calendar: FC = (): JSX.Element => {
       </div>
     );
   };
+
+  if (isPending)
+    return (
+      <div className="w-[80%] h-full flex flex-col items-center justify-center">
+        <Loader />
+      </div>
+    );
 
   return (
     <div className="w-[80%] h-full flex flex-col items-center justify-center px-0 py-12">

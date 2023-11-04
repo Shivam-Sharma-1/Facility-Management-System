@@ -4,6 +4,7 @@ import axios from "axios";
 
 import { Typography } from "@mui/material";
 import ApprovalCard from "./ApprovalCard";
+import Loader from "./Loader";
 
 const ApprovalStatus: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
   const { data: approvalData, isPending } = useQuery<ApprovalData[]>({
@@ -19,7 +20,15 @@ const ApprovalStatus: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
       );
       return response.data;
     },
+    refetchInterval: 5 * 1000,
   });
+
+  if (isPending)
+    return (
+      <div className="w-[80%] h-full flex flex-col items-center justify-center">
+        <Loader />
+      </div>
+    );
 
   return (
     <div className="w-[80%] h-full flex flex-col items-center justify-center px-6 py-12">
@@ -42,8 +51,8 @@ const ApprovalStatus: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
                 date={approval.date}
                 start={approval.start}
                 end={approval.end}
-                facility={approval.facility.name}
-                requestedBy={approval.requestedBy.name}
+                facility={approval.facility.name!}
+                requestedBy={approval.requestedBy.name!}
                 approvedAtAdmin={approval.approvedAtAdmin}
                 approvedAtFM={approval.approvedAtFM}
                 approvedAtGD={approval.approvedAtGD}

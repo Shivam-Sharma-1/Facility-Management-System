@@ -5,6 +5,7 @@ import axios from "axios";
 
 import FacilityCard from "./FacilityCard";
 import { Typography } from "@mui/material";
+import Loader from "./Loader";
 
 const Facilities: FC = (): JSX.Element => {
   const { data, isPending } = useQuery({
@@ -20,8 +21,15 @@ const Facilities: FC = (): JSX.Element => {
     },
   });
 
+  if (isPending)
+    return (
+      <div className="w-[80%] h-full flex flex-col items-center justify-center">
+        <Loader />
+      </div>
+    );
+
   return (
-    <div className="w-[80%] h-full flex flex-col items-center justify-cente pt-12">
+    <div className="w-[80%] h-full flex flex-col items-center justify-center pt-12">
       <Typography variant="h2" component="h1">
         Facilities
       </Typography>
