@@ -59,7 +59,7 @@ interface AddEventDataProps {
 
 interface User {
   name: string;
-  employeeId: string;
+  employeeId: number;
   image: string;
   role: string;
 }
