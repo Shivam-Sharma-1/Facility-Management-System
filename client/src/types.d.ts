@@ -3,6 +3,7 @@
 interface FacilityCardProps {
   name: string;
   icon: string;
+  manager: string;
 }
 
 interface AddEventModalProps {
@@ -116,6 +117,19 @@ type FacilityData = {
   description: string;
   icon: string;
   slug: string;
+  facilityManager: FacilityManager[];
+};
+
+type FacilityManager = {
+  user: {
+    name: string;
+    employeeId: number;
+  };
+};
+
+type DashboardData = {
+  count: number;
+  facilities: FacilityData[];
 };
 
 type LoginData = {

@@ -11,7 +11,7 @@ const Facilities: FC = (): JSX.Element => {
   const { data, isPending } = useQuery({
     queryKey: ["facilities"],
     queryFn: async () => {
-      const response = await axios.get<FacilityData[]>(
+      const response = await axios.get<DashboardData>(
         "http://localhost:3000/dashboard",
         {
           withCredentials: true,
@@ -35,9 +35,13 @@ const Facilities: FC = (): JSX.Element => {
       </Typography>
       <div className="w-full flex justify-center items-center flex-wrap pt-4">
         {!isPending &&
-          data?.map((facility: FacilityData) => (
+          data?.facilities.map((facility: FacilityData) => (
             <Link to={`/facility/${facility.slug}`} key={facility.name}>
-              <FacilityCard name={facility.name} icon={facility.icon} />
+              <FacilityCard
+                name={facility.name}
+                icon={facility.icon}
+                manager={facility.facilityManager[0].user.name}
+              />
             </Link>
           ))}
       </div>
