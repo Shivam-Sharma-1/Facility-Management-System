@@ -63,10 +63,11 @@ export const getFacilities: RequestHandler = async (
 		const facilities = await prisma.facility.findMany({
 			include: {
 				facilityManager: {
-					select: {
+					include: {
 						user: {
 							select: {
 								name: true,
+								employeeId: true,
 							},
 						},
 					},
