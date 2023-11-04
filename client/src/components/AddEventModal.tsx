@@ -151,6 +151,19 @@ const AddEventModal: FC<AddEventModalProps> = ({
     }
   };
 
+  const handleCancel = (): void => {
+    setIsOpen(false);
+    setFormData({
+      title: "",
+      purpose: "",
+      date: null,
+      start: "",
+      end: "",
+      slug: "",
+      employeeId: "",
+    });
+  };
+
   useEffect(() => {
     if (formData.start) {
       updateAvailableEndTimes();
@@ -305,7 +318,7 @@ const AddEventModal: FC<AddEventModalProps> = ({
               color="error"
               sx={{ minWidth: "47%" }}
               size="large"
-              onClick={() => setIsOpen(false)}
+              onClick={handleCancel}
             >
               Cancel
             </Button>
