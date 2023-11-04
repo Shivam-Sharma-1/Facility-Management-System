@@ -22,7 +22,9 @@ enum ApprovalStatus {
   APPROVED_BY_GD
   APPROVED_BY_FM
   APPROVED_BY_ADMIN
-  REJECTED
+  REJECTED_BY_GD
+  REJECTED_BY_FM
+  REJECTED_BY_ADMIN
 }
 
 model Session {
@@ -33,60 +35,80 @@ model Session {
 }
 
 model User {
-  id              Int               @id @default(autoincrement())
+  id              String            @id @default(cuid())
   image           String?
   name            String
-  employeeId      String            @unique
+  employeeId      Int               @unique
   password        String
   role            Role              @default(USER)
   booking         Booking[]
-  groupDirector   GroupDirector[]
+  groupDirector   GroupDirector?
   facilityManager FacilityManager[]
+  group           Group?            @relation(fields: [groupId], references: [id])
+  groupId         String?
 }
 
 model Booking {
-  id              Int            @id @default(autoincrement())
-  title           String
-  slug            String         @unique
-  purpose         String
-  color           String?
-  requestedBy     User           @relation(fields: [userId], references: [id])
-  userId          Int
-  status          ApprovalStatus @default(PENDING)
-  createdAt       DateTime       @default(now())
-  date            DateTime
-  start           DateTime
-  end             DateTime
-  facility        Facility       @relation(fields: [facilityId], references: [id])
-  facilityId      Int
-  approvedAtGD    DateTime?
-  approvedAtFM    DateTime?
-  approvedAtAdmin DateTime?
+  id                  String           @id @default(cuid())
+  title               String
+  slug                String           @unique
+  purpose             String
+  requestedBy         User             @relation(fields: [userId], references: [id])
+  userId              String
+  status              ApprovalStatus   @default(PENDING)
+  createdAt           DateTime         @default(now())
+  facility            Facility         @relation(fields: [facilityId], references: [id])
+  facilityId          String
+  statusUpdateByGD    GroupDirector?   @relation(references: [id], fields: [groupDirectorId])
+  groupDirectorId     String?
+  statusUpdateByFM    FacilityManager? @relation(references: [id], fields: [facilityManagerId])
+  facilityManagerId   String?
+  statusUpdateAtGD    DateTime?
+  statusUpdateAtFM    DateTime?
+  statusUpdateAtAdmin DateTime?
+  time                BookingTime      @relation(references: [id], fields: [timeId])
+  timeId              String           @unique
+}
+
+model BookingTime {
+  id      String   @id @default(cuid())
+  date    DateTime
+  start   DateTime
+  end     DateTime
+  Booking Booking?
 }
 
 model Facility {
-  id              Int               @id @default(autoincrement())
+  id              String            @id @default(cuid())
   name            String
   description     String
   icon            String
   slug            String            @unique
-  groupDirector   GroupDirector[]
   facilityManager FacilityManager[]
   bookings        Booking[]
 }
 
 model GroupDirector {
-  id         Int      @id @default(autoincrement())
-  user       User     @relation(fields: [userId], references: [id])
-  userId     Int
-  facility   Facility @relation(fields: [facilityId], references: [id])
-  facilityId Int      @unique
+  id       String    @id @default(cuid())
+  user     User      @relation(fields: [userId], references: [id])
+  userId   String    @unique
+  group    Group     @relation(fields: [groupId], references: [id])
+  groupId  String    @unique
+  bookings Booking[]
+}
+
+model Group {
+  id            String         @id @default(cuid())
+  name          String
+  groupDirector GroupDirector?
+  users         User[]
 }
 
 model FacilityManager {
-  id         Int      @id @default(autoincrement())
-  user       User     @relation(fields: [userId], references: [id])
-  userId     Int
-  facility   Facility @relation(fields: [facilityId], references: [id])
-  facilityId Int      @unique
+  id         String    @id @default(cuid())
+  user       User      @relation(fields: [userId], references: [id])
+  userId     String    @unique
+  facility   Facility  @relation(fields: [facilityId], references: [id])
+  facilityId String    @unique
+  bookings   Booking[]
 }
