@@ -82,21 +82,23 @@ const Navigation = (): JSX.Element => {
           {open ? <ExpandLess /> : <ExpandMore />}
         </ListItemButton>
         <Collapse in={open} timeout="auto" unmountOnExit>
-          <List
-            component="div"
-            disablePadding
-            sx={{ paddingLeft: "1em", paddingBlock: "0.5em" }}
-          >
-            <ListItemButton>
-              <ListItemText
-                primaryTypographyProps={{
-                  variant: "h6",
-                  component: "li",
-                }}
-                primary="My Bookings"
-              />
-            </ListItemButton>
-          </List>
+          <Link to="/employee/mybookings" className="text-white">
+            <List
+              component="div"
+              disablePadding
+              sx={{ paddingLeft: "1em", paddingBlock: "0.5em" }}
+            >
+              <ListItemButton>
+                <ListItemText
+                  primaryTypographyProps={{
+                    variant: "h6",
+                    component: "li",
+                  }}
+                  primary="My Bookings"
+                />
+              </ListItemButton>
+            </List>
+          </Link>
 
           {auth?.user!.role !== "USER" && (
             <>
