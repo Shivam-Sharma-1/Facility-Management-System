@@ -82,13 +82,17 @@ const BookingCard: FC<BookingCardProps> = ({
         </Typography>
         {approvedByGD && (
           <Typography variant="h6" component="p">
-            <span className="font-bold tracking-wide">Approved By GD: </span>{" "}
+            <span className="font-bold tracking-wide">
+              {status === "REJECTED_BY_GD" ? "Rejected" : "Approved"} By GD:{" "}
+            </span>{" "}
             {approvedByGD}
           </Typography>
         )}
         {approvedByFM && (
           <Typography variant="h6" component="p">
-            <span className="font-bold tracking-wide">Approved By FM: </span>{" "}
+            <span className="font-bold tracking-wide">
+              {status === "REJECTED_BY_FM" ? "Rejected" : "Approved"} By FM:{" "}
+            </span>{" "}
             {approvedByFM}
           </Typography>
         )}
