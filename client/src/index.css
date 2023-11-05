@@ -22,10 +22,12 @@
 
 *::-webkit-scrollbar {
   width: 2px;
+  height: 2px;
 }
 
 body::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
 }
 
 *::-webkit-scrollbar-track {
@@ -44,8 +46,8 @@ a {
 }
 
 body {
-  background-color: white;
-  color: black;
+  background-color: #faf9f6;
+  color: #212427;
 }
 
 .fc-day {
@@ -55,7 +57,7 @@ body {
 
 .fc-daygrid-day-events {
   overflow-y: auto !important;
-  height: 89px !important;
+  height: 100px !important;
 }
 
 .fc-col-header-cell-cushion {
@@ -72,6 +74,7 @@ body {
 
 .fc-toolbar-title {
   font-weight: normal !important;
+  font-size: 2.5rem !important;
 }
 
 .fc-button-primary {
@@ -83,4 +86,24 @@ body {
 .fc-button-primary:hover {
   opacity: 0.9 !important;
   transition: all 0.2s ease-in-out !important;
+}
+
+.loader {
+  width: 48px;
+  height: 48px;
+  border: 5px solid #2374e5;
+  border-bottom-color: #00275e;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

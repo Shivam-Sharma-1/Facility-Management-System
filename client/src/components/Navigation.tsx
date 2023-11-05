@@ -35,9 +35,6 @@ const Navigation = (): JSX.Element => {
       axios.post("http://localhost:3000/auth/logout", {
         withCredentials: true,
       }),
-    onSuccess: () => {
-      console.log("logout");
-    },
     onError: (error) => {
       console.log(error);
     },
@@ -52,8 +49,8 @@ const Navigation = (): JSX.Element => {
           alt="avatar-image"
         />
         <div className="w-fit flex flex-col justify-center">
-          <Typography variant="h5">{auth?.user?.name}</Typography>
-          <Typography variant="body1" className="font-normal">
+          <Typography variant="h4">{auth?.user?.name}</Typography>
+          <Typography variant="subtitle1" className="font-normal">
             ID: {auth?.user?.employeeId}
           </Typography>
         </div>
@@ -75,7 +72,13 @@ const Navigation = (): JSX.Element => {
               sx={{ width: "26px", height: "26px", color: "white" }}
             />
           </ListItemIcon>
-          <ListItemText primary="Approval Status" />
+          <ListItemText
+            primaryTypographyProps={{
+              variant: "h6",
+              component: "li",
+            }}
+            primary="Approval Status"
+          />
           {open ? <ExpandLess /> : <ExpandMore />}
         </ListItemButton>
         <Collapse in={open} timeout="auto" unmountOnExit>
@@ -85,7 +88,13 @@ const Navigation = (): JSX.Element => {
             sx={{ paddingLeft: "1em", paddingBlock: "0.5em" }}
           >
             <ListItemButton>
-              <ListItemText primary="My Bookings" />
+              <ListItemText
+                primaryTypographyProps={{
+                  variant: "h6",
+                  component: "li",
+                }}
+                primary="My Bookings"
+              />
             </ListItemButton>
           </List>
 
@@ -108,7 +117,13 @@ const Navigation = (): JSX.Element => {
                   sx={{ paddingLeft: "1em", paddingBlock: "0.5em" }}
                 >
                   <ListItemButton>
-                    <ListItemText primary="Approval Requests" />
+                    <ListItemText
+                      primaryTypographyProps={{
+                        variant: "h6",
+                        component: "li",
+                      }}
+                      primary="Approval Requests"
+                    />
                   </ListItemButton>
                 </List>
               </Link>
@@ -123,7 +138,13 @@ const Navigation = (): JSX.Element => {
               sx={{ width: "26px", height: "26px", color: "white" }}
             />
           </ListItemIcon>
-          <ListItemText primary="Bookings" />
+          <ListItemText
+            primaryTypographyProps={{
+              variant: "h6",
+              component: "li",
+            }}
+            primary="Bookings"
+          />
         </ListItemButton>
         <Divider color="#0c0051" />
 
@@ -134,7 +155,13 @@ const Navigation = (): JSX.Element => {
                 sx={{ width: "26px", height: "26px", color: "white" }}
               />
             </ListItemIcon>
-            <ListItemText primary="Facilities" />
+            <ListItemText
+              primaryTypographyProps={{
+                variant: "h6",
+                component: "li",
+              }}
+              primary="Facilities"
+            />
           </ListItemButton>
         </Link>
         <Divider color="#0c0051" />
@@ -145,7 +172,13 @@ const Navigation = (): JSX.Element => {
               sx={{ width: "26px", height: "26px", color: "white" }}
             />
           </ListItemIcon>
-          <ListItemText primary="Report" />
+          <ListItemText
+            primaryTypographyProps={{
+              variant: "h6",
+              component: "li",
+            }}
+            primary="Report"
+          />
         </ListItemButton>
         <Divider color="#0c0051" />
 
@@ -162,7 +195,13 @@ const Navigation = (): JSX.Element => {
               sx={{ width: "26px", height: "26px", color: "white" }}
             />
           </ListItemIcon>
-          <ListItemText primary="Logout" />
+          <ListItemText
+            primaryTypographyProps={{
+              variant: "h6",
+              component: "li",
+            }}
+            primary="Logout"
+          />
         </ListItemButton>
         <Divider color="#0c0051" />
       </List>

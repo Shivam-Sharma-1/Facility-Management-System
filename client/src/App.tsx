@@ -11,6 +11,14 @@ import FacilityPage from "./pages/FacilityPage";
 import { AuthProvider } from "./utils/auth";
 import { RequireAuth } from "./components/RequireAuth";
 import ApprovalsPage from "./pages/ApprovalsPage";
+import "@tanstack/react-query";
+import { AxiosError } from "axios";
+
+declare module "@tanstack/react-query" {
+  interface Register {
+    defaultError: AxiosError;
+  }
+}
 
 const router = createBrowserRouter(
   createRoutesFromElements(

@@ -1,5 +1,5 @@
-import { Button, Typography } from "@mui/material";
-import { FC } from "react";
+import { Alert, Button, Snackbar, Typography } from "@mui/material";
+import { FC, useState } from "react";
 import isoToTime from "../utils/isoToTime";
 import isoToDate from "../utils/isoToDate";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
@@ -16,15 +16,16 @@ const ApprovalCard: FC<ApprovalProps> = ({
   end,
   facility,
   requestedBy,
-  approvedAtAdmin,
-  approvedAtFM,
-  approvedAtGD,
+  approvedByGD,
 }): JSX.Element => {
+  const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
+  const [isAccepted, setIsAccepted] = useState<boolean>(false);
+
   const handleClick = useMutation({
     mutationFn: (data: ApprovalType) =>
       axios.post(
         `http://localhost:3000/employee/approvals/${
-          approvedAtGD ? "fm" : "gd"
+          approvedByGD ? "fm" : "gd"
         }`,
         data,
         {
@@ -37,26 +38,35 @@ const ApprovalCard: FC<ApprovalProps> = ({
   });
 
   return (
-    <div className="w-full flex justify-between items-center px-10 py-5">
+    <div className="justify-between items-center px-10 py-8 w-[60%] h-full flex mt-10 rounded-md bg-bgPrimary shadow-cardHover border-0 border-l-[10px] border-primary border-solid">
       <div className="flex flex-col justify-center">
-        <Typography variant="h4" component="h2">
-          {title}
+        <Typography
+          variant="h5"
+          component="p"
+          sx={{ marginBottom: ".3em", fontWeight: 600 }}
+        >
+          {facility} | {title}
         </Typography>
-        <Typography variant="body1">{purpose}</Typography>
-        <Typography variant="body1">{isoToDate(date)}</Typography>
-        <Typography variant="body1">
+        <Typography variant="h6" component="p">
+          <span className="font-bold tracking-wide">Purpose: </span> {purpose}
+        </Typography>
+        <Typography variant="h6" component="p">
+          <span className="font-bold tracking-wide">Date:</span>{" "}
+          {isoToDate(date)}
+        </Typography>
+        <Typography variant="h6" component="p">
+          <span className="font-bold tracking-wide">Time:</span>{" "}
           {isoToTime(start)} - {isoToTime(end)}
         </Typography>
-        <Typography variant="body1">Requested By - {requestedBy}</Typography>
-        <Typography variant="body1">Facility- {facility}</Typography>
-        {approvedAtGD && (
-          <Typography variant="body1">Approved by GD</Typography>
-        )}
-        {approvedAtFM && (
-          <Typography variant="body1">Approved by FM</Typography>
-        )}
-        {approvedAtAdmin && (
-          <Typography variant="body1">Approved by Admin</Typography>
+        <Typography variant="h6" component="p">
+          <span className="font-bold tracking-wide">Requested By: </span>{" "}
+          {requestedBy}
+        </Typography>
+        {approvedByGD && (
+          <Typography variant="h6" component="p">
+            <span className="font-bold tracking-wide">Approved By GD: </span>{" "}
+            {approvedByGD}
+          </Typography>
         )}
       </div>
       <div className="flex items-center gap-4">
@@ -64,8 +74,13 @@ const ApprovalCard: FC<ApprovalProps> = ({
           variant="contained"
           startIcon={<TaskAltIcon />}
           color="success"
+          size="large"
           sx={{ minWidth: "40%" }}
-          onClick={() => handleClick.mutate({ slug: slug, approved: true })}
+          onClick={() => {
+            handleClick.mutate({ slug: slug, approved: true });
+            setOpenSnackbar(true);
+            setIsAccepted(true);
+          }}
         >
           Accept
         </Button>
@@ -73,12 +88,32 @@ const ApprovalCard: FC<ApprovalProps> = ({
           variant="contained"
           startIcon={<DeleteIcon />}
           color="error"
+          size="large"
           sx={{ minWidth: "40%" }}
-          onClick={() => handleClick.mutate({ slug: slug, approved: false })}
+          onClick={() => {
+            handleClick.mutate({ slug: slug, approved: false });
+            setOpenSnackbar(true);
+            setIsAccepted(false);
+          }}
         >
           Reject
         </Button>
       </div>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={5000}
+        onClose={() => setOpenSnackbar(false)}
+      >
+        <Alert
+          onClose={() => setOpenSnackbar(false)}
+          severity={"success"}
+          sx={{ width: "100%" }}
+        >
+          {isAccepted
+            ? "Booking approved successfully!"
+            : "Booking request rejected!"}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

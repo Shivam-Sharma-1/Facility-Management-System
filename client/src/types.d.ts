@@ -3,13 +3,16 @@
 interface FacilityCardProps {
   name: string;
   icon: string;
+  manager: string;
 }
 
 interface AddEventModalProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
   setOpenSnackbar: (isOpen: boolean) => void;
-  bookingsData: BookingDataProps[];
+  setDefaultDate: (message: string | null) => void;
+  bookingsData: BookingNewDataProps[];
+  defaultDate: string | null;
 }
 
 interface EventModalProps {
@@ -19,45 +22,100 @@ interface EventModalProps {
 }
 
 interface EventContentProps {
-  backgroundColor: string;
   event: {
-    title: string;
+    extendedProps: {
+      slug: string;
+    };
   };
 }
 
 interface BookingDataProps {
+  id: string;
   title: string;
+  slug: string;
   purpose: string;
-  date: string | null;
-  start: string | null;
-  end: string | null;
-  color: string;
+  status: string;
+  createdAt: string;
+  facilityManager: string | null;
+  statusUpdateAtGD: string | null;
+  statusUpdateAtFM: string | null;
+  statusUpdateAtAdmin: string | null;
+  statusUpdateByGD: {
+    user: {
+      name: string;
+      employeeId: number;
+    };
+  } | null;
+  statusUpdateByFM: {
+    user: {
+      name: string;
+      employeeId: number;
+    };
+  } | null;
+  time: {
+    start: string;
+    end: string;
+    date: string;
+  };
   requestedBy: {
     name: string;
-    employeeId: string;
+    employeeId: number;
   };
-  createdAt: string;
-  facilityId: number;
+  facility: {
+    name: string;
+    slug: string;
+  };
+}
+
+interface BookingNewDataProps {
   id: string;
+  title: string;
   slug: string;
+  purpose: string;
   status: string;
-  userId: number;
+  createdAt: string;
+  facilityManager: string | null;
+  statusUpdateAtGD: string | null;
+  statusUpdateAtFM: string | null;
+  statusUpdateAtAdmin: string | null;
+  statusUpdateByGD: {
+    user: {
+      name: string;
+      employeeId: number;
+    };
+  } | null;
+  statusUpdateByFM: {
+    user: {
+      name: string;
+      employeeId: number;
+    };
+  } | null;
+  start: string;
+  end: string;
+  date: string;
+  requestedBy: {
+    name: string;
+    employeeId: number;
+  };
+  facility: {
+    name: string;
+    slug: string;
+  };
 }
 
 interface AddEventDataProps {
   title: string;
   purpose: string;
-  date: string | null;
+  date: Dayjs | null;
   start: string | null;
   end: string | null;
-  color: string;
-  employeeId: string;
+  employeeId: number | null;
   slug: string;
 }
 
 interface User {
   name: string;
-  employeeId: string;
+  employeeId: number;
   image: string;
   role: string;
 }
@@ -81,10 +139,13 @@ interface RequireAuthProps {
 interface EventInfoProps {
   title: string;
   purpose: string;
+  status: string;
   start: string;
   end: string;
   date: string;
   requestBy: string;
+  statusUpdateByGD: string | null;
+  statusUpdateByFM: string | null;
 }
 
 interface ApprovalProps {
@@ -95,10 +156,8 @@ interface ApprovalProps {
   start: string;
   end: string;
   facility: string;
-  requestedBy: string;
-  approvedAtGD: string | null;
-  approvedAtFM: string | null;
-  approvedAtAdmin: string | null;
+  requestedBy: string | null;
+  approvedByGD: string | null;
 }
 
 interface ApprovalStatusProps {
@@ -114,10 +173,23 @@ type FacilityData = {
   description: string;
   icon: string;
   slug: string;
+  facilityManager: FacilityManager[];
+};
+
+type FacilityManager = {
+  user: {
+    name: string;
+    employeeId: number;
+  };
+};
+
+type DashboardData = {
+  count: number;
+  facilities: FacilityData[];
 };
 
 type LoginData = {
-  employeeId: string;
+  employeeId: number | null;
   password: string;
 };
 
@@ -130,16 +202,23 @@ type ApprovalData = {
   userId: number;
   status: string;
   createdAt: string;
-  date: string;
-  start: string;
-  end: string;
+  time: {
+    date: string;
+    start: string;
+    end: string;
+  };
   facility: {
     name: string;
   };
   facilityId: number;
-  approvedAtGD: string | null;
-  approvedAtFM: string | null;
-  approvedAtAdmin: string | null;
+  statusUpdateAtGD: string | null;
+  statusUpdateAtFM: string | null;
+  statusUpdateAtAdmin: string | null;
+  statusUpdateByGD: null | {
+    user: {
+      name: string;
+    };
+  };
   requestedBy: {
     name: string;
   };
