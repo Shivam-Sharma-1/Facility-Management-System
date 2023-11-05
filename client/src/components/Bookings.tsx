@@ -26,7 +26,6 @@ const MyBookings = (): JSX.Element => {
     if (!isPending) {
       setBookings(data!.facility.bookings || []);
     }
-    console.log(data);
   }, [data, isPending]);
 
   if (isPending)

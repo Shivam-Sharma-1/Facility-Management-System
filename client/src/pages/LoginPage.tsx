@@ -32,7 +32,6 @@ const LoginPage: FC = (): JSX.Element => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(id, password);
     mutation.mutate({ employeeId: id, password: password });
   };
 

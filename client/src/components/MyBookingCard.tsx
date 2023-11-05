@@ -111,7 +111,6 @@ const MyBookingCard: FC<MyBookingCardProps> = ({
             sx={{ minWidth: "47%" }}
             size="large"
             startIcon={<CancelOutlinedIcon />}
-            onClick={() => console.log("cancel")}
           >
             Cancel
           </Button>
