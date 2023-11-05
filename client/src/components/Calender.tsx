@@ -27,7 +27,7 @@ const Calendar: FC = (): JSX.Element => {
   const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
   const [defaultDate, setDefaultDate] = useState<string | null>(null);
 
-  const [bookingsData, setBookingsData] = useState<BookingDataProps[]>([]);
+  const [bookingsData, setBookingsData] = useState<BookingNewDataProps[]>([]);
   const [eventInfo, setEventInfo] = useState<EventInfoProps>({
     title: "",
     purpose: "",
@@ -60,7 +60,12 @@ const Calendar: FC = (): JSX.Element => {
   useEffect(() => {
     if (!isPending) {
       const newData = data?.map((booking) => {
-        return { ...booking, id: booking.id.toString() };
+        return {
+          ...booking,
+          start: booking.time.start,
+          date: booking.time.date,
+          end: booking.time.end,
+        };
       });
       setBookingsData(newData || []);
     }
@@ -68,8 +73,9 @@ const Calendar: FC = (): JSX.Element => {
 
   const handleEventClick = (info: EventClickArg): void => {
     const clickData = bookingsData.find(
-      (event: BookingDataProps) => event.slug === info.event.extendedProps.slug
-    ) as BookingDataProps;
+      (event: BookingNewDataProps) =>
+        event.slug === info.event.extendedProps.slug
+    ) as BookingNewDataProps;
 
     setEventInfo({
       title: clickData.title,
@@ -91,9 +97,9 @@ const Calendar: FC = (): JSX.Element => {
     eventInfo
   ): JSX.Element => {
     const eventData = bookingsData.find(
-      (event: BookingDataProps) =>
+      (event: BookingNewDataProps) =>
         event.slug === eventInfo.event.extendedProps.slug
-    ) as BookingDataProps;
+    ) as BookingNewDataProps;
 
     const bgColor =
       eventData.status === "APPROVED_BY_FM" ||
