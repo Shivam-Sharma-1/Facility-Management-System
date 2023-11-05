@@ -40,8 +40,18 @@ interface BookingDataProps {
   statusUpdateAtGD: string | null;
   statusUpdateAtFM: string | null;
   statusUpdateAtAdmin: string | null;
-  statusUpdateAtGD: string | null;
-  statusUpdateAtFM: string | null;
+  statusUpdateByGD: {
+    user: {
+      name: string;
+      employeeId: number;
+    };
+  } | null;
+  statusUpdateByFM: {
+    user: {
+      name: string;
+      employeeId: number;
+    };
+  } | null;
   time: {
     start: string;
     end: string;
@@ -68,8 +78,18 @@ interface BookingNewDataProps {
   statusUpdateAtGD: string | null;
   statusUpdateAtFM: string | null;
   statusUpdateAtAdmin: string | null;
-  statusUpdateAtGD: string | null;
-  statusUpdateAtFM: string | null;
+  statusUpdateByGD: {
+    user: {
+      name: string;
+      employeeId: number;
+    };
+  } | null;
+  statusUpdateByFM: {
+    user: {
+      name: string;
+      employeeId: number;
+    };
+  } | null;
   start: string;
   end: string;
   date: string;
@@ -119,10 +139,13 @@ interface RequireAuthProps {
 interface EventInfoProps {
   title: string;
   purpose: string;
+  status: string;
   start: string;
   end: string;
   date: string;
   requestBy: string;
+  statusUpdateByGD: string | null;
+  statusUpdateByFM: string | null;
 }
 
 interface ApprovalProps {
@@ -133,10 +156,8 @@ interface ApprovalProps {
   start: string;
   end: string;
   facility: string;
-  requestedBy: string;
-  approvedAtGD: string | null;
-  approvedAtFM: string | null;
-  approvedAtAdmin: string | null;
+  requestedBy: string | null;
+  approvedByGD: string | null;
 }
 
 interface ApprovalStatusProps {
@@ -181,16 +202,23 @@ type ApprovalData = {
   userId: number;
   status: string;
   createdAt: string;
-  date: string;
-  start: string;
-  end: string;
+  time: {
+    date: string;
+    start: string;
+    end: string;
+  };
   facility: {
     name: string;
   };
   facilityId: number;
-  approvedAtGD: string | null;
-  approvedAtFM: string | null;
-  approvedAtAdmin: string | null;
+  statusUpdateAtGD: string | null;
+  statusUpdateAtFM: string | null;
+  statusUpdateAtAdmin: string | null;
+  statusUpdateByGD: null | {
+    user: {
+      name: string;
+    };
+  };
   requestedBy: {
     name: string;
   };
