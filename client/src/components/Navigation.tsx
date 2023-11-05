@@ -134,21 +134,25 @@ const Navigation = (): JSX.Element => {
         </Collapse>
         <Divider color="#0c0051" />
 
-        <ListItemButton className="flex gap-4" sx={{ padding: "1em" }}>
-          <ListItemIcon sx={{ minWidth: "0px" }}>
-            <BookmarksIcon
-              sx={{ width: "26px", height: "26px", color: "white" }}
-            />
-          </ListItemIcon>
-          <ListItemText
-            primaryTypographyProps={{
-              variant: "h6",
-              component: "li",
-            }}
-            primary="Bookings"
-          />
-        </ListItemButton>
-        <Divider color="#0c0051" />
+        {auth?.user!.role === "FACILITY_MANAGER" && (
+          <Link to="/facility/bookings" className="text-white">
+            <ListItemButton className="flex gap-4" sx={{ padding: "1em" }}>
+              <ListItemIcon sx={{ minWidth: "0px" }}>
+                <BookmarksIcon
+                  sx={{ width: "26px", height: "26px", color: "white" }}
+                />
+              </ListItemIcon>
+              <ListItemText
+                primaryTypographyProps={{
+                  variant: "h6",
+                  component: "li",
+                }}
+                primary="Bookings"
+              />
+            </ListItemButton>
+            <Divider color="#0c0051" />
+          </Link>
+        )}
 
         <Link to="/" className="text-white">
           <ListItemButton className="flex gap-4" sx={{ padding: "1em" }}>

@@ -14,6 +14,7 @@ import ApprovalsPage from "./pages/ApprovalsPage";
 import "@tanstack/react-query";
 import { AxiosError } from "axios";
 import MyBookingsPage from "./pages/MyBookingsPage";
+import BookingsPage from "./pages/BookingsPage";
 
 declare module "@tanstack/react-query" {
   interface Register {
@@ -32,39 +33,57 @@ const router = createBrowserRouter(
           </RequireAuth>
         }
       />
+
       <Route path="auth/login" element={<LoginPage />} />
-      <Route
-        path="facility/:id"
-        element={
-          <RequireAuth GD={false} FM={false}>
-            <FacilityPage />
-          </RequireAuth>
-        }
-      />
-      <Route
-        path="employee/approvals/gd"
-        element={
-          <RequireAuth GD={true} FM={false}>
-            <ApprovalsPage GD={true} FM={false} />
-          </RequireAuth>
-        }
-      />
-      <Route
-        path="employee/approvals/fm"
-        element={
-          <RequireAuth GD={false} FM={true}>
-            <ApprovalsPage GD={false} FM={true} />
-          </RequireAuth>
-        }
-      />
-      <Route
-        path="employee/mybookings"
-        element={
-          <RequireAuth GD={false} FM={false}>
-            <MyBookingsPage />
-          </RequireAuth>
-        }
-      />
+
+      <Route path="facility">
+        <Route
+          path=":id"
+          element={
+            <RequireAuth GD={false} FM={false}>
+              <FacilityPage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="bookings"
+          element={
+            <RequireAuth GD={false} FM={true}>
+              <BookingsPage />
+            </RequireAuth>
+          }
+        />
+      </Route>
+
+      <Route path="employee">
+        <Route path="approvals">
+          <Route
+            path="gd"
+            element={
+              <RequireAuth GD={true} FM={false}>
+                <ApprovalsPage GD={true} FM={false} />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="fm"
+            element={
+              <RequireAuth GD={false} FM={true}>
+                <ApprovalsPage GD={false} FM={true} />
+              </RequireAuth>
+            }
+          />
+        </Route>
+
+        <Route
+          path="mybookings"
+          element={
+            <RequireAuth GD={false} FM={false}>
+              <MyBookingsPage />
+            </RequireAuth>
+          }
+        />
+      </Route>
     </Route>
   )
 );
