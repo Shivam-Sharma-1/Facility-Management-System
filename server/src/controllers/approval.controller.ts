@@ -91,22 +91,30 @@ export const getAllGDApprovals: RequestHandler = async (
 					},
 				],
 			},
-			include: {
+			select: {
+				id: true,
+				title: true,
+				slug: true,
+				purpose: true,
+				status: true,
+				createdAt: true,
+				time: {
+					select: {
+						start: true,
+						end: true,
+						date: true,
+					},
+				},
 				requestedBy: {
 					select: {
 						name: true,
+						employeeId: true,
 					},
 				},
 				facility: {
 					select: {
 						name: true,
-					},
-				},
-				time: {
-					select: {
-						date: true,
-						start: true,
-						end: true,
+						slug: true,
 					},
 				},
 			},
@@ -153,26 +161,43 @@ export const getAllFMApprovals: RequestHandler = async (
 							where: {
 								status: "APPROVED_BY_GD",
 							},
-							include: {
-								statusUpdateByGD: {
+							select: {
+								id: true,
+								slug: true,
+								title: true,
+								purpose: true,
+								status: true,
+								createdAt: true,
+								time: {
 									select: {
-										user: {
-											select: {
-												name: true,
-											},
-										},
+										start: true,
+										end: true,
+										date: true,
 									},
 								},
 								requestedBy: {
 									select: {
 										name: true,
+										employeeId: true,
 									},
 								},
 								facility: {
 									select: {
 										name: true,
+										slug: true,
 									},
 								},
+								statusUpdateByGD: {
+									select: {
+										user: {
+											select: {
+												name: true,
+												employeeId: true,
+											},
+										},
+									},
+								},
+								statusUpdateAtGD: true,
 							},
 						},
 					},
