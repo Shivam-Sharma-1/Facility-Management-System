@@ -160,11 +160,11 @@ interface ApprovalProps {
   approvedByGD: string | null;
 }
 
-interface BookingCardProps {
+interface MyBookingCardProps {
   title: string;
   purpose: string;
   status: string;
-  slug: string;
+  remark: string;
   date: string;
   start: string;
   end: string;
@@ -212,7 +212,7 @@ type ApprovalData = {
   title: string;
   slug: string;
   purpose: string;
-  color: string;
+  remark: string;
   userId: number;
   status: string;
   createdAt: string;
@@ -246,4 +246,10 @@ type ApprovalData = {
 type ApprovalType = {
   slug: string;
   approved: boolean;
+};
+
+type BookingCardData = {
+  facility: {
+    bookings: ApprovalData[];
+  };
 };
