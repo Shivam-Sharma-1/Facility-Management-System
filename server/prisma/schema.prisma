@@ -77,7 +77,7 @@ model BookingTime {
   date    DateTime
   start   DateTime
   end     DateTime
-  Booking Booking?
+  booking Booking?
 }
 
 model Facility {
