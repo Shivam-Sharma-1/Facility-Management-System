@@ -25,6 +25,7 @@ export const getBookings: RequestHandler = async (
 				OR: [
 					{ status: "APPROVED_BY_FM" },
 					{ status: "APPROVED_BY_ADMIN" },
+					{ status: "APPROVED_BY_GD" },
 					{ status: "PENDING" },
 				],
 			},
