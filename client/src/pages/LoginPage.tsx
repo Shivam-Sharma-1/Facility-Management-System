@@ -32,7 +32,6 @@ const LoginPage: FC = (): JSX.Element => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(id, password);
     mutation.mutate({ employeeId: id, password: password });
   };
 
@@ -50,7 +49,7 @@ const LoginPage: FC = (): JSX.Element => {
             label="Id"
             variant="outlined"
             className="w-full"
-            value={id}
+            value={id?.toString() || ""}
             onChange={(e) => setId(parseInt(e.target.value))}
             required
           />

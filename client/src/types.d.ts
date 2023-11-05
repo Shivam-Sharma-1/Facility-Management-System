@@ -160,6 +160,20 @@ interface ApprovalProps {
   approvedByGD: string | null;
 }
 
+interface MyBookingCardProps {
+  title: string;
+  purpose: string;
+  status: string;
+  remark: string;
+  date: string;
+  start: string;
+  end: string;
+  facility: string;
+  requestedBy: string | null;
+  approvedByGD: string | null;
+  approvedByFM: string | null;
+}
+
 interface ApprovalStatusProps {
   GD: boolean;
   FM: boolean;
@@ -198,7 +212,7 @@ type ApprovalData = {
   title: string;
   slug: string;
   purpose: string;
-  color: string;
+  remark: string;
   userId: number;
   status: string;
   createdAt: string;
@@ -219,6 +233,11 @@ type ApprovalData = {
       name: string;
     };
   };
+  statusUpdateByFM: null | {
+    user: {
+      name: string;
+    };
+  };
   requestedBy: {
     name: string;
   };
@@ -227,4 +246,11 @@ type ApprovalData = {
 type ApprovalType = {
   slug: string;
   approved: boolean;
+  remark?: string;
+};
+
+type BookingCardData = {
+  facility: {
+    bookings: ApprovalData[];
+  };
 };

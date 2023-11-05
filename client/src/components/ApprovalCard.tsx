@@ -1,11 +1,20 @@
-import { Alert, Button, Snackbar, Typography } from "@mui/material";
-import { FC, useState } from "react";
-import isoToTime from "../utils/isoToTime";
-import isoToDate from "../utils/isoToDate";
+import { ChangeEvent, FC, FormEvent, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import {
+  Alert,
+  Button,
+  FormControl,
+  FormLabel,
+  Snackbar,
+  TextField,
+  Typography,
+} from "@mui/material";
+import axios from "axios";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
+
+import isoToDate from "../utils/isoToDate";
+import isoToTime from "../utils/isoToTime";
 
 const ApprovalCard: FC<ApprovalProps> = ({
   title,
@@ -20,6 +29,8 @@ const ApprovalCard: FC<ApprovalProps> = ({
 }): JSX.Element => {
   const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
   const [isAccepted, setIsAccepted] = useState<boolean>(false);
+  const [isCancel, setIsCancel] = useState<boolean>(false);
+  const [remarkValue, setRemarkValue] = useState<string>("");
 
   const handleClick = useMutation({
     mutationFn: (data: ApprovalType) =>
@@ -36,6 +47,17 @@ const ApprovalCard: FC<ApprovalProps> = ({
       console.log(error);
     },
   });
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    handleClick.mutate({
+      slug: slug,
+      approved: false,
+      remark: remarkValue,
+    });
+    setOpenSnackbar(true);
+    setIsAccepted(false);
+  };
 
   return (
     <div className="justify-between items-center px-10 py-8 w-[60%] h-full flex mt-10 rounded-md bg-bgPrimary shadow-cardHover border-0 border-l-[10px] border-primary border-solid">
@@ -69,36 +91,62 @@ const ApprovalCard: FC<ApprovalProps> = ({
           </Typography>
         )}
       </div>
-      <div className="flex items-center gap-4">
-        <Button
-          variant="contained"
-          startIcon={<TaskAltIcon />}
-          color="success"
-          size="large"
-          sx={{ minWidth: "40%" }}
-          onClick={() => {
-            handleClick.mutate({ slug: slug, approved: true });
-            setOpenSnackbar(true);
-            setIsAccepted(true);
-          }}
-        >
-          Accept
-        </Button>
-        <Button
-          variant="contained"
-          startIcon={<DeleteIcon />}
-          color="error"
-          size="large"
-          sx={{ minWidth: "40%" }}
-          onClick={() => {
-            handleClick.mutate({ slug: slug, approved: false });
-            setOpenSnackbar(true);
-            setIsAccepted(false);
-          }}
-        >
-          Reject
-        </Button>
+      <div className="w-[40%] flex flex-col gap-4 items-center">
+        <form autoComplete="off" className="w-full" onSubmit={handleSubmit}>
+          <FormControl className="w-full flex flex-col gap-4">
+            {isCancel && (
+              <div className="w-full flex flex-col gap-2">
+                <FormLabel htmlFor="remark">State the reason:</FormLabel>
+                <TextField
+                  id="remark"
+                  label="Remark"
+                  variant="outlined"
+                  className="w-full"
+                  value={remarkValue}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    setRemarkValue(e.target.value)
+                  }
+                  required
+                  size="small"
+                  multiline
+                />
+              </div>
+            )}
+            <div className="w-full flex items-center gap-4 justify-center">
+              <Button
+                variant="contained"
+                startIcon={<TaskAltIcon />}
+                color="success"
+                type="submit"
+                size="large"
+                sx={{ minWidth: "48%" }}
+                onClick={() => {
+                  if (!isCancel) {
+                    handleClick.mutate({ slug: slug, approved: true });
+                    setOpenSnackbar(true);
+                    setIsAccepted(true);
+                  }
+                }}
+              >
+                {isCancel ? "Ok" : "Accept"}
+              </Button>
+              <Button
+                variant="contained"
+                startIcon={<DeleteIcon />}
+                color="error"
+                size="large"
+                sx={{ minWidth: "48%" }}
+                onClick={() => {
+                  setIsCancel((state) => !state);
+                }}
+              >
+                {isCancel ? "Cancel" : "Reject"}
+              </Button>
+            </div>
+          </FormControl>
+        </form>
       </div>
+
       <Snackbar
         open={openSnackbar}
         autoHideDuration={5000}
