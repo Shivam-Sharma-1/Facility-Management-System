@@ -87,6 +87,10 @@ model Facility {
   description     String
   icon            String
   slug            String            @unique
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  deletedAt       DateTime
+  isActive        Boolean           @default(true)
   facilityManager FacilityManager[]
   bookings        Booking[]
 }
