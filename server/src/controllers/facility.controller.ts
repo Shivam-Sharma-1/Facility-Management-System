@@ -214,6 +214,7 @@ export const getBookingsForFacility: RequestHandler = async (
 								purpose: true,
 								status: true,
 								createdAt: true,
+								remark: true,
 								statusUpdateAtGD: true,
 								statusUpdateAtFM: true,
 								statusUpdateAtAdmin: true,
