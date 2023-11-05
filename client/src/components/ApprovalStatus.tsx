@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { FC } from "react";
+import { Typography } from "@mui/material";
 import axios from "axios";
 
-import { Typography } from "@mui/material";
 import ApprovalCard from "./ApprovalCard";
 import Loader from "./Loader";
 
@@ -11,15 +11,15 @@ const ApprovalStatus: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
     queryKey: ["bookings"],
     queryFn: async () => {
       const response = await axios.get<ApprovalData[]>(
-        `http://localhost:3000/employee/approvals/${
-          GD ? "gd" : FM ? "fm" : "admin"
-        }`,
+        `http://localhost:3000/employee/approvals/${GD && !FM ? "gd" : "fm"}`,
         {
           withCredentials: true,
         }
       );
       return response.data;
     },
+    staleTime: 0,
+    gcTime: 0,
     refetchInterval: 5 * 1000,
   });
 
@@ -35,7 +35,7 @@ const ApprovalStatus: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
       <Typography variant="h3" component="h1">
         Approval Status
       </Typography>
-      {!isPending && approvalData && approvalData.length! <= 1 ? (
+      {!isPending && approvalData && approvalData.length! < 1 ? (
         <Typography variant="h5" component="h2" sx={{ marginTop: "1em" }}>
           No booking requests at the moment!
         </Typography>
@@ -48,14 +48,18 @@ const ApprovalStatus: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
                 title={approval.title}
                 purpose={approval.purpose}
                 slug={approval.slug}
-                date={approval.date}
-                start={approval.start}
-                end={approval.end}
-                facility={approval.facility.name!}
-                requestedBy={approval.requestedBy.name!}
-                approvedAtAdmin={approval.approvedAtAdmin}
-                approvedAtFM={approval.approvedAtFM}
-                approvedAtGD={approval.approvedAtGD}
+                date={approval.time.date}
+                start={approval.time.start}
+                end={approval.time.end}
+                facility={approval.facility.name && approval.facility.name!}
+                requestedBy={
+                  approval.requestedBy.name ? approval.requestedBy.name! : null
+                }
+                approvedByGD={
+                  approval.statusUpdateByGD
+                    ? approval.statusUpdateByGD!.user.name!
+                    : null
+                }
               />
             ))}
         </div>
