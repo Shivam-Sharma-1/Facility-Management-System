@@ -33,11 +33,34 @@ export const getBookings: RequestHandler = async (
 					start: "desc",
 				},
 			},
-			include: {
-				requestedBy: {
+			select: {
+				id: true,
+				title: true,
+				slug: true,
+				purpose: true,
+				status: true,
+				createdAt: true,
+				statusUpdateAtGD: true,
+				statusUpdateAtFM: true,
+				statusUpdateAtAdmin: true,
+				statusUpdateByGD: {
 					select: {
-						name: true,
-						employeeId: true,
+						user: {
+							select: {
+								name: true,
+								employeeId: true,
+							},
+						},
+					},
+				},
+				statusUpdateByFM: {
+					select: {
+						user: {
+							select: {
+								name: true,
+								employeeId: true,
+							},
+						},
 					},
 				},
 				time: {
@@ -45,6 +68,18 @@ export const getBookings: RequestHandler = async (
 						start: true,
 						end: true,
 						date: true,
+					},
+				},
+				requestedBy: {
+					select: {
+						name: true,
+						employeeId: true,
+					},
+				},
+				facility: {
+					select: {
+						name: true,
+						slug: true,
 					},
 				},
 			},

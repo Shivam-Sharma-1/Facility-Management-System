@@ -67,6 +67,7 @@ export const getFacilities: RequestHandler = async (
 						user: {
 							select: {
 								name: true,
+								employeeId: true,
 							},
 						},
 					},
