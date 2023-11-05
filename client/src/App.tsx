@@ -13,6 +13,7 @@ import { RequireAuth } from "./components/RequireAuth";
 import ApprovalsPage from "./pages/ApprovalsPage";
 import "@tanstack/react-query";
 import { AxiosError } from "axios";
+import MyBookingsPage from "./pages/MyBookingsPage";
 
 declare module "@tanstack/react-query" {
   interface Register {
@@ -53,6 +54,14 @@ const router = createBrowserRouter(
         element={
           <RequireAuth GD={false} FM={true}>
             <ApprovalsPage GD={false} FM={true} />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="employee/mybookings"
+        element={
+          <RequireAuth GD={false} FM={false}>
+            <MyBookingsPage />
           </RequireAuth>
         }
       />
