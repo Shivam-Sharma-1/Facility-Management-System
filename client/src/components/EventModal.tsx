@@ -8,9 +8,13 @@ const EventModal: FC<EventModalProps> = ({
   eventInfo,
 }): JSX.Element => {
   return (
-    <Modal open={isOpen} onClose={() => setIsOpen(false)}>
+    <Modal
+      open={isOpen}
+      onClose={() => setIsOpen(false)}
+      sx={{ border: "none" }}
+    >
       <div className="bg-bgPrimary w-full max-w-[500px] flex flex-col gap-6 absolute left-[50%] top-[50%] -translate-x-[50%] -translate-y-[50%] rounded-md shadow-cardHover border-none">
-        <div className="w-full flex items-center justify-between bg-primary px-10 py-8 rounded-md rounded-b-none">
+        <div className="w-full flex items-center justify-between bg-primary px-10 py-8 rounded-md rounded-b-none border-none">
           <Typography
             id="modal-modal-title"
             variant="h4"
@@ -44,17 +48,26 @@ const EventModal: FC<EventModalProps> = ({
             {eventInfo.start} - {eventInfo.end}
           </Typography>
           <Typography variant="h5" component="p">
+            <span className="font-bold tracking-wide">Status:</span>{" "}
+            {eventInfo.status === "PENDING" ? "Pending" : "Approved"}
+          </Typography>
+
+          <Typography variant="h5" component="p">
             <span className="font-bold tracking-wide">Requested by:</span>{" "}
             {eventInfo.requestBy}
           </Typography>
-          <Typography variant="h5" component="p">
-            <span className="font-bold tracking-wide">Approved by (GD):</span>{" "}
-            empty
-          </Typography>
-          <Typography variant="h5" component="p">
-            <span className="font-bold tracking-wide">Approved by (FM):</span>{" "}
-            empty
-          </Typography>
+          {eventInfo.statusUpdateByGD && (
+            <Typography variant="h5" component="p">
+              <span className="font-bold tracking-wide">Approved by GD:</span>{" "}
+              {eventInfo.statusUpdateByGD}
+            </Typography>
+          )}
+          {eventInfo.statusUpdateByFM && (
+            <Typography variant="h5" component="p">
+              <span className="font-bold tracking-wide">Approved by FM:</span>{" "}
+              {eventInfo.statusUpdateByFM}
+            </Typography>
+          )}
         </div>
       </div>
     </Modal>
