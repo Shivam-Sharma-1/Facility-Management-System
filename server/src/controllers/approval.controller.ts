@@ -27,10 +27,12 @@ export const getAllUserBookings: RequestHandler = async (
 				purpose: true,
 				status: true,
 				createdAt: true,
+				remark: true,
 				time: {
 					select: {
 						start: true,
 						end: true,
+						date: true,
 					},
 				},
 				statusUpdateAtGD: true,
@@ -45,6 +47,26 @@ export const getAllUserBookings: RequestHandler = async (
 				facility: {
 					select: {
 						name: true,
+					},
+				},
+				statusUpdateByFM: {
+					select: {
+						user: {
+							select: {
+								name: true,
+								employeeId: true,
+							},
+						},
+					},
+				},
+				statusUpdateByGD: {
+					select: {
+						user: {
+							select: {
+								name: true,
+								employeeId: true,
+							},
+						},
 					},
 				},
 			},
@@ -232,7 +254,7 @@ export const approveByGD: RequestHandler = async (
 	next: NextFunction
 ) => {
 	try {
-		const { slug, approved } = req.body;
+		const { slug, approved, remark } = req.body;
 		const employeeId = req.session.userId;
 		const time = new Date().toISOString();
 		let status: ApprovalStatus = "PENDING";
@@ -262,6 +284,7 @@ export const approveByGD: RequestHandler = async (
 			},
 			data: {
 				status,
+				remark,
 				statusUpdateAtGD: time,
 				statusUpdateByGD: {
 					connect: {
@@ -299,7 +322,7 @@ export const approveByFM: RequestHandler = async (
 	next: NextFunction
 ) => {
 	try {
-		const { slug, approved } = req.body;
+		const { slug, approved, remark } = req.body;
 		const employeeId = req.session.userId;
 		const time = new Date().toISOString();
 		let status: ApprovalStatus = "PENDING";
@@ -329,6 +352,7 @@ export const approveByFM: RequestHandler = async (
 			},
 			data: {
 				status,
+				remark,
 				statusUpdateAtFM: time,
 				statusUpdateByFM: {
 					connect: {

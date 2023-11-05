@@ -59,6 +59,7 @@ model Booking {
   createdAt           DateTime         @default(now())
   facility            Facility         @relation(fields: [facilityId], references: [id])
   facilityId          String
+  remark              String           @default("")
   statusUpdateByGD    GroupDirector?   @relation(references: [id], fields: [groupDirectorId])
   groupDirectorId     String?
   statusUpdateByFM    FacilityManager? @relation(references: [id], fields: [facilityManagerId])
