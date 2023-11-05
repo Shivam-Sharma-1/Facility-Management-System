@@ -41,7 +41,7 @@ model User {
   employeeId      Int               @unique
   password        String
   role            Role              @default(USER)
-  booking         Booking[]
+  bookings        Booking[]
   groupDirector   GroupDirector?
   facilityManager FacilityManager[]
   group           Group?            @relation(fields: [groupId], references: [id])
@@ -109,7 +109,7 @@ model Group {
   name          String
   groupDirector GroupDirector?
   users         User[]
-  Booking       Booking[]
+  bookings      Booking[]
 }
 
 model FacilityManager {
