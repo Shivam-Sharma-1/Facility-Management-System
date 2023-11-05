@@ -38,6 +38,7 @@ export const getBookings: RequestHandler = async (
 				slug: true,
 				purpose: true,
 				status: true,
+				createdAt: true,
 				statusUpdateAtGD: true,
 				statusUpdateAtFM: true,
 				statusUpdateAtAdmin: true,
