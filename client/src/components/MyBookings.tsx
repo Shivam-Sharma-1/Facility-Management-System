@@ -2,7 +2,7 @@ import { Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import BookingCard from "./BookingCard";
+import BookingCard from "./MyBookingCard";
 import Loader from "./Loader";
 
 const MyBookings = (): JSX.Element => {
@@ -54,7 +54,7 @@ const MyBookings = (): JSX.Element => {
                 title={booking.title}
                 status={booking.status}
                 purpose={booking.purpose}
-                slug={booking.slug}
+                remark={booking.remark}
                 date={booking.time.date}
                 start={booking.time.start}
                 end={booking.time.end}

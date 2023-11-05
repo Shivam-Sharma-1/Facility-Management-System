@@ -1,9 +1,10 @@
-import { Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import { FC, useEffect, useState } from "react";
 import isoToDate from "../utils/isoToDate";
 import isoToTime from "../utils/isoToTime";
+import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 
-const BookingCard: FC<MyBookingCardProps> = ({
+const MyBookingCard: FC<MyBookingCardProps> = ({
   title,
   remark,
   purpose,
@@ -102,8 +103,22 @@ const BookingCard: FC<MyBookingCardProps> = ({
           </Typography>
         )}
       </div>
+      <div className="flex flex-col">
+        {!status.startsWith("REJECTED") && (
+          <Button
+            variant="contained"
+            color="error"
+            sx={{ minWidth: "47%" }}
+            size="large"
+            startIcon={<CancelOutlinedIcon />}
+            onClick={() => console.log("cancel")}
+          >
+            Cancel
+          </Button>
+        )}
+      </div>
     </div>
   );
 };
 
-export default BookingCard;
+export default MyBookingCard;
