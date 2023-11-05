@@ -42,7 +42,7 @@ const AddEventModal: FC<AddEventModalProps> = ({
     start: "",
     end: "",
     slug: "",
-    employeeId: "",
+    employeeId: null,
   });
   const location = useLocation();
   const [validationError, setValidationError] = useState<string>("");
@@ -138,7 +138,7 @@ const AddEventModal: FC<AddEventModalProps> = ({
           date: formData.date,
           start: isoStartTime,
           end: isoEndTime,
-          employeeId: auth?.user?.employeeId || "",
+          employeeId: auth!.user!.employeeId!,
           slug: `${formData.title.toLowerCase()}${formData.date}`,
         };
         setValidationError("");
@@ -160,7 +160,7 @@ const AddEventModal: FC<AddEventModalProps> = ({
       start: "",
       end: "",
       slug: "",
-      employeeId: "",
+      employeeId: null,
     });
   };
 
