@@ -29,7 +29,6 @@ const ApprovalStatus: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
     if (!isPending) {
       setApprovalData(data || []);
     }
-    console.log(data);
   }, [data, isPending]);
 
   if (isPending)
