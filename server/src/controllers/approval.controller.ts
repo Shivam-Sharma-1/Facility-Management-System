@@ -31,6 +31,7 @@ export const getAllUserBookings: RequestHandler = async (
 					select: {
 						start: true,
 						end: true,
+						date: true,
 					},
 				},
 				statusUpdateAtGD: true,
@@ -45,6 +46,26 @@ export const getAllUserBookings: RequestHandler = async (
 				facility: {
 					select: {
 						name: true,
+					},
+				},
+				statusUpdateByFM: {
+					select: {
+						user: {
+							select: {
+								name: true,
+								employeeId: true,
+							},
+						},
+					},
+				},
+				statusUpdateByGD: {
+					select: {
+						user: {
+							select: {
+								name: true,
+								employeeId: true,
+							},
+						},
 					},
 				},
 			},
