@@ -1,5 +1,5 @@
-import { Button, Typography } from "@mui/material";
-import { FC } from "react";
+import { Alert, Button, Snackbar, Typography } from "@mui/material";
+import { FC, useState } from "react";
 import isoToTime from "../utils/isoToTime";
 import isoToDate from "../utils/isoToDate";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
@@ -16,15 +16,16 @@ const ApprovalCard: FC<ApprovalProps> = ({
   end,
   facility,
   requestedBy,
-  approvedAtAdmin,
-  approvedAtFM,
-  approvedAtGD,
+  approvedByGD,
 }): JSX.Element => {
+  const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
+  const [isAccepted, setIsAccepted] = useState<boolean>(false);
+
   const handleClick = useMutation({
     mutationFn: (data: ApprovalType) =>
       axios.post(
         `http://localhost:3000/employee/approvals/${
-          approvedAtGD ? "fm" : "gd"
+          approvedByGD ? "fm" : "gd"
         }`,
         data,
         {
@@ -44,7 +45,7 @@ const ApprovalCard: FC<ApprovalProps> = ({
           component="p"
           sx={{ marginBottom: ".3em", fontWeight: 600 }}
         >
-          {facility} - {title}
+          {facility} | {title}
         </Typography>
         <Typography variant="h6" component="p">
           <span className="font-bold tracking-wide">Purpose: </span> {purpose}
@@ -61,19 +62,10 @@ const ApprovalCard: FC<ApprovalProps> = ({
           <span className="font-bold tracking-wide">Requested By: </span>{" "}
           {requestedBy}
         </Typography>
-        {approvedAtGD && (
+        {approvedByGD && (
           <Typography variant="h6" component="p">
-            Approved by GD
-          </Typography>
-        )}
-        {approvedAtFM && (
-          <Typography variant="h6" component="p">
-            Approved by FM
-          </Typography>
-        )}
-        {approvedAtAdmin && (
-          <Typography variant="h6" component="p">
-            Approved by Admin
+            <span className="font-bold tracking-wide">Approved By GD: </span>{" "}
+            {approvedByGD}
           </Typography>
         )}
       </div>
@@ -84,7 +76,11 @@ const ApprovalCard: FC<ApprovalProps> = ({
           color="success"
           size="large"
           sx={{ minWidth: "40%" }}
-          onClick={() => handleClick.mutate({ slug: slug, approved: true })}
+          onClick={() => {
+            handleClick.mutate({ slug: slug, approved: true });
+            setOpenSnackbar(true);
+            setIsAccepted(true);
+          }}
         >
           Accept
         </Button>
@@ -94,11 +90,30 @@ const ApprovalCard: FC<ApprovalProps> = ({
           color="error"
           size="large"
           sx={{ minWidth: "40%" }}
-          onClick={() => handleClick.mutate({ slug: slug, approved: false })}
+          onClick={() => {
+            handleClick.mutate({ slug: slug, approved: false });
+            setOpenSnackbar(true);
+            setIsAccepted(false);
+          }}
         >
           Reject
         </Button>
       </div>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={5000}
+        onClose={() => setOpenSnackbar(false)}
+      >
+        <Alert
+          onClose={() => setOpenSnackbar(false)}
+          severity={"success"}
+          sx={{ width: "100%" }}
+        >
+          {isAccepted
+            ? "Booking approved successfully!"
+            : "Booking request rejected!"}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };
