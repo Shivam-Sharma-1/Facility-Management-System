@@ -31,10 +31,13 @@ const Calendar: FC = (): JSX.Element => {
   const [eventInfo, setEventInfo] = useState<EventInfoProps>({
     title: "",
     purpose: "",
+    status: "",
     start: "",
     end: "",
     date: "",
     requestBy: "",
+    statusUpdateByGD: null,
+    statusUpdateByFM: null,
   });
   const location = useLocation();
   const slug = location.pathname.split("/")[2];
@@ -55,6 +58,7 @@ const Calendar: FC = (): JSX.Element => {
       return response.data;
     },
     refetchInterval: 5 * 1000,
+    gcTime: 0,
   });
 
   useEffect(() => {
@@ -80,10 +84,17 @@ const Calendar: FC = (): JSX.Element => {
     setEventInfo({
       title: clickData.title,
       purpose: clickData.purpose,
+      status: clickData.status,
       start: clickData.start ? isoToTime(clickData.start!) : "",
       end: clickData.end ? isoToTime(clickData.end!) : "",
       date: isoToDate(clickData.date!),
       requestBy: clickData.requestedBy.name,
+      statusUpdateByGD: clickData.statusUpdateByGD
+        ? clickData.statusUpdateByGD!.user.name
+        : null,
+      statusUpdateByFM: clickData.statusUpdateByFM
+        ? clickData.statusUpdateByFM!.user.name
+        : null,
     });
     setIsOpen(true);
   };
