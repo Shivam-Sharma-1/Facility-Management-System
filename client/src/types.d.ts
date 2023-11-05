@@ -246,6 +246,7 @@ type ApprovalData = {
 type ApprovalType = {
   slug: string;
   approved: boolean;
+  remark?: string;
 };
 
 type BookingCardData = {
