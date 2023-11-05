@@ -89,7 +89,7 @@ model Facility {
   slug            String            @unique
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
-  deletedAt       DateTime
+  deletedAt       DateTime?
   isActive        Boolean           @default(true)
   facilityManager FacilityManager[]
   bookings        Booking[]
