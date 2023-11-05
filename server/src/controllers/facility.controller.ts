@@ -34,6 +34,7 @@ export const getBookings: RequestHandler = async (
 				},
 			},
 			select: {
+				id: true,
 				title: true,
 				slug: true,
 				purpose: true,
