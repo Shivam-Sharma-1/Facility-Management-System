@@ -7,7 +7,7 @@ import { Button, TextField } from "@mui/material";
 import { useAuth } from "../hooks/useAuth";
 
 const LoginPage: FC = (): JSX.Element => {
-  const [id, setId] = useState<string>("");
+  const [id, setId] = useState<number | null>(null);
   const [password, setPassword] = useState<string>("");
   const auth = useAuth();
   const navigate = useNavigate();
@@ -51,7 +51,7 @@ const LoginPage: FC = (): JSX.Element => {
             variant="outlined"
             className="w-full"
             value={id}
-            onChange={(e) => setId(e.target.value)}
+            onChange={(e) => setId(parseInt(e.target.value))}
             required
           />
           <TextField

@@ -189,7 +189,7 @@ type DashboardData = {
 };
 
 type LoginData = {
-  employeeId: number;
+  employeeId: number | null;
   password: string;
 };
 
