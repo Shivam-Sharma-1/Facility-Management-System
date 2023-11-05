@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { Typography } from "@mui/material";
 import axios from "axios";
 
@@ -7,8 +7,10 @@ import ApprovalCard from "./ApprovalCard";
 import Loader from "./Loader";
 
 const ApprovalStatus: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
-  const { data: approvalData, isPending } = useQuery<ApprovalData[]>({
-    queryKey: ["bookings"],
+  const [approvalData, setApprovalData] = useState<ApprovalData[]>([]);
+
+  const { data, isPending } = useQuery<ApprovalData[]>({
+    queryKey: ["booking"],
     queryFn: async () => {
       const response = await axios.get<ApprovalData[]>(
         `http://localhost:3000/employee/approvals/${GD && !FM ? "gd" : "fm"}`,
@@ -22,6 +24,13 @@ const ApprovalStatus: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
     gcTime: 0,
     refetchInterval: 5 * 1000,
   });
+
+  useEffect(() => {
+    if (!isPending) {
+      setApprovalData(data || []);
+    }
+    console.log(data);
+  }, [data, isPending]);
 
   if (isPending)
     return (
