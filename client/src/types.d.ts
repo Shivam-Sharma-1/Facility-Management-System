@@ -11,7 +11,7 @@ interface AddEventModalProps {
   setIsOpen: (isOpen: boolean) => void;
   setOpenSnackbar: (isOpen: boolean) => void;
   setDefaultDate: (message: string | null) => void;
-  bookingsData: BookingDataProps[];
+  bookingsData: BookingNewDataProps[];
   defaultDate: string | null;
 }
 
@@ -30,22 +30,57 @@ interface EventContentProps {
 }
 
 interface BookingDataProps {
+  id: string;
   title: string;
+  slug: string;
   purpose: string;
-  date: string | null;
-  start: string | null;
-  end: string | null;
-  color: string;
+  status: string;
+  createdAt: string;
+  facilityManager: string | null;
+  statusUpdateAtGD: string | null;
+  statusUpdateAtFM: string | null;
+  statusUpdateAtAdmin: string | null;
+  statusUpdateAtGD: string | null;
+  statusUpdateAtFM: string | null;
+  time: {
+    start: string;
+    end: string;
+    date: string;
+  };
   requestedBy: {
     name: string;
-    employeeId: string;
+    employeeId: number;
   };
-  createdAt: string;
-  facilityId: number;
+  facility: {
+    name: string;
+    slug: string;
+  };
+}
+
+interface BookingNewDataProps {
   id: string;
+  title: string;
   slug: string;
+  purpose: string;
   status: string;
-  userId: number;
+  createdAt: string;
+  facilityManager: string | null;
+  statusUpdateAtGD: string | null;
+  statusUpdateAtFM: string | null;
+  statusUpdateAtAdmin: string | null;
+  statusUpdateAtGD: string | null;
+  statusUpdateAtFM: string | null;
+  start: string;
+  end: string;
+  date: string;
+  requestedBy: {
+    name: string;
+    employeeId: number;
+  };
+  facility: {
+    name: string;
+    slug: string;
+  };
 }
 
 interface AddEventDataProps {
@@ -54,7 +89,7 @@ interface AddEventDataProps {
   date: Dayjs | null;
   start: string | null;
   end: string | null;
-  employeeId: string;
+  employeeId: number | null;
   slug: string;
 }
 
@@ -133,7 +168,7 @@ type DashboardData = {
 };
 
 type LoginData = {
-  employeeId: string;
+  employeeId: number;
   password: string;
 };
 
