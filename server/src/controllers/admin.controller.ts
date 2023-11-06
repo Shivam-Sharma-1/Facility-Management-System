@@ -2,6 +2,39 @@ import { NextFunction, Request, RequestHandler, Response } from "express";
 import createHttpError from "http-errors";
 import prisma from "../db/prisma";
 
+export const getFacilities: RequestHandler = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		const facilities = await prisma.facility.findMany({
+			include: {
+				facilityManager: {
+					select: {
+						user: {
+							select: {
+								employeeId: true,
+								name: true,
+							},
+						},
+					},
+				},
+			},
+		});
+		res.status(200).json(facilities);
+	} catch (error) {
+		console.error(error);
+		return next(
+			createHttpError.InternalServerError(
+				"Something went wrong. Please try again."
+			)
+		);
+	} finally {
+		prisma.$disconnect();
+	}
+};
+
 /**
  * @description Add facilities
  * @method POST
@@ -82,30 +115,43 @@ export const deleteFacility: RequestHandler = async (
 	next: NextFunction
 ) => {
 	try {
-		// dont delete facility manager
 		const { slug } = req.body;
+		const time = new Date().toISOString();
+		const facilityManager = await prisma.facilityManager.findFirst({
+			where: {
+				facility: {
+					slug,
+				},
+			},
+			select: {
+				userId: true,
+			},
+		});
 		const deletedFacility = await prisma.$transaction([
-			prisma.facility.delete({
+			prisma.facility.update({
 				where: {
 					slug,
 				},
+				data: {
+					isActive: false,
+					deletedAt: time,
+				},
 			}),
-			prisma.facilityManager.deleteMany({
+			prisma.facilityManager.delete({
 				where: {
-					facility: {
-						slug,
-					},
+					userId: facilityManager?.userId,
+				},
+			}),
+			prisma.user.update({
+				where: {
+					id: facilityManager?.userId,
+				},
+				data: {
+					role: "USER",
 				},
 			}),
 		]);
-		// const updateUser = await prisma.user.updateMany({
-		// 	where: {
-		// 		id: FM.map((fm) => fm.userId),
-		// 	},
-		// 	data: {
-		// 		role: "USER",
-		// 	},
-		// })
+
 		if (!deletedFacility) {
 			return next(
 				createHttpError.InternalServerError(
@@ -129,4 +175,52 @@ export const updateFacility: RequestHandler = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
-) => {};
+) => {
+	try {
+		const {
+			slug,
+			name,
+			description,
+			newFacilityManagerId,
+			prevFacilityManagerId,
+			icon,
+		} = req.body;
+		const facility = await prisma.$transaction([
+			prisma.facility.update({
+				where: {
+					slug,
+				},
+				data: {
+					name,
+					description,
+					icon,
+				},
+			}),
+			prisma.user.update({
+				where: {
+					employeeId: newFacilityManagerId,
+				},
+				data: {
+					role: "FACILITY_MANAGER",
+					facilityManager: {
+						create: {
+							facility: {
+								connect: {
+									slug,
+								},
+							},
+						},
+					},
+				},
+			}),
+		]);
+		res.status(201).json(facility);
+	} catch (error) {
+		console.error(error);
+		return next(
+			createHttpError.InternalServerError(
+				"Something went wrong. Please try again."
+			)
+		);
+	}
+};
