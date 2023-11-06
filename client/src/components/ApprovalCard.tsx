@@ -50,6 +50,13 @@ const ApprovalCard: FC<ApprovalProps> = ({
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    handleClick.mutate({ slug: slug, approved: true });
+    setOpenSnackbar(true);
+    setIsAccepted(true);
+  };
+
+  const handleReject = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     handleClick.mutate({
       slug: slug,
       approved: false,
@@ -92,7 +99,11 @@ const ApprovalCard: FC<ApprovalProps> = ({
         )}
       </div>
       <div className="w-[40%] flex flex-col gap-4 items-center">
-        <form autoComplete="off" className="w-full" onSubmit={handleSubmit}>
+        <form
+          autoComplete="off"
+          className="w-full"
+          onSubmit={(e) => (isCancel ? handleReject(e) : handleSubmit(e))}
+        >
           <FormControl className="w-full flex flex-col gap-4">
             {isCancel && (
               <div className="w-full flex flex-col gap-2">
@@ -120,13 +131,6 @@ const ApprovalCard: FC<ApprovalProps> = ({
                 type="submit"
                 size="large"
                 sx={{ minWidth: "48%" }}
-                onClick={() => {
-                  if (!isCancel) {
-                    handleClick.mutate({ slug: slug, approved: true });
-                    setOpenSnackbar(true);
-                    setIsAccepted(true);
-                  }
-                }}
               >
                 {isCancel ? "Ok" : "Accept"}
               </Button>
