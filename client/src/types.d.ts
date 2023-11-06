@@ -134,6 +134,7 @@ interface RequireAuthProps {
   children: ReactNode;
   GD: boolean;
   FM: boolean;
+  Admin?: boolean;
 }
 
 interface EventInfoProps {
