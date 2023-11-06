@@ -287,7 +287,6 @@ export const getAllBookings: RequestHandler = async (
 			};
 		}
 
-		console.log(JSON.stringify(filterConditions));
 		const bookings = await prisma.booking.findMany({
 			where: filterConditions,
 			select: {
