@@ -7,7 +7,7 @@ import { Button, TextField } from "@mui/material";
 import { useAuth } from "../hooks/useAuth";
 
 const LoginPage: FC = (): JSX.Element => {
-  const [id, setId] = useState<string>("");
+  const [id, setId] = useState<number | null>(null);
   const [password, setPassword] = useState<string>("");
   const auth = useAuth();
   const navigate = useNavigate();
@@ -21,7 +21,6 @@ const LoginPage: FC = (): JSX.Element => {
         withCredentials: true,
       }),
     onSuccess: (data) => {
-      console.log(data);
       auth?.login(data.data);
       localStorage.setItem("token-info", JSON.stringify(data.data));
       navigate(redirectPath, { replace: true, preventScrollReset: true });
@@ -33,15 +32,13 @@ const LoginPage: FC = (): JSX.Element => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("submitted");
-    console.log(id, password);
     mutation.mutate({ employeeId: id, password: password });
   };
 
   return (
     <div className="w-full h-full min-h-screen flex justify-center items-center">
       <div className="w-[400px] bg-bgPrimary shadow-cardHover rounded-lg flex flex-col justify-center p-10 gap-6">
-        <h1 className="text-black">Employee Login</h1>
+        <h1>Employee Login</h1>
         <form
           onSubmit={handleSubmit}
           autoComplete="off"
@@ -52,8 +49,8 @@ const LoginPage: FC = (): JSX.Element => {
             label="Id"
             variant="outlined"
             className="w-full"
-            value={id}
-            onChange={(e) => setId(e.target.value)}
+            value={id?.toString() || ""}
+            onChange={(e) => setId(parseInt(e.target.value))}
             required
           />
           <TextField

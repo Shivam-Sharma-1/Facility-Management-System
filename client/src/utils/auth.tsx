@@ -9,13 +9,11 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 
   const login = (newUser: User): void => {
     setUser(newUser);
-    console.log("new user", newUser);
   };
 
   const logout = (): void => {
     setUser(null);
     localStorage.removeItem("token-info");
-    console.log("logout");
   };
 
   return (

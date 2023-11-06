@@ -24,6 +24,7 @@ export const getBookings: RequestHandler = async (
 				},
 				OR: [
 					{ status: "APPROVED_BY_FM" },
+					{ status: "APPROVED_BY_GD" },
 					{ status: "APPROVED_BY_ADMIN" },
 					{ status: "APPROVED_BY_GD" },
 					{ status: "PENDING" },
@@ -162,6 +163,111 @@ export const addBookings: RequestHandler = async (
 				)
 			);
 		}
+		return next(
+			createHttpError.InternalServerError(
+				"Something went wrong. Please try again."
+			)
+		);
+	} finally {
+		prisma.$disconnect();
+	}
+};
+
+/**
+ * @description get booking for Facility
+ * @method GET
+ * @access private
+ * @returns {booking}
+ */
+
+export const getBookingsForFacility: RequestHandler = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		const employeeId = req.session.userId;
+		const facilityManager = await prisma.user.findFirst({
+			where: {
+				AND: [{ employeeId }, { role: "FACILITY_MANAGER" }],
+			},
+		});
+		if (!facilityManager) {
+			return next(
+				createHttpError.Unauthorized(
+					"You do not have permission to access this route."
+				)
+			);
+		}
+
+		const bookings = await prisma.facilityManager.findFirst({
+			where: {
+				userId: facilityManager.id,
+			},
+			select: {
+				facility: {
+					select: {
+						bookings: {
+							select: {
+								id: true,
+								title: true,
+								slug: true,
+								purpose: true,
+								status: true,
+								createdAt: true,
+								remark: true,
+								statusUpdateAtGD: true,
+								statusUpdateAtFM: true,
+								statusUpdateAtAdmin: true,
+								statusUpdateByGD: {
+									select: {
+										user: {
+											select: {
+												name: true,
+												employeeId: true,
+											},
+										},
+									},
+								},
+								statusUpdateByFM: {
+									select: {
+										user: {
+											select: {
+												name: true,
+												employeeId: true,
+											},
+										},
+									},
+								},
+								time: {
+									select: {
+										start: true,
+										end: true,
+										date: true,
+									},
+								},
+								requestedBy: {
+									select: {
+										name: true,
+										employeeId: true,
+									},
+								},
+								facility: {
+									select: {
+										name: true,
+										slug: true,
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		});
+
+		res.status(200).json(bookings);
+	} catch (error) {
+		console.error(error);
 		return next(
 			createHttpError.InternalServerError(
 				"Something went wrong. Please try again."

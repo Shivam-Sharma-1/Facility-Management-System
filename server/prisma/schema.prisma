@@ -41,7 +41,7 @@ model User {
   employeeId      Int               @unique
   password        String
   role            Role              @default(USER)
-  booking         Booking[]
+  bookings        Booking[]
   groupDirector   GroupDirector?
   facilityManager FacilityManager[]
   group           Group?            @relation(fields: [groupId], references: [id])
@@ -59,6 +59,7 @@ model Booking {
   createdAt           DateTime         @default(now())
   facility            Facility         @relation(fields: [facilityId], references: [id])
   facilityId          String
+  remark              String           @default("")
   statusUpdateByGD    GroupDirector?   @relation(references: [id], fields: [groupDirectorId])
   groupDirectorId     String?
   statusUpdateByFM    FacilityManager? @relation(references: [id], fields: [facilityManagerId])
@@ -86,10 +87,10 @@ model Facility {
   description     String
   icon            String
   slug            String            @unique
-  isActive        Boolean           @default(true)
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
   deletedAt       DateTime?
+  isActive        Boolean           @default(true)
   facilityManager FacilityManager[]
   bookings        Booking[]
 }

@@ -11,15 +11,15 @@ export const RequireAuth: FC<RequireAuthProps> = ({
   const location = useLocation();
   const auth = useAuth();
 
-  if (!auth?.user) {
+  if (!auth!.user) {
     return <Navigate to="/auth/login" state={{ path: location.pathname }} />;
   }
 
-  if (GD && auth?.user?.role !== "GROUP_DIRECTOR") {
+  if (GD && auth?.user!.role !== "GROUP_DIRECTOR") {
     return <Navigate to="/" />;
   }
 
-  if (FM && auth?.user?.role !== "FACILITY_MANAGER") {
+  if (FM && auth?.user!.role !== "FACILITY_MANAGER") {
     return <Navigate to="/" />;
   }
 
