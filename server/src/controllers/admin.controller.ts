@@ -254,7 +254,41 @@ export const getAllBookings: RequestHandler = async (
 	next: NextFunction
 ) => {
 	try {
+		const { month, facility } = req.query;
+		let filterConditions = {};
+
+		if (month) {
+			// Parse the month parameter as a Date object
+			const startDate = new Date(`${month}-01`);
+			const endDate = new Date(`${month}-31`);
+			startDate.setFullYear(new Date().getFullYear());
+			endDate.setFullYear(new Date().getFullYear());
+
+			filterConditions = {
+				...filterConditions,
+
+				createdAt: {
+					gte: startDate,
+					lt: endDate,
+				},
+			};
+		}
+
+		if (facility) {
+			filterConditions = {
+				AND: [
+					{ ...filterConditions },
+					{
+						facility: {
+							slug: facility,
+						},
+					},
+				],
+			};
+		}
+
 		const bookings = await prisma.booking.findMany({
+			where: filterConditions,
 			select: {
 				title: true,
 				purpose: true,
@@ -311,10 +345,14 @@ export const getAllBookings: RequestHandler = async (
 			where: {
 				isActive: true,
 			},
+			select: {
+				slug: true,
+				name: true,
+			},
 		});
 		res.status(200).json({ facilities, bookings });
 	} catch (error) {
-		console.error(error);
+		console.error(error.message);
 		return next(
 			createHttpError.InternalServerError(
 				"Something went wrong. Please try again."
