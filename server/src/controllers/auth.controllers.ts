@@ -149,10 +149,65 @@ export const authRegister: RequestHandler = async (
 	} catch (error) {
 		console.error(error);
 		if (error.isJoi === true)
-			return next(
-				createHttpError.BadRequest("Invalid employee ID/password")
-			);
+			return next(createHttpError.BadRequest(error.message));
 		next(error);
+	} finally {
+		prisma.$disconnect();
+	}
+};
+
+export const createGroup: RequestHandler = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		const { name } = req.body;
+		const group = await prisma.group.create({
+			data: {
+				name,
+			},
+		});
+		if (!group) {
+			return next(createHttpError.BadRequest("Group not created."));
+		}
+		res.status(201).json(group);
+	} catch (error) {
+		console.error(error);
+		return next(
+			createHttpError.InternalServerError(
+				"Something went wrong. Please try again."
+			)
+		);
+	} finally {
+		prisma.$disconnect();
+	}
+};
+
+export const addGroupDirector: RequestHandler = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		const { groupId, groupDirectorId } = req.body;
+		const group = await prisma.groupDirector.create({
+			data: {
+				userId: groupDirectorId,
+				groupId,
+			},
+		});
+		if (!group) {
+			return next(createHttpError.BadRequest("Group not created."));
+		}
+		res.status(201).json(group);
+	} catch (error) {
+		console.error(error);
+		return next(
+			createHttpError.InternalServerError(
+				"Something went wrong. Please try again."
+			)
+		);
 	} finally {
 		prisma.$disconnect();
 	}

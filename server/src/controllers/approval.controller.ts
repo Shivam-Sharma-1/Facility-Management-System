@@ -70,6 +70,9 @@ export const getAllUserBookings: RequestHandler = async (
 					},
 				},
 			},
+			orderBy: {
+				createdAt: "desc",
+			},
 		});
 		res.status(200).json(bookings);
 	} catch (error) {

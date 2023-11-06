@@ -6,8 +6,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL_DEV")
+  provider = "mysql"
+  url      = env("DATABASE_URL_MYSQL")
 }
 
 enum Role {

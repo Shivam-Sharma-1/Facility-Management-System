@@ -27,7 +27,7 @@ export const getFacilities: RequestHandler = async (
 				where: {
 					AND: [
 						{
-							groupId: user.groupId,
+							groupId: user.groupId!,
 						},
 						{
 							status: "PENDING",

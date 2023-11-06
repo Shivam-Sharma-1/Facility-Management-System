@@ -9,6 +9,7 @@ const authSchema = Joi.object({
 		.required()
 		.min(8),
 	role: Joi.string(),
+	groupId: Joi.string(),
 }).with("employeeId", "password");
 
 export default authSchema;
