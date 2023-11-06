@@ -47,10 +47,11 @@ const EventModal: FC<EventModalProps> = ({
             <span className="font-bold tracking-wide">Time:</span>{" "}
             {eventInfo.start} - {eventInfo.end}
           </Typography>
-          <Typography variant="h5" component="p">
-            <span className="font-bold tracking-wide">Status:</span>{" "}
-            {eventInfo.status === "PENDING" ? "Pending" : "Approved"}
-          </Typography>
+          {eventInfo.status === "PENDING" && (
+            <Typography variant="h5" component="p">
+              <span className="font-bold tracking-wide">Status:</span> Pending
+            </Typography>
+          )}
 
           <Typography variant="h5" component="p">
             <span className="font-bold tracking-wide">Requested by:</span>{" "}
