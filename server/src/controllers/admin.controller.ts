@@ -185,6 +185,16 @@ export const updateFacility: RequestHandler = async (
 			prevFacilityManagerId,
 			icon,
 		} = req.body;
+		const prevFacilityManager = await prisma.facilityManager.findFirst({
+			where: {
+				user: {
+					employeeId: prevFacilityManagerId,
+				},
+			},
+			select: {
+				userId: true,
+			},
+		});
 		const facility = await prisma.$transaction([
 			prisma.facility.update({
 				where: {
@@ -194,6 +204,19 @@ export const updateFacility: RequestHandler = async (
 					name,
 					description,
 					icon,
+				},
+			}),
+			prisma.facilityManager.delete({
+				where: {
+					userId: prevFacilityManager?.userId,
+				},
+			}),
+			prisma.user.update({
+				where: {
+					employeeId: prevFacilityManagerId,
+				},
+				data: {
+					role: "USER",
 				},
 			}),
 			prisma.user.update({
@@ -215,6 +238,81 @@ export const updateFacility: RequestHandler = async (
 			}),
 		]);
 		res.status(201).json(facility);
+	} catch (error) {
+		console.error(error);
+		return next(
+			createHttpError.InternalServerError(
+				"Something went wrong. Please try again."
+			)
+		);
+	}
+};
+
+export const getAllBookings: RequestHandler = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		const bookings = await prisma.booking.findMany({
+			select: {
+				title: true,
+				purpose: true,
+				status: true,
+				createdAt: true,
+				remark: true,
+				time: {
+					select: {
+						start: true,
+						end: true,
+						date: true,
+					},
+				},
+				statusUpdateAtGD: true,
+				statusUpdateAtFM: true,
+				statusUpdateAtAdmin: true,
+				requestedBy: {
+					select: {
+						name: true,
+						employeeId: true,
+					},
+				},
+				facility: {
+					select: {
+						name: true,
+					},
+				},
+				statusUpdateByFM: {
+					select: {
+						user: {
+							select: {
+								name: true,
+								employeeId: true,
+							},
+						},
+					},
+				},
+				statusUpdateByGD: {
+					select: {
+						user: {
+							select: {
+								name: true,
+								employeeId: true,
+							},
+						},
+					},
+				},
+			},
+			orderBy: {
+				createdAt: "desc",
+			},
+		});
+		const facilities = await prisma.facility.findMany({
+			where: {
+				isActive: true,
+			},
+		});
+		res.status(200).json({ facilities, bookings });
 	} catch (error) {
 		console.error(error);
 		return next(
