@@ -244,6 +244,19 @@ interface AdminFacilitiesRowData {
   fm: JSX.Element | null;
 }
 
+interface AddFacilityDataProps {
+  name: string;
+  description: string;
+  icon: string;
+  FMId: string | number | null;
+}
+
+interface AddFacilityModalProps {
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+  setOpenSnackbar: (isOpen: boolean) => void;
+}
+
 // ----------TYPES-----------
 
 type FacilityData = {
