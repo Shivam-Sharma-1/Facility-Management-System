@@ -1,13 +1,23 @@
-import { Button, CircularProgress, Typography } from "@mui/material";
+import {
+  Alert,
+  Button,
+  CircularProgress,
+  Snackbar,
+  Typography,
+} from "@mui/material";
 import { FC, useEffect, useState } from "react";
 import InsertInvitationIcon from "@mui/icons-material/InsertInvitation";
 
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import AdminFacilitiesTable from "./AdminFacilitiesTable";
+import AddFacilityModal from "./AddFacilityModal";
 
 const AdminFacilities: FC = (): JSX.Element => {
   const [facilitiesData, setFacilitiesData] = useState<FacilityData[]>([]);
+  const [isAddFacilityModalOpen, setIsAddFacilityModalOpen] =
+    useState<boolean>(false);
+  const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
 
   const { data, isPending } = useQuery({
     queryKey: ["adminfacilities"],
@@ -18,6 +28,10 @@ const AdminFacilities: FC = (): JSX.Element => {
       return response.data;
     },
   });
+
+  const handleCloseSnackbar = (): void => {
+    setOpenSnackbar(false);
+  };
 
   useEffect(() => {
     if (!isPending) {
@@ -34,6 +48,13 @@ const AdminFacilities: FC = (): JSX.Element => {
 
   return (
     <div className="w-[80%] flex flex-col px-12 py-8 gap-6">
+      {isAddFacilityModalOpen && (
+        <AddFacilityModal
+          isOpen={isAddFacilityModalOpen}
+          setIsOpen={setIsAddFacilityModalOpen}
+          setOpenSnackbar={setOpenSnackbar}
+        />
+      )}
       <Typography variant="h3" component="h1">
         Manage facilities
       </Typography>
@@ -46,6 +67,9 @@ const AdminFacilities: FC = (): JSX.Element => {
           }
           sx={{ paddingX: "2em", height: "45px" }}
           size="large"
+          onClick={() => {
+            setIsAddFacilityModalOpen(true);
+          }}
         >
           Add facility
         </Button>
@@ -55,6 +79,19 @@ const AdminFacilities: FC = (): JSX.Element => {
           <AdminFacilitiesTable facilitiesData={facilitiesData} />
         </div>
       )}
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          Facility added successfully!
+        </Alert>
+      </Snackbar>
     </div>
   );
 };
