@@ -62,57 +62,29 @@ const Navigation = (): JSX.Element => {
         aria-labelledby="nested-list-subheader"
         disablePadding
       >
-        <ListItemButton
-          onClick={handleClick}
-          className="flex gap-4"
-          sx={{ padding: "1em" }}
-        >
-          <ListItemIcon sx={{ minWidth: "0px" }}>
-            <ApprovalIcon
-              sx={{ width: "26px", height: "26px", color: "white" }}
-            />
-          </ListItemIcon>
-          <ListItemText
-            primaryTypographyProps={{
-              variant: "h6",
-              component: "li",
-            }}
-            primary="Approval Status"
-          />
-          {open ? <ExpandLess /> : <ExpandMore />}
-        </ListItemButton>
-        <Collapse in={open} timeout="auto" unmountOnExit>
-          <Link to="/employee/mybookings" className="text-white">
-            <List
-              component="div"
-              disablePadding
-              sx={{ paddingLeft: "1em", paddingBlock: "0.5em" }}
+        {auth?.user!.role === "ADMIN" && (
+          <>
+            <ListItemButton
+              onClick={handleClick}
+              className="flex gap-4"
+              sx={{ padding: "1em" }}
             >
-              <ListItemButton>
-                <ListItemText
-                  primaryTypographyProps={{
-                    variant: "h6",
-                    component: "li",
-                  }}
-                  primary="My Bookings"
+              <ListItemIcon sx={{ minWidth: "0px" }}>
+                <ApprovalIcon
+                  sx={{ width: "26px", height: "26px", color: "white" }}
                 />
-              </ListItemButton>
-            </List>
-          </Link>
-
-          {auth?.user!.role !== "USER" && (
-            <>
-              <Divider color="#0c0051" />
-              <Link
-                to={`/employee/approvals/${
-                  auth?.user!.role === "GROUP_DIRECTOR"
-                    ? "gd"
-                    : auth?.user!.role === "FACILITY_MANAGER"
-                    ? "fm"
-                    : "admin"
-                }`}
-                className="text-white"
-              >
+              </ListItemIcon>
+              <ListItemText
+                primaryTypographyProps={{
+                  variant: "h6",
+                  component: "li",
+                }}
+                primary="Admin"
+              />
+              {open ? <ExpandLess /> : <ExpandMore />}
+            </ListItemButton>
+            <Collapse in={open} timeout="auto" unmountOnExit>
+              <Link to="/admin/facilities" className="text-white">
                 <List
                   component="div"
                   disablePadding
@@ -124,14 +96,82 @@ const Navigation = (): JSX.Element => {
                         variant: "h6",
                         component: "li",
                       }}
-                      primary="Approval Requests"
+                      primary="Facilities"
                     />
                   </ListItemButton>
                 </List>
               </Link>
-            </>
-          )}
-        </Collapse>
+              <Link to="/admin/bookings" className="text-white">
+                <List
+                  component="div"
+                  disablePadding
+                  sx={{ paddingLeft: "1em", paddingBlock: "0.5em" }}
+                >
+                  <ListItemButton>
+                    <ListItemText
+                      primaryTypographyProps={{
+                        variant: "h6",
+                        component: "li",
+                      }}
+                      primary="Bookings"
+                    />
+                  </ListItemButton>
+                </List>
+              </Link>
+            </Collapse>
+            <Divider color="#0c0051" />
+          </>
+        )}
+
+        <Link to="/employee/mybookings" className="text-white">
+          <List
+            component="div"
+            disablePadding
+            sx={{ paddingLeft: "1em", paddingBlock: "0.5em" }}
+          >
+            <ListItemButton>
+              <ListItemText
+                primaryTypographyProps={{
+                  variant: "h6",
+                  component: "li",
+                }}
+                primary="My Bookings"
+              />
+            </ListItemButton>
+          </List>
+        </Link>
+
+        {auth?.user!.role !== "USER" && (
+          <>
+            <Divider color="#0c0051" />
+            <Link
+              to={`/employee/approvals/${
+                auth?.user!.role === "GROUP_DIRECTOR"
+                  ? "gd"
+                  : auth?.user!.role === "FACILITY_MANAGER"
+                  ? "fm"
+                  : "admin"
+              }`}
+              className="text-white"
+            >
+              <List
+                component="div"
+                disablePadding
+                sx={{ paddingLeft: "1em", paddingBlock: "0.5em" }}
+              >
+                <ListItemButton>
+                  <ListItemText
+                    primaryTypographyProps={{
+                      variant: "h6",
+                      component: "li",
+                    }}
+                    primary="Approval Requests"
+                  />
+                </ListItemButton>
+              </List>
+            </Link>
+          </>
+        )}
         <Divider color="#0c0051" />
 
         {auth?.user!.role === "FACILITY_MANAGER" && (
