@@ -30,8 +30,6 @@ export const getFacilities: RequestHandler = async (
 				"Something went wrong. Please try again."
 			)
 		);
-	} finally {
-		prisma.$disconnect();
 	}
 };
 
@@ -98,8 +96,6 @@ export const addFacility: RequestHandler = async (
 				"Something went wrong. Please try again."
 			)
 		);
-	} finally {
-		prisma.$disconnect();
 	}
 };
 
@@ -167,8 +163,6 @@ export const deleteFacility: RequestHandler = async (
 				"Something went wrong. Please try again."
 			)
 		);
-	} finally {
-		prisma.$disconnect();
 	}
 };
 export const updateFacility: RequestHandler = async (
@@ -245,8 +239,6 @@ export const updateFacility: RequestHandler = async (
 				"Something went wrong. Please try again."
 			)
 		);
-	} finally {
-		prisma.$disconnect();
 	}
 };
 
@@ -295,6 +287,7 @@ export const getAllBookings: RequestHandler = async (
 				title: true,
 				purpose: true,
 				status: true,
+				slug: true,
 				createdAt: true,
 				remark: true,
 				time: {
@@ -360,7 +353,42 @@ export const getAllBookings: RequestHandler = async (
 				"Something went wrong. Please try again."
 			)
 		);
-	} finally {
-		prisma.$disconnect();
+	}
+};
+
+export const approveBooking: RequestHandler = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		const { slug, approved, remark } = req.body;
+		const time = new Date().toISOString();
+
+		const booking = await prisma.booking.update({
+			where: {
+				slug,
+			},
+			data: {
+				status: approved ? "APPROVED_BY_ADMIN" : "REJECTED_BY_ADMIN",
+				remark,
+				statusUpdateAtAdmin: time,
+			},
+		});
+		if (!booking) {
+			return next(
+				createHttpError.BadRequest(
+					"Something went wrong. Please try again."
+				)
+			);
+		}
+		res.status(200).json(booking);
+	} catch (error) {
+		console.error(error);
+		return next(
+			createHttpError.InternalServerError(
+				"Something went wrong. Please try again."
+			)
+		);
 	}
 };
