@@ -13,7 +13,7 @@ import { IconButton } from "@mui/material";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 
-const columns: readonly Column[] = [
+const columns: readonly AdminBookingsColumnData[] = [
   { id: "title", label: "Title/Facility", minWidth: 140 },
   { id: "purpose", label: "Purpose", minWidth: 140 },
   { id: "date", label: "Date", minWidth: 140 },

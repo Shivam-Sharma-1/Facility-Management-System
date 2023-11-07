@@ -184,7 +184,7 @@ interface FilterOptionProps {
   label: string;
 }
 
-interface Column {
+interface AdminBookingsColumnData {
   id:
     | "title"
     | "purpose"
