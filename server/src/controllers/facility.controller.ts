@@ -92,8 +92,6 @@ export const getBookings: RequestHandler = async (
 				"Something went wrong. Please try again."
 			)
 		);
-	} finally {
-		prisma.$disconnect();
 	}
 };
 
@@ -167,8 +165,6 @@ export const addBookings: RequestHandler = async (
 				"Something went wrong. Please try again."
 			)
 		);
-	} finally {
-		prisma.$disconnect();
 	}
 };
 
@@ -272,7 +268,5 @@ export const getBookingsForFacility: RequestHandler = async (
 				"Something went wrong. Please try again."
 			)
 		);
-	} finally {
-		prisma.$disconnect();
 	}
 };

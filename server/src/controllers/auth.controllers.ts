@@ -52,8 +52,6 @@ export const authLogin: RequestHandler = async (
 			);
 		}
 		return next(createHttpError.Unauthorized("Invalid credentials."));
-	} finally {
-		prisma.$disconnect();
 	}
 };
 
@@ -129,8 +127,6 @@ export const changePassword: RequestHandler = async (
 				"Something went wrong. Please try again."
 			)
 		);
-	} finally {
-		prisma.$disconnect();
 	}
 };
 
@@ -159,8 +155,6 @@ export const getUser: RequestHandler = async (
 				"Something went wrong. Please try again."
 			)
 		);
-	} finally {
-		prisma.$disconnect();
 	}
 };
 
@@ -203,8 +197,6 @@ export const authRegister: RequestHandler = async (
 		if (error.isJoi === true)
 			return next(createHttpError.BadRequest(error.message));
 		next(error);
-	} finally {
-		prisma.$disconnect();
 	}
 };
 
@@ -231,8 +223,6 @@ export const createGroup: RequestHandler = async (
 				"Something went wrong. Please try again."
 			)
 		);
-	} finally {
-		prisma.$disconnect();
 	}
 };
 
@@ -260,7 +250,5 @@ export const addGroupDirector: RequestHandler = async (
 				"Something went wrong. Please try again."
 			)
 		);
-	} finally {
-		prisma.$disconnect();
 	}
 };

@@ -81,8 +81,6 @@ export const getAllUserBookings: RequestHandler = async (
 				"Something went wrong. Please try again."
 			)
 		);
-	} finally {
-		prisma.$disconnect();
 	}
 };
 
@@ -155,8 +153,6 @@ export const getAllGDApprovals: RequestHandler = async (
 	} catch (error) {
 		console.error(error);
 		return next(createHttpError.InternalServerError(error.message));
-	} finally {
-		prisma.$disconnect();
 	}
 };
 
@@ -240,8 +236,6 @@ export const getAllFMApprovals: RequestHandler = async (
 	} catch (error) {
 		console.error(error);
 		return next(createHttpError.InternalServerError(error.message));
-	} finally {
-		prisma.$disconnect();
 	}
 };
 
@@ -308,8 +302,6 @@ export const approveByGD: RequestHandler = async (
 	} catch (error) {
 		console.error(error);
 		return next(createHttpError.InternalServerError(error.message));
-	} finally {
-		prisma.$disconnect();
 	}
 };
 
@@ -376,7 +368,5 @@ export const approveByFM: RequestHandler = async (
 	} catch (error) {
 		console.error(error);
 		return next(createHttpError.InternalServerError(error.message));
-	} finally {
-		prisma.$disconnect();
 	}
 };
