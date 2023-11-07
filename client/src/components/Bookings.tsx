@@ -38,7 +38,7 @@ const MyBookings = (): JSX.Element => {
   return (
     <div className="w-[80%] h-full flex flex-col items-center justify-center px-6 py-12">
       <Typography variant="h3" component="h1">
-        My Bookings
+        Facility Bookings
       </Typography>
       {!isPending && bookings && bookings.length! < 1 ? (
         <Typography variant="h5" component="h2" sx={{ marginTop: "1em" }}>
