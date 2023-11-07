@@ -40,7 +40,7 @@ const Facilities: FC = (): JSX.Element => {
               <FacilityCard
                 name={facility.name}
                 icon={facility.icon}
-                manager={facility.facilityManager[0].user.name}
+                manager={facility.facilityManager.user.name}
               />
             </Link>
           ))}
