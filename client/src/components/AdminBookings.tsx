@@ -124,6 +124,8 @@ const AdminBookings: FC = (): JSX.Element => {
           onClick={() => {
             setSelectValue("");
             setTimeFilter(false);
+            enabled && setEnabled(false);
+            refetch();
           }}
         >
           Reset
