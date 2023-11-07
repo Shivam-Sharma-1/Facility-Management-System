@@ -76,14 +76,24 @@ const AdminBookings: FC = (): JSX.Element => {
         <Chip
           label="All"
           clickable={true}
-          sx={{ minWidth: "100px", minHeight: "40px", fontSize: "1rem" }}
+          sx={{
+            minWidth: "100px",
+            minHeight: "40px",
+            fontSize: "1rem",
+            borderRadius: "4px",
+          }}
           variant={timeFilter ? "outlined" : "filled"}
           onClick={() => setTimeFilter(false)}
         />
         <Chip
           label="This month"
           clickable={true}
-          sx={{ minWidth: "100px", minHeight: "40px", fontSize: "1rem" }}
+          sx={{
+            minWidth: "100px",
+            minHeight: "40px",
+            fontSize: "1rem",
+            borderRadius: "4px",
+          }}
           variant={timeFilter ? "filled" : "outlined"}
           onClick={() => setTimeFilter(true)}
         />
