@@ -25,7 +25,7 @@ const AddFacilityModal: FC<AddFacilityModalProps> = ({
   });
 
   const mutation = useMutation({
-    mutationFn: (data: AddFacilityDataProps) =>
+    mutationFn: (data: AdminFacilitiesSubmitData) =>
       axios.post(`http://localhost:3000/admin/facility/add`, data, {
         withCredentials: true,
       }),
@@ -39,12 +39,12 @@ const AddFacilityModal: FC<AddFacilityModalProps> = ({
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    const submitData = {
+    const submitData: AdminFacilitiesSubmitData = {
       name: formData.name,
       description: formData.description,
       icon: formData.icon,
       slug: formData.name.toLowerCase().replace(/\s/g, "-"),
-      FMId: parseInt(formData.FMId!),
+      facilityManagerId: parseInt(formData.FMId! as string),
     };
     setOpenSnackbar(true);
     mutation.mutate(submitData);
