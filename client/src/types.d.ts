@@ -254,7 +254,13 @@ interface AddFacilityDataProps {
 interface AddFacilityModalProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
+}
+
+interface EditFacilityModalProps {
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
   setOpenSnackbar: (isOpen: boolean) => void;
+  facilityData: FacilityData;
 }
 
 // ----------TYPES-----------
@@ -274,7 +280,7 @@ type FacilityData = {
 type FacilityManager = {
   user: {
     name: string;
-    employeeId: number;
+    employeeId: number | null;
   };
 };
 
@@ -347,4 +353,13 @@ type AdminFacilitiesSubmitData = {
   icon: string;
   slug: string;
   facilityManagerId: number | null;
+};
+
+type AdminFacilitiesEditData = {
+  name: string;
+  description: string;
+  icon: string;
+  slug: string;
+  prevFacilityManagerId: number | null;
+  newFacilityManagerId: number | null;
 };
