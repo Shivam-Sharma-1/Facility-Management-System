@@ -25,6 +25,18 @@ enum ApprovalStatus {
   REJECTED_BY_GD
   REJECTED_BY_FM
   REJECTED_BY_ADMIN
+  CANCELLED
+}
+
+enum CancellationStatus {
+  PENDING
+  CANCELLED_BY_USER
+  APPROVED_BY_GD
+  APPROVED_BY_FM
+  APPROVED_BY_ADMIN
+  REJECTED_BY_GD
+  REJECTED_BY_FM
+  REJECTED_BY_ADMIN
 }
 
 model Session {
@@ -49,28 +61,35 @@ model User {
 }
 
 model Booking {
-  id                  String           @id @default(cuid())
-  title               String
-  slug                String           @unique
-  purpose             String
-  requestedBy         User             @relation(fields: [userId], references: [id])
-  userId              String
-  status              ApprovalStatus   @default(PENDING)
-  createdAt           DateTime         @default(now())
-  facility            Facility         @relation(fields: [facilityId], references: [id])
-  facilityId          String
-  remark              String           @default("")
-  statusUpdateByGD    GroupDirector?   @relation(references: [id], fields: [groupDirectorId])
-  groupDirectorId     String?
-  statusUpdateByFM    FacilityManager? @relation(references: [id], fields: [facilityManagerId])
-  facilityManagerId   String?
-  statusUpdateAtGD    DateTime?
-  statusUpdateAtFM    DateTime?
-  statusUpdateAtAdmin DateTime?
-  time                BookingTime      @relation(references: [id], fields: [timeId])
-  timeId              String           @unique
-  group               Group?           @relation(references: [id], fields: [groupId])
-  groupId             String?
+  id                        String              @id @default(cuid())
+  title                     String
+  slug                      String              @unique
+  purpose                   String
+  requestedBy               User                @relation(fields: [userId], references: [id])
+  userId                    String
+  status                    ApprovalStatus      @default(PENDING)
+  cancellationStatus        CancellationStatus? @default(PENDING)
+  createdAt                 DateTime            @default(now())
+  cancelledAt               DateTime?
+  cancellationRequestedAt   DateTime?
+  facility                  Facility            @relation(fields: [facilityId], references: [id])
+  facilityId                String
+  remark                    String              @default("")
+  cancellationRemark        String              @default("")
+  statusUpdateByGD          GroupDirector?      @relation(references: [id], fields: [groupDirectorId])
+  groupDirectorId           String?
+  statusUpdateByFM          FacilityManager?    @relation(references: [id], fields: [facilityManagerId])
+  facilityManagerId         String?
+  statusUpdateAtGD          DateTime?
+  statusUpdateAtFM          DateTime?
+  statusUpdateAtAdmin       DateTime?
+  cancellationUpdateAtGD    DateTime?
+  cancellationUpdateAtFM    DateTime?
+  cancellationUpdateAtAdmin DateTime?
+  time                      BookingTime         @relation(references: [id], fields: [timeId])
+  timeId                    String              @unique
+  group                     Group?              @relation(references: [id], fields: [groupId])
+  groupId                   String?
 }
 
 model BookingTime {
