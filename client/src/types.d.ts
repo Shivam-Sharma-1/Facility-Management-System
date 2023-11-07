@@ -340,3 +340,11 @@ type AdminBookingsData = {
   facilities: FacilityData[];
   bookings: ApprovalData[];
 };
+
+type AdminFacilitiesSubmitData = {
+  name: string;
+  description: string;
+  icon: string;
+  slug: string;
+  facilityManagerId: number | null;
+};
