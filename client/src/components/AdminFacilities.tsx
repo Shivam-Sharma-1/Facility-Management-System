@@ -54,6 +54,7 @@ const AdminFacilities: FC = (): JSX.Element => {
         <AddFacilityModal
           isOpen={isAddFacilityModalOpen}
           setIsOpen={setIsAddFacilityModalOpen}
+          setOpenSnackbar={setOpenSnackbar}
         />
       )}
 
