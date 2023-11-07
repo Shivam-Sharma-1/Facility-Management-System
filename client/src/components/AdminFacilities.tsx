@@ -17,6 +17,7 @@ const AdminFacilities: FC = (): JSX.Element => {
   const [facilitiesData, setFacilitiesData] = useState<FacilityData[]>([]);
   const [isAddFacilityModalOpen, setIsAddFacilityModalOpen] =
     useState<boolean>(false);
+
   const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
 
   const { data, isPending } = useQuery({
@@ -27,6 +28,7 @@ const AdminFacilities: FC = (): JSX.Element => {
       });
       return response.data;
     },
+    refetchInterval: 5 * 1000,
   });
 
   const handleCloseSnackbar = (): void => {
@@ -52,9 +54,9 @@ const AdminFacilities: FC = (): JSX.Element => {
         <AddFacilityModal
           isOpen={isAddFacilityModalOpen}
           setIsOpen={setIsAddFacilityModalOpen}
-          setOpenSnackbar={setOpenSnackbar}
         />
       )}
+
       <Typography variant="h3" component="h1">
         Manage facilities
       </Typography>

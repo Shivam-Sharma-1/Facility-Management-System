@@ -9,9 +9,10 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import isoToDate from "../utils/isoToDate";
 import isoToTime from "../utils/isoToTime";
-import { IconButton } from "@mui/material";
+import { Alert, IconButton, Snackbar } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import EditFacilityModal from "./EditFacilityModal";
 
 const columns: readonly AdminFacilitiesColumnData[] = [
   { id: "name", label: "Name", minWidth: 140 },
@@ -28,6 +29,26 @@ const AdminFacilitiesTable: FC<AdminFacilitiesTableProps> = (
 ): JSX.Element => {
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
+  const [isEditFacilityModalOpen, setIsEditFacilityModalOpen] =
+    useState<boolean>(false);
+  const [modalData, setModalData] = useState<FacilityData>({
+    id: "",
+    name: "",
+    description: "",
+    icon: "",
+    slug: "",
+    facilityManager: {
+      user: {
+        name: "",
+        employeeId: null,
+      },
+    },
+  });
+  const [openEditSnackbar, setOpenEditSnackbar] = useState<boolean>(false);
+
+  const handleCloseSnackbar = (): void => {
+    setOpenEditSnackbar(false);
+  };
 
   const rows: AdminFacilitiesRowData[] =
     facilitiesData &&
@@ -64,7 +85,13 @@ const AdminFacilitiesTable: FC<AdminFacilitiesTableProps> = (
       ) : null,
       actions: (
         <div className="flex gap-1">
-          <IconButton color="primary">
+          <IconButton
+            color="primary"
+            onClick={() => {
+              setModalData(facility);
+              setIsEditFacilityModalOpen(true);
+            }}
+          >
             <EditIcon />
           </IconButton>
           <IconButton color="error">
@@ -85,6 +112,14 @@ const AdminFacilitiesTable: FC<AdminFacilitiesTableProps> = (
 
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
+      {isEditFacilityModalOpen && (
+        <EditFacilityModal
+          isOpen={isEditFacilityModalOpen}
+          setIsOpen={setIsEditFacilityModalOpen}
+          setOpenSnackbar={setOpenEditSnackbar}
+          facilityData={modalData}
+        />
+      )}
       <TableContainer sx={{ maxHeight: 540 }}>
         <Table stickyHeader>
           <TableHead>
@@ -129,6 +164,19 @@ const AdminFacilitiesTable: FC<AdminFacilitiesTableProps> = (
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
+      <Snackbar
+        open={openEditSnackbar}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          Facility edited successfully!
+        </Alert>
+      </Snackbar>
     </Paper>
   );
 };
