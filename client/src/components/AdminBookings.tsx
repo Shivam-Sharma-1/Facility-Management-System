@@ -77,14 +77,14 @@ const AdminBookings: FC = (): JSX.Element => {
           label="All"
           clickable={true}
           sx={{ minWidth: "100px", minHeight: "40px", fontSize: "1rem" }}
-          variant={timeFilter ? "outlined" : "contained"}
+          variant={timeFilter ? "outlined" : "filled"}
           onClick={() => setTimeFilter(false)}
         />
         <Chip
           label="This month"
           clickable={true}
           sx={{ minWidth: "100px", minHeight: "40px", fontSize: "1rem" }}
-          variant={timeFilter ? "contained" : "outlined"}
+          variant={timeFilter ? "filled" : "outlined"}
           onClick={() => setTimeFilter(true)}
         />
         <FormControl size="small" className="w-[200px]">
