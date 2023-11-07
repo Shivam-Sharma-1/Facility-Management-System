@@ -15,6 +15,7 @@ import "@tanstack/react-query";
 import { AxiosError } from "axios";
 import MyBookingsPage from "./pages/MyBookingsPage";
 import BookingsPage from "./pages/BookingsPage";
+import AdminBookingsPage from "./pages/AdminBookingsPage";
 
 declare module "@tanstack/react-query" {
   interface Register {
@@ -80,6 +81,17 @@ const router = createBrowserRouter(
           element={
             <RequireAuth GD={false} FM={false}>
               <MyBookingsPage />
+            </RequireAuth>
+          }
+        />
+      </Route>
+
+      <Route path="admin">
+        <Route
+          path="bookings"
+          element={
+            <RequireAuth GD={false} FM={false} Admin={true}>
+              <AdminBookingsPage />
             </RequireAuth>
           }
         />
