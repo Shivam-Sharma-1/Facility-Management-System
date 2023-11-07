@@ -16,6 +16,7 @@ import { AxiosError } from "axios";
 import MyBookingsPage from "./pages/MyBookingsPage";
 import BookingsPage from "./pages/BookingsPage";
 import AdminBookingsPage from "./pages/AdminBookingsPage";
+import AdminFacilitiesPage from "./pages/AdminFacilitiesPage";
 
 declare module "@tanstack/react-query" {
   interface Register {
@@ -92,6 +93,14 @@ const router = createBrowserRouter(
           element={
             <RequireAuth GD={false} FM={false} Admin={true}>
               <AdminBookingsPage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="facilities"
+          element={
+            <RequireAuth GD={false} FM={false} Admin={true}>
+              <AdminFacilitiesPage />
             </RequireAuth>
           }
         />
