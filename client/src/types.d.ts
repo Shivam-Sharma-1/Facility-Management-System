@@ -180,21 +180,112 @@ interface ApprovalStatusProps {
   FM: boolean;
 }
 
+interface FilterOptionProps {
+  label: string;
+}
+
+interface AdminBookingsColumnData {
+  id:
+    | "title"
+    | "purpose"
+    | "date"
+    | "time"
+    | "createdAt"
+    | "status"
+    | "reqBy"
+    | "actions"
+    | "gd"
+    | "fm";
+  label: string;
+  minWidth?: number;
+}
+
+interface AdminBookingsTableProps {
+  bookingsData: ApprovalData[];
+}
+
+interface AdminFacilitiesTableProps {
+  facilitiesData: FacilityData[];
+}
+
+interface AdminBookingsRowData {
+  title: JSX.Element;
+  purpose: string;
+  date: string;
+  time: string;
+  createdAt: JSX.Element;
+  reqBy: string;
+  status: string;
+  actions: string | JSX.Element;
+  gd: JSX.Element | null;
+  fm: JSX.Element | null;
+}
+
+interface AdminFacilitiesColumnData {
+  id:
+    | "name"
+    | "description"
+    | "status"
+    | "createdAt"
+    | "updatedAt"
+    | "deletedAt"
+    | "actions"
+    | "fm";
+  label: string;
+  minWidth?: number;
+}
+
+interface AdminFacilitiesRowData {
+  name: string;
+  description: string;
+  status: string;
+  createdAt: JSX.Element;
+  updatedAt: JSX.Element;
+  deletedAt: JSX.Element;
+  actions: string | JSX.Element;
+  fm: JSX.Element | null;
+}
+
+interface AddFacilityDataProps {
+  name: string;
+  description: string;
+  icon: string;
+  FMId: string | number | null;
+}
+
+interface AddFacilityModalProps {
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+  setOpenSnackbar: (isOpen: boolean) => void;
+}
+
+interface EditFacilityModalProps {
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+  setOpenSnackbar: (isOpen: boolean) => void;
+  facilityData: FacilityData;
+}
+
 // ----------TYPES-----------
 
 type FacilityData = {
   id: string;
   name: string;
   description: string;
+  status?: string;
   icon: string;
   slug: string;
-  facilityManager: FacilityManager[];
+  isActive?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+  deletedAt?: string;
+  facilityManager: FacilityManager;
 };
 
 type FacilityManager = {
   user: {
     name: string;
-    employeeId: number;
+    employeeId: number | null;
   };
 };
 
@@ -254,4 +345,26 @@ type BookingCardData = {
   facility: {
     bookings: ApprovalData[];
   };
+};
+
+type AdminBookingsData = {
+  facilities: FacilityData[];
+  bookings: ApprovalData[];
+};
+
+type AdminFacilitiesSubmitData = {
+  name: string;
+  description: string;
+  icon: string;
+  slug: string;
+  facilityManagerId: number | null;
+};
+
+type AdminFacilitiesEditData = {
+  name: string;
+  description: string;
+  icon: string;
+  slug: string;
+  prevFacilityManagerId: number | null;
+  newFacilityManagerId: number | null;
 };
