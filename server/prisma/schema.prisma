@@ -35,16 +35,16 @@ model Session {
 }
 
 model User {
-  id              String            @id @default(cuid())
+  id              String           @id @default(cuid())
   image           String?
   name            String
-  employeeId      Int               @unique
+  employeeId      Int              @unique
   password        String
-  role            Role              @default(USER)
+  role            Role             @default(USER)
   bookings        Booking[]
   groupDirector   GroupDirector?
-  facilityManager FacilityManager[]
-  group           Group?            @relation(fields: [groupId], references: [id])
+  facilityManager FacilityManager?
+  group           Group?           @relation(fields: [groupId], references: [id])
   groupId         String?
 }
 
@@ -82,16 +82,16 @@ model BookingTime {
 }
 
 model Facility {
-  id              String            @id @default(cuid())
+  id              String           @id @default(cuid())
   name            String
   description     String
   icon            String
-  slug            String            @unique
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
+  slug            String           @unique
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
   deletedAt       DateTime?
-  isActive        Boolean           @default(true)
-  facilityManager FacilityManager[]
+  isActive        Boolean          @default(true)
+  facilityManager FacilityManager?
   bookings        Booking[]
 }
 
