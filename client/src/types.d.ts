@@ -204,6 +204,10 @@ interface AdminBookingsTableProps {
   bookingsData: ApprovalData[];
 }
 
+interface AdminFacilitiesTableProps {
+  facilitiesData: FacilityData[];
+}
+
 interface AdminBookingsRowData {
   title: JSX.Element;
   purpose: string;
@@ -217,6 +221,29 @@ interface AdminBookingsRowData {
   fm: JSX.Element | null;
 }
 
+interface AdminFacilitiesColumnData {
+  id:
+    | "name"
+    | "description"
+    | "createdAt"
+    | "updatedAt"
+    | "deletedAt"
+    | "actions"
+    | "fm";
+  label: string;
+  minWidth?: number;
+}
+
+interface AdminFacilitiesRowData {
+  name: string;
+  description: string;
+  createdAt: JSX.Element;
+  updatedAt: JSX.Element;
+  deletedAt: JSX.Element;
+  actions: string | JSX.Element;
+  fm: JSX.Element | null;
+}
+
 // ----------TYPES-----------
 
 type FacilityData = {
@@ -225,7 +252,10 @@ type FacilityData = {
   description: string;
   icon: string;
   slug: string;
-  facilityManager: FacilityManager[];
+  createdAt?: string;
+  updatedAt?: string;
+  deletedAt?: string;
+  facilityManager: FacilityManager;
 };
 
 type FacilityManager = {
