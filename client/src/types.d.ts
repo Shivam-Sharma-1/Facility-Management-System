@@ -180,6 +180,32 @@ interface ApprovalStatusProps {
   FM: boolean;
 }
 
+interface FilterOptionProps {
+  label: string;
+}
+
+interface Column {
+  id:
+    | "title"
+    | "purpose"
+    | "date"
+    | "time"
+    | "createdAt"
+    | "status"
+    | "reqBy"
+    | "actions"
+    | "gd"
+    | "fm";
+  label: string;
+  minWidth?: number;
+  align?: "right";
+  format?: (value: number) => string;
+}
+
+interface AdminBookingsTableProps {
+  bookingsData: ApprovalData[];
+}
+
 // ----------TYPES-----------
 
 type FacilityData = {
@@ -254,4 +280,9 @@ type BookingCardData = {
   facility: {
     bookings: ApprovalData[];
   };
+};
+
+type AdminBookingsData = {
+  facilities: FacilityManager[];
+  bookings: ApprovalData[];
 };
