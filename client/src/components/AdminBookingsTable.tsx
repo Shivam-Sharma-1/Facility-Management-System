@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { ChangeEvent, FC, useState } from "react";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -26,26 +26,13 @@ const columns: readonly Column[] = [
   { id: "actions", label: "Operations", minWidth: 130 },
 ];
 
-interface rowData {
-  title: string;
-  purpose: string;
-  date: string;
-  time: string;
-  createdAt: string;
-  reqBy: string;
-  status: string;
-  actions: string;
-  gd: string | null;
-  fm: string | null;
-}
-
 const AdminBookingsTable: FC<AdminBookingsTableProps> = (
   bookingsData
 ): JSX.Element => {
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [page, setPage] = useState<number>(0);
+  const [rowsPerPage, setRowsPerPage] = useState<number>(10);
 
-  const rows: rowData[] =
+  const rows: AdminBookingsRowData[] =
     bookingsData &&
     bookingsData.bookingsData.map((booking) => ({
       title: (
@@ -92,7 +79,7 @@ const AdminBookingsTable: FC<AdminBookingsTableProps> = (
             : null}
         </>
       ) : null,
-      status: booking.status.toLowerCase().replaceAll("_", " "),
+      status: booking.status.toLowerCase().replace(/_/g, " "),
       actions:
         booking.status === "PENDING" || booking.status === "APPROVED_BY_GD" ? (
           <div className="flex gap-1">
@@ -107,15 +94,12 @@ const AdminBookingsTable: FC<AdminBookingsTableProps> = (
           "No actions"
         ),
     }));
-  console.log("rows", rows);
 
-  const handleChangePage = (event: unknown, newPage: number) => {
+  const handleChangePage = (_event: unknown, newPage: number) => {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleChangeRowsPerPage = (event: ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
