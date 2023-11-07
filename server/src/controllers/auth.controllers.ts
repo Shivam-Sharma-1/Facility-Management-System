@@ -83,6 +83,58 @@ export const authLogout: RequestHandler = async (
 };
 
 /**
+ * @description change password
+ * @method POST
+ * @access private
+ * @returns {message}
+ */
+export const changePassword: RequestHandler = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		const { oldPassword, newPassword } = req.body;
+		const adminId = req.session.userId;
+
+		const admin = await prisma.user.findUnique({
+			where: {
+				employeeId: adminId,
+			},
+		});
+		if (!admin) {
+			return next(createHttpError.Unauthorized("User does not exist."));
+		}
+		const verifyOldPassword = await argon2.verify(
+			admin.password,
+			oldPassword
+		);
+		if (!verifyOldPassword) {
+			return next(createHttpError.Unauthorized("Invalid old password."));
+		}
+		const hashedPassword = await argon2.hash(newPassword);
+		const updatedAdmin = await prisma.user.update({
+			where: {
+				employeeId: adminId,
+			},
+			data: {
+				password: hashedPassword,
+			},
+		});
+		res.status(200).json(updatedAdmin);
+	} catch (error) {
+		console.error(error);
+		return next(
+			createHttpError.InternalServerError(
+				"Something went wrong. Please try again."
+			)
+		);
+	} finally {
+		prisma.$disconnect();
+	}
+};
+
+/**
  * @description acess employee
  * @method GET
  * @access private
