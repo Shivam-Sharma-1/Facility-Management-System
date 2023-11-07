@@ -256,6 +256,7 @@ interface AddFacilityDataProps {
 interface AddFacilityModalProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
+  setOpenSnackbar: (isOpen: boolean) => void;
 }
 
 interface EditFacilityModalProps {
