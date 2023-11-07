@@ -198,12 +198,23 @@ interface Column {
     | "fm";
   label: string;
   minWidth?: number;
-  align?: "right";
-  format?: (value: number) => string;
 }
 
 interface AdminBookingsTableProps {
   bookingsData: ApprovalData[];
+}
+
+interface AdminBookingsRowData {
+  title: JSX.Element;
+  purpose: string;
+  date: string;
+  time: string;
+  createdAt: JSX.Element;
+  reqBy: string;
+  status: string;
+  actions: string | JSX.Element;
+  gd: JSX.Element | null;
+  fm: JSX.Element | null;
 }
 
 // ----------TYPES-----------
@@ -283,6 +294,6 @@ type BookingCardData = {
 };
 
 type AdminBookingsData = {
-  facilities: FacilityManager[];
+  facilities: FacilityData[];
   bookings: ApprovalData[];
 };
