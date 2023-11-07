@@ -13,10 +13,12 @@ import { Alert, IconButton, Snackbar } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import EditFacilityModal from "./EditFacilityModal";
+import DeleteFacilityModal from "./DeleteFacilityModal";
 
 const columns: readonly AdminFacilitiesColumnData[] = [
   { id: "name", label: "Name", minWidth: 140 },
   { id: "description", label: "Description", minWidth: 140 },
+  { id: "status", label: "Status", minWidth: 100 },
   { id: "createdAt", label: "Created At", minWidth: 150 },
   { id: "updatedAt", label: "Updated At", minWidth: 150 },
   { id: "deletedAt", label: "Deleted At", minWidth: 150 },
@@ -31,10 +33,13 @@ const AdminFacilitiesTable: FC<AdminFacilitiesTableProps> = (
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
   const [isEditFacilityModalOpen, setIsEditFacilityModalOpen] =
     useState<boolean>(false);
+  const [isDeleteFacilityModalOpen, setIsDeleteFacilityModalOpen] =
+    useState<boolean>(false);
   const [modalData, setModalData] = useState<FacilityData>({
     id: "",
     name: "",
     description: "",
+    status: "",
     icon: "",
     slug: "",
     facilityManager: {
@@ -45,9 +50,11 @@ const AdminFacilitiesTable: FC<AdminFacilitiesTableProps> = (
     },
   });
   const [openEditSnackbar, setOpenEditSnackbar] = useState<boolean>(false);
+  const [openDeleteSnackbar, setOpenDeleteSnackbar] = useState<boolean>(false);
 
   const handleCloseSnackbar = (): void => {
     setOpenEditSnackbar(false);
+    setOpenDeleteSnackbar(false);
   };
 
   const rows: AdminFacilitiesRowData[] =
@@ -55,6 +62,7 @@ const AdminFacilitiesTable: FC<AdminFacilitiesTableProps> = (
     facilitiesData.facilitiesData.map((facility) => ({
       name: facility.name,
       description: facility.description,
+      status: facility.isActive ? "Active" : "Inactive",
       createdAt: (
         <>
           {isoToTime(facility.createdAt!)}
@@ -94,7 +102,13 @@ const AdminFacilitiesTable: FC<AdminFacilitiesTableProps> = (
           >
             <EditIcon />
           </IconButton>
-          <IconButton color="error">
+          <IconButton
+            color="error"
+            onClick={() => {
+              setModalData(facility);
+              setIsDeleteFacilityModalOpen(true);
+            }}
+          >
             <DeleteIcon />
           </IconButton>
         </div>
@@ -117,6 +131,14 @@ const AdminFacilitiesTable: FC<AdminFacilitiesTableProps> = (
           isOpen={isEditFacilityModalOpen}
           setIsOpen={setIsEditFacilityModalOpen}
           setOpenSnackbar={setOpenEditSnackbar}
+          facilityData={modalData}
+        />
+      )}
+      {isDeleteFacilityModalOpen && (
+        <DeleteFacilityModal
+          isOpen={isDeleteFacilityModalOpen}
+          setIsOpen={setIsDeleteFacilityModalOpen}
+          setOpenSnackbar={setOpenDeleteSnackbar}
           facilityData={modalData}
         />
       )}
@@ -175,6 +197,19 @@ const AdminFacilitiesTable: FC<AdminFacilitiesTableProps> = (
           sx={{ width: "100%" }}
         >
           Facility edited successfully!
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={openDeleteSnackbar}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          Facility deleted successfully!
         </Alert>
       </Snackbar>
     </Paper>

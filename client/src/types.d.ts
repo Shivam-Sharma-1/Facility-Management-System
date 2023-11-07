@@ -225,6 +225,7 @@ interface AdminFacilitiesColumnData {
   id:
     | "name"
     | "description"
+    | "status"
     | "createdAt"
     | "updatedAt"
     | "deletedAt"
@@ -237,6 +238,7 @@ interface AdminFacilitiesColumnData {
 interface AdminFacilitiesRowData {
   name: string;
   description: string;
+  status: string;
   createdAt: JSX.Element;
   updatedAt: JSX.Element;
   deletedAt: JSX.Element;
@@ -269,8 +271,10 @@ type FacilityData = {
   id: string;
   name: string;
   description: string;
+  status?: string;
   icon: string;
   slug: string;
+  isActive?: boolean;
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;
