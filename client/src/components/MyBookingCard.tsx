@@ -62,7 +62,7 @@ const MyBookingCard: FC<MyBookingCardProps> = ({
   const handleClick = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     console.log(slug, remarkValue);
-    mutation.mutate({ slug: slug, remark: remarkValue });
+    mutation.mutate({ slug: slug!, remark: remarkValue });
   };
 
   useEffect(() => {
@@ -132,9 +132,10 @@ const MyBookingCard: FC<MyBookingCardProps> = ({
           ? "bg-blue-100 border-blue-600"
           : (status.startsWith("APPROVED") &&
               cancelStatus === "NOT_REQUESTED") ||
-            cancelStatus.startsWith("APPROVED")
+            cancelStatus!.startsWith("APPROVED")
           ? "bg-green-100 border-green-600"
-          : status.startsWith("REJECTED") || cancelStatus.startsWith("APPROVED")
+          : status.startsWith("REJECTED") ||
+            cancelStatus!.startsWith("APPROVED")
           ? "bg-red-100 border-red-600"
           : "bg-yellow-100 border-yellow-600"
       }`}
@@ -160,7 +161,7 @@ const MyBookingCard: FC<MyBookingCardProps> = ({
         </Typography>
         <Typography variant="body1" component="p">
           <span className="font-bold tracking-wide">Requested At:</span>{" "}
-          {isoToDate(createdAt)}, {isoToTime(createdAt)}
+          {isoToDate(createdAt!)}, {isoToTime(createdAt!)}
         </Typography>
 
         <Typography variant="body1" component="p">
