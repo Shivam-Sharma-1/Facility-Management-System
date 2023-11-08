@@ -135,6 +135,7 @@ interface RequireAuthProps {
   GD: boolean;
   FM: boolean;
   Admin?: boolean;
+  noAdmin?: boolean;
 }
 
 interface EventInfoProps {
