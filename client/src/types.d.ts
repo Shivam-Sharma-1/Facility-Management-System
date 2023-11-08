@@ -166,8 +166,10 @@ interface MyBookingCardProps {
   title: string;
   purpose: string;
   status: string;
+  cancelStatus: string;
   slug: string;
   remark: string;
+  createdAt: string;
   date: string;
   start: string;
   end: string;
@@ -178,6 +180,10 @@ interface MyBookingCardProps {
   approvedAtGD: string | null;
   approvedAtFM: string | null;
   approvedAtAdmin: string | null;
+  cancellationRequestedAt: string | null;
+  cancellationRemark: string | null;
+  cancellationUpdateAtGD: string | null;
+  cancellationUpdateAtFM: string | null;
 }
 
 interface ApprovalStatusProps {
@@ -316,14 +322,19 @@ type LoginData = {
 };
 
 type ApprovalData = {
-  id: number;
   title: string;
-  slug: string;
   purpose: string;
-  remark: string;
-  userId: number;
-  status: string;
+  slug: string;
   createdAt: string;
+  remark: string;
+  status: string;
+  cancellationStatus?: string;
+  cancellationRequestedAt?: string | null;
+  cancellationRemark?: string;
+  cancelledAt?: string | null;
+  cancellationUpdateAtGD?: string | null;
+  cancellationUpdateAtFM?: string | null;
+  cancellationUpdateAtAdmin?: string | null;
   time: {
     date: string;
     start: string;
@@ -348,7 +359,14 @@ type ApprovalData = {
   };
   requestedBy: {
     name: string;
+    employeeId: number;
   };
+  statusUpdateByFM: string | null;
+  statusUpdateByGD: string | null;
+};
+
+type BookingCardProps = {
+  bookingData: ApprovalData;
 };
 
 type ApprovalType = {
