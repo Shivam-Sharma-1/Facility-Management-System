@@ -16,7 +16,7 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 
 import AddEventModal from "./modals/AddEventModal";
-import EventModal from "./EventModal";
+import EventModal from "./modals/EventModal";
 import isoToTime from "../utils/isoToTime";
 import isoToDate from "../utils/isoToDate";
 import Loader from "./Loader";
