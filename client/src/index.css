@@ -53,6 +53,7 @@ a {
 body {
   background-color: #faf9f6;
   color: #212427;
+  scrollbar-gutter: stable both-edges;
 }
 
 .fc-day {
