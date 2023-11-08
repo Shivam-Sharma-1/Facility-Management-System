@@ -26,6 +26,7 @@ export const getAllUserBookings: RequestHandler = async (
 				title: true,
 				purpose: true,
 				status: true,
+				slug: true,
 				createdAt: true,
 				remark: true,
 				time: {
