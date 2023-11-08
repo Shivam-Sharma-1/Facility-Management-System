@@ -166,6 +166,7 @@ interface MyBookingCardProps {
   title: string;
   purpose: string;
   status: string;
+  slug: string;
   remark: string;
   date: string;
   start: string;
@@ -174,6 +175,9 @@ interface MyBookingCardProps {
   requestedBy: string | null;
   approvedByGD: string | null;
   approvedByFM: string | null;
+  approvedAtGD: string | null;
+  approvedAtFM: string | null;
+  approvedAtAdmin: string | null;
 }
 
 interface ApprovalStatusProps {
