@@ -214,6 +214,13 @@ export const getBookingsForFacility: RequestHandler = async (
 								statusUpdateAtGD: true,
 								statusUpdateAtFM: true,
 								statusUpdateAtAdmin: true,
+								cancelledAt: true,
+								cancellationRemark: true,
+								cancellationRequestedAt: true,
+								cancellationStatus: true,
+								cancellationUpdateAtGD: true,
+								cancellationUpdateAtFM: true,
+								cancellationUpdateAtAdmin: true,
 								statusUpdateByGD: {
 									select: {
 										user: {
@@ -261,6 +268,113 @@ export const getBookingsForFacility: RequestHandler = async (
 		});
 
 		res.status(200).json(bookings);
+	} catch (error) {
+		console.error(error);
+		return next(
+			createHttpError.InternalServerError(
+				"Something went wrong. Please try again."
+			)
+		);
+	}
+};
+
+export const getBookingsForGroup: RequestHandler = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		const employeeId = req.session.userId;
+		const bookings = await prisma.groupDirector.findFirst({
+			where: {
+				AND: [
+					{
+						user: {
+							employeeId,
+						},
+					},
+					{
+						user: {
+							role: "GROUP_DIRECTOR",
+						},
+					},
+				],
+			},
+			select: {
+				group: {
+					select: {
+						bookings: {
+							select: {
+								id: true,
+								title: true,
+								slug: true,
+								purpose: true,
+								status: true,
+								createdAt: true,
+								remark: true,
+								statusUpdateAtGD: true,
+								statusUpdateAtFM: true,
+								statusUpdateAtAdmin: true,
+								cancelledAt: true,
+								cancellationRemark: true,
+								cancellationRequestedAt: true,
+								cancellationStatus: true,
+								cancellationUpdateAtGD: true,
+								cancellationUpdateAtFM: true,
+								cancellationUpdateAtAdmin: true,
+								statusUpdateByGD: {
+									select: {
+										user: {
+											select: {
+												name: true,
+												employeeId: true,
+											},
+										},
+									},
+								},
+								statusUpdateByFM: {
+									select: {
+										user: {
+											select: {
+												name: true,
+												employeeId: true,
+											},
+										},
+									},
+								},
+								time: {
+									select: {
+										start: true,
+										end: true,
+										date: true,
+									},
+								},
+								requestedBy: {
+									select: {
+										name: true,
+										employeeId: true,
+									},
+								},
+								facility: {
+									select: {
+										name: true,
+										slug: true,
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		});
+		if (!bookings) {
+			return next(
+				createHttpError.Unauthorized(
+					"You do not have permission to access this route."
+				)
+			);
+		}
+		res.status(200).json(bookings.group.bookings);
 	} catch (error) {
 		console.error(error);
 		return next(
