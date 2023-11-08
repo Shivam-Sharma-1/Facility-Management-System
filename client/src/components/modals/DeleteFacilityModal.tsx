@@ -24,7 +24,6 @@ const DeleteFacilityModal: FC<EditFacilityModalProps> = ({
   });
 
   const handleSubmit = (): void => {
-    console.log(facilityData);
     setOpenSnackbar(true);
     mutation.mutate({ slug: facilityData.slug });
   };

@@ -31,6 +31,7 @@ const AddFacilityModal: FC<AddFacilityModalProps> = ({
       }),
     onSuccess: () => {
       setIsOpen(false);
+      setOpenSnackbar(true);
     },
     onError: (error) => {
       console.log(error);
@@ -46,7 +47,6 @@ const AddFacilityModal: FC<AddFacilityModalProps> = ({
       slug: formData.name.toLowerCase().replace(/\s/g, "-"),
       facilityManagerId: parseInt(formData.FMId! as string),
     };
-    setOpenSnackbar(true);
     mutation.mutate(submitData);
   };
 
