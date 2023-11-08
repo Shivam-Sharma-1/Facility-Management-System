@@ -93,26 +93,32 @@ const AdminFacilitiesTable: FC<AdminFacilitiesTableProps> = (
         </>
       ),
       actions: (
-        <div className="flex gap-1">
-          <IconButton
-            color="primary"
-            onClick={() => {
-              setModalData(facility);
-              setIsEditFacilityModalOpen(true);
-            }}
-          >
-            <EditIcon />
-          </IconButton>
-          <IconButton
-            color="error"
-            onClick={() => {
-              setModalData(facility);
-              setIsDeleteFacilityModalOpen(true);
-            }}
-          >
-            <DeleteIcon />
-          </IconButton>
-        </div>
+        <>
+          {facility.isActive ? (
+            <div className="flex gap-1">
+              <IconButton
+                color="primary"
+                onClick={() => {
+                  setModalData(facility);
+                  setIsEditFacilityModalOpen(true);
+                }}
+              >
+                <EditIcon />
+              </IconButton>
+              <IconButton
+                color="error"
+                onClick={() => {
+                  setModalData(facility);
+                  setIsDeleteFacilityModalOpen(true);
+                }}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </div>
+          ) : (
+            "N/A"
+          )}
+        </>
       ),
     }));
 
