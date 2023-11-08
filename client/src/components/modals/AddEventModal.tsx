@@ -139,7 +139,9 @@ const AddEventModal: FC<AddEventModalProps> = ({
           start: isoStartTime,
           end: isoEndTime,
           employeeId: auth!.user!.employeeId!,
-          slug: `${formData.title.toLowerCase()}${slug}${isoStartTime}`,
+          slug: `${formData.title
+            .toLowerCase()
+            .replace(/\s/g, "-")}${slug}${isoStartTime}`,
         };
         setValidationError("");
         setAvailableEndTimes([]);
