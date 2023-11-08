@@ -50,6 +50,7 @@ const AdminBookings: FC = (): JSX.Element => {
       return response.data;
     },
     enabled: enabled,
+    refetchInterval: 5 * 1000,
   });
 
   useEffect(() => {
