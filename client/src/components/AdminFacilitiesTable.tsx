@@ -12,8 +12,8 @@ import isoToTime from "../utils/isoToTime";
 import { Alert, IconButton, Snackbar } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import EditFacilityModal from "./EditFacilityModal";
-import DeleteFacilityModal from "./DeleteFacilityModal";
+import EditFacilityModal from "./modals/EditFacilityModal";
+import DeleteFacilityModal from "./modals/DeleteFacilityModal";
 
 const columns: readonly AdminFacilitiesColumnData[] = [
   { id: "name", label: "Name", minWidth: 140 },
@@ -79,18 +79,19 @@ const AdminFacilitiesTable: FC<AdminFacilitiesTableProps> = (
       ),
       deletedAt: (
         <>
-          {isoToTime(facility.deletedAt!)}
+          {facility.deletedAt ? isoToTime(facility.deletedAt!) : "N/A"}
           <br />
-          {isoToDate(facility.deletedAt!).toString()}
+          {facility.deletedAt && isoToDate(facility.deletedAt!).toString()}
         </>
       ),
-      fm: facility.facilityManager ? (
+      fm: (
         <>
-          {facility.facilityManager?.user.name || null}
+          {facility.isActive ? facility.facilityManager?.user.name : "N/A"}
           <br />
-          Id: {facility.facilityManager?.user.employeeId || null}
+          {facility.isActive &&
+            "Id:" + facility.facilityManager?.user.employeeId}
         </>
-      ) : null,
+      ),
       actions: (
         <div className="flex gap-1">
           <IconButton

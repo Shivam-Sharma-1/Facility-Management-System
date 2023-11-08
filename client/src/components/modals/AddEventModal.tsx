@@ -20,11 +20,11 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../../hooks/useAuth";
 
 import "dayjs/locale/en-gb";
-import isoToDate from "../utils/isoToDate";
-import isoToTime from "../utils/isoToTime";
+import isoToDate from "../../utils/isoToDate";
+import isoToTime from "../../utils/isoToTime";
 
 const AddEventModal: FC<AddEventModalProps> = ({
   isOpen,
