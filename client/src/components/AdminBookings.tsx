@@ -61,7 +61,7 @@ const AdminBookings: FC = (): JSX.Element => {
 
   if (isPending)
     return (
-      <div className="w-full min-h-screen h-full flex flex-col items-center justify-center">
+      <div className="w-[74vw] min-h-screen h-full flex flex-col items-center justify-center">
         <CircularProgress />
       </div>
     );
@@ -142,9 +142,7 @@ const AdminBookings: FC = (): JSX.Element => {
         </Button>
       </div>
       {!isPending && (
-        <div>
-          <AdminBookingsTable bookingsData={bookingsData.bookings} />
-        </div>
+        <AdminBookingsTable bookingsData={bookingsData.bookings} />
       )}
     </div>
   );

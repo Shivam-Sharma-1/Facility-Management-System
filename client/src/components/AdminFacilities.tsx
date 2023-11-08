@@ -43,7 +43,7 @@ const AdminFacilities: FC = (): JSX.Element => {
 
   if (isPending)
     return (
-      <div className="w-full min-h-screen h-full flex flex-col items-center justify-center">
+      <div className="w-[74vw] min-h-screen h-full flex flex-col items-center justify-center">
         <CircularProgress />
       </div>
     );
@@ -77,11 +77,7 @@ const AdminFacilities: FC = (): JSX.Element => {
           Add facility
         </Button>
       </div>
-      {!isPending && (
-        <div>
-          <AdminFacilitiesTable facilitiesData={facilitiesData} />
-        </div>
-      )}
+      {!isPending && <AdminFacilitiesTable facilitiesData={facilitiesData} />}
       <Snackbar
         open={openSnackbar}
         autoHideDuration={3000}

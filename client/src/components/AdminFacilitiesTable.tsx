@@ -126,7 +126,7 @@ const AdminFacilitiesTable: FC<AdminFacilitiesTableProps> = (
   };
 
   return (
-    <Paper sx={{ width: "100%", overflow: "hidden" }}>
+    <Paper sx={{ width: "74vw", maxWidth: "1150px", overflow: "hidden" }}>
       {isEditFacilityModalOpen && (
         <EditFacilityModal
           isOpen={isEditFacilityModalOpen}
@@ -143,7 +143,7 @@ const AdminFacilitiesTable: FC<AdminFacilitiesTableProps> = (
           facilityData={modalData}
         />
       )}
-      <TableContainer sx={{ maxHeight: 540 }}>
+      <TableContainer sx={{ height: "480px", overflow: "auto" }}>
         <Table stickyHeader>
           <TableHead>
             <TableRow>
@@ -152,6 +152,7 @@ const AdminFacilitiesTable: FC<AdminFacilitiesTableProps> = (
                   key={column.id}
                   align="left"
                   style={{ minWidth: column.minWidth }}
+                  sx={{ backgroundColor: "#dfdfdf" }}
                 >
                   {column.label}
                 </TableCell>
