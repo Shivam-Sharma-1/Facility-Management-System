@@ -92,8 +92,6 @@ export const getBookings: RequestHandler = async (
 				"Something went wrong. Please try again."
 			)
 		);
-	} finally {
-		prisma.$disconnect();
 	}
 };
 
@@ -167,13 +165,11 @@ export const addBookings: RequestHandler = async (
 				"Something went wrong. Please try again."
 			)
 		);
-	} finally {
-		prisma.$disconnect();
 	}
 };
 
 /**
- * @description get booking for Facility
+ * @description get all bookings of the particular facility for facility manager
  * @method GET
  * @access private
  * @returns {booking}
@@ -272,7 +268,5 @@ export const getBookingsForFacility: RequestHandler = async (
 				"Something went wrong. Please try again."
 			)
 		);
-	} finally {
-		prisma.$disconnect();
 	}
 };

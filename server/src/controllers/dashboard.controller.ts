@@ -61,6 +61,9 @@ export const getFacilities: RequestHandler = async (
 			});
 		}
 		const facilities = await prisma.facility.findMany({
+			where: {
+				isActive: true,
+			},
 			include: {
 				facilityManager: {
 					select: {
@@ -89,8 +92,6 @@ export const getFacilities: RequestHandler = async (
 				"Something went wrong. Please try again."
 			)
 		);
-	} finally {
-		prisma.$disconnect();
 	}
 };
 
@@ -143,7 +144,5 @@ export const addFacilities: RequestHandler = async (
 				"Something went wrong. Please try again."
 			)
 		);
-	} finally {
-		prisma.$disconnect();
 	}
 };

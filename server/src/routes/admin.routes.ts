@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
 	addFacility,
+	approveBooking,
 	deleteFacility,
 	getAllBookings,
 	getFacilities,
@@ -22,5 +23,8 @@ adminRouter
 adminRouter
 	.route("/bookings")
 	.get(validateSession, validateAdmin, getAllBookings);
+adminRouter
+	.route("/approval")
+	.post(validateSession, validateAdmin, approveBooking);
 
 export default adminRouter;
