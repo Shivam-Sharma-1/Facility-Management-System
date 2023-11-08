@@ -6,8 +6,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgres"
-  url      = env("DATABASE_URL_DEV")
+  provider = "mysql"
+  url      = env("DATABASE_URL_MYSQL")
 }
 
 enum Role {
@@ -30,7 +30,7 @@ enum ApprovalStatus {
 
 enum CancellationStatus {
   PENDING
-  CANCELLED_BY_USER
+  NOT_REQUESTED
   APPROVED_BY_GD
   APPROVED_BY_FM
   APPROVED_BY_ADMIN
@@ -68,7 +68,7 @@ model Booking {
   requestedBy               User                @relation(fields: [userId], references: [id])
   userId                    String
   status                    ApprovalStatus      @default(PENDING)
-  cancellationStatus        CancellationStatus? @default(PENDING)
+  cancellationStatus        CancellationStatus? @default(NOT_REQUESTED)
   createdAt                 DateTime            @default(now())
   cancelledAt               DateTime?
   cancellationRequestedAt   DateTime?
