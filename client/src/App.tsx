@@ -17,6 +17,7 @@ import MyBookingsPage from "./pages/MyBookingsPage";
 import BookingsPage from "./pages/BookingsPage";
 import AdminBookingsPage from "./pages/AdminBookingsPage";
 import AdminFacilitiesPage from "./pages/AdminFacilitiesPage";
+import Layout from "./components/Layout";
 
 declare module "@tanstack/react-query" {
   interface Register {
@@ -26,86 +27,95 @@ declare module "@tanstack/react-query" {
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/">
+    <>
+      <Route path="/auth/login" element={<LoginPage />} />
+
       <Route
-        index
+        path="/"
         element={
           <RequireAuth GD={false} FM={false}>
-            <DashboardPage />
+            <Layout />
           </RequireAuth>
         }
-      />
-
-      <Route path="auth/login" element={<LoginPage />} />
-
-      <Route path="facility">
+      >
         <Route
-          path=":id"
+          index
           element={
             <RequireAuth GD={false} FM={false}>
-              <FacilityPage />
+              <DashboardPage />
             </RequireAuth>
           }
         />
-        <Route
-          path="bookings"
-          element={
-            <RequireAuth GD={false} FM={true}>
-              <BookingsPage />
-            </RequireAuth>
-          }
-        />
-      </Route>
 
-      <Route path="employee">
-        <Route path="approvals">
+        <Route path="facility">
           <Route
-            path="gd"
+            path=":id"
             element={
-              <RequireAuth GD={true} FM={false}>
-                <ApprovalsPage GD={true} FM={false} />
+              <RequireAuth GD={false} FM={false}>
+                <FacilityPage />
               </RequireAuth>
             }
           />
           <Route
-            path="fm"
+            path="bookings"
             element={
               <RequireAuth GD={false} FM={true}>
-                <ApprovalsPage GD={false} FM={true} />
+                <BookingsPage />
               </RequireAuth>
             }
           />
         </Route>
 
-        <Route
-          path="mybookings"
-          element={
-            <RequireAuth GD={false} FM={false}>
-              <MyBookingsPage />
-            </RequireAuth>
-          }
-        />
-      </Route>
+        <Route path="employee">
+          <Route path="approvals">
+            <Route
+              path="gd"
+              element={
+                <RequireAuth GD={true} FM={false}>
+                  <ApprovalsPage GD={true} FM={false} />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="fm"
+              element={
+                <RequireAuth GD={false} FM={true}>
+                  <ApprovalsPage GD={false} FM={true} />
+                </RequireAuth>
+              }
+            />
+          </Route>
 
-      <Route path="admin">
-        <Route
-          path="bookings"
-          element={
-            <RequireAuth GD={false} FM={false} Admin={true}>
-              <AdminBookingsPage />
-            </RequireAuth>
-          }
-        />
-        <Route
-          path="facilities"
-          element={
-            <RequireAuth GD={false} FM={false} Admin={true}>
-              <AdminFacilitiesPage />
-            </RequireAuth>
-          }
-        />
+          <Route
+            path="mybookings"
+            element={
+              <RequireAuth GD={false} FM={false}>
+                <MyBookingsPage />
+              </RequireAuth>
+            }
+          />
+        </Route>
+
+        <Route path="admin">
+          <Route
+            path="bookings"
+            element={
+              <RequireAuth GD={false} FM={false} Admin={true}>
+                <AdminBookingsPage />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="facilities"
+            element={
+              <RequireAuth GD={false} FM={false} Admin={true}>
+                <AdminFacilitiesPage />
+              </RequireAuth>
+            }
+          />
+        </Route>
       </Route>
-    </Route>
+    </>
   )
 );
 

@@ -61,13 +61,13 @@ const AdminBookings: FC = (): JSX.Element => {
 
   if (isPending)
     return (
-      <div className="w-[80%] min-h-screen h-full flex flex-col items-center justify-center">
+      <div className="w-full min-h-screen h-full flex flex-col items-center justify-center">
         <CircularProgress />
       </div>
     );
 
   return (
-    <div className="w-[80%] flex flex-col px-12 py-8 gap-6">
+    <div className="w-full flex flex-col px-12 py-8 gap-6">
       <div className="w-full flex justify-between">
         <Typography variant="h3" component="h1">
           Manage bookings
