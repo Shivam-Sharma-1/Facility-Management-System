@@ -12,8 +12,8 @@ import isoToTime from "../utils/isoToTime";
 import { Alert, IconButton, Snackbar } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import EditFacilityModal from "./EditFacilityModal";
-import DeleteFacilityModal from "./DeleteFacilityModal";
+import EditFacilityModal from "./modals/EditFacilityModal";
+import DeleteFacilityModal from "./modals/DeleteFacilityModal";
 
 const columns: readonly AdminFacilitiesColumnData[] = [
   { id: "name", label: "Name", minWidth: 140 },
@@ -79,39 +79,46 @@ const AdminFacilitiesTable: FC<AdminFacilitiesTableProps> = (
       ),
       deletedAt: (
         <>
-          {isoToTime(facility.deletedAt!)}
+          {facility.deletedAt ? isoToTime(facility.deletedAt!) : "N/A"}
           <br />
-          {isoToDate(facility.deletedAt!).toString()}
+          {facility.deletedAt && isoToDate(facility.deletedAt!).toString()}
         </>
       ),
-      fm: facility.facilityManager ? (
+      fm: (
         <>
-          {facility.facilityManager?.user.name || null}
+          {facility.isActive ? facility.facilityManager?.user.name : "N/A"}
           <br />
-          Id: {facility.facilityManager?.user.employeeId || null}
+          {facility.isActive &&
+            "Id:" + facility.facilityManager?.user.employeeId}
         </>
-      ) : null,
+      ),
       actions: (
-        <div className="flex gap-1">
-          <IconButton
-            color="primary"
-            onClick={() => {
-              setModalData(facility);
-              setIsEditFacilityModalOpen(true);
-            }}
-          >
-            <EditIcon />
-          </IconButton>
-          <IconButton
-            color="error"
-            onClick={() => {
-              setModalData(facility);
-              setIsDeleteFacilityModalOpen(true);
-            }}
-          >
-            <DeleteIcon />
-          </IconButton>
-        </div>
+        <>
+          {facility.isActive ? (
+            <div className="flex gap-1">
+              <IconButton
+                color="primary"
+                onClick={() => {
+                  setModalData(facility);
+                  setIsEditFacilityModalOpen(true);
+                }}
+              >
+                <EditIcon />
+              </IconButton>
+              <IconButton
+                color="error"
+                onClick={() => {
+                  setModalData(facility);
+                  setIsDeleteFacilityModalOpen(true);
+                }}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </div>
+          ) : (
+            "N/A"
+          )}
+        </>
       ),
     }));
 
@@ -125,7 +132,7 @@ const AdminFacilitiesTable: FC<AdminFacilitiesTableProps> = (
   };
 
   return (
-    <Paper sx={{ width: "100%", overflow: "hidden" }}>
+    <Paper sx={{ width: "74vw", maxWidth: "1150px", overflow: "hidden" }}>
       {isEditFacilityModalOpen && (
         <EditFacilityModal
           isOpen={isEditFacilityModalOpen}
@@ -142,7 +149,7 @@ const AdminFacilitiesTable: FC<AdminFacilitiesTableProps> = (
           facilityData={modalData}
         />
       )}
-      <TableContainer sx={{ maxHeight: 540 }}>
+      <TableContainer sx={{ height: "480px", overflow: "auto" }}>
         <Table stickyHeader>
           <TableHead>
             <TableRow>
@@ -151,6 +158,7 @@ const AdminFacilitiesTable: FC<AdminFacilitiesTableProps> = (
                   key={column.id}
                   align="left"
                   style={{ minWidth: column.minWidth }}
+                  sx={{ backgroundColor: "#dfdfdf" }}
                 >
                   {column.label}
                 </TableCell>

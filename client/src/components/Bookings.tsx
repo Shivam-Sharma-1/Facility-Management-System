@@ -1,8 +1,7 @@
-import { Typography } from "@mui/material";
+import { CircularProgress, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import Loader from "./Loader";
 import BookingCard from "./BookingCard";
 
 const MyBookings = (): JSX.Element => {
@@ -30,13 +29,13 @@ const MyBookings = (): JSX.Element => {
 
   if (isPending)
     return (
-      <div className="w-[80%] h-full flex flex-col items-center justify-center">
-        <Loader />
+      <div className="w-full min-h-screen h-full flex flex-col items-center justify-center">
+        <CircularProgress />
       </div>
     );
 
   return (
-    <div className="w-[80%] h-full flex flex-col items-center justify-center px-6 py-12">
+    <div className="w-full h-full flex flex-col items-center justify-center px-6 py-12">
       <Typography variant="h3" component="h1">
         Facility Bookings
       </Typography>

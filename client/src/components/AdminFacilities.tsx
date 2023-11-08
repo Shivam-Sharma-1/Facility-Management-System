@@ -11,7 +11,7 @@ import InsertInvitationIcon from "@mui/icons-material/InsertInvitation";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import AdminFacilitiesTable from "./AdminFacilitiesTable";
-import AddFacilityModal from "./AddFacilityModal";
+import AddFacilityModal from "./modals/AddFacilityModal";
 
 const AdminFacilities: FC = (): JSX.Element => {
   const [facilitiesData, setFacilitiesData] = useState<FacilityData[]>([]);
@@ -43,13 +43,13 @@ const AdminFacilities: FC = (): JSX.Element => {
 
   if (isPending)
     return (
-      <div className="w-[80%] min-h-screen h-full flex flex-col items-center justify-center">
+      <div className="w-[74vw] min-h-screen h-full flex flex-col items-center justify-center">
         <CircularProgress />
       </div>
     );
 
   return (
-    <div className="w-[80%] flex flex-col px-12 py-8 gap-6">
+    <div className="w-full flex flex-col px-12 py-8 gap-6">
       {isAddFacilityModalOpen && (
         <AddFacilityModal
           isOpen={isAddFacilityModalOpen}
@@ -77,11 +77,7 @@ const AdminFacilities: FC = (): JSX.Element => {
           Add facility
         </Button>
       </div>
-      {!isPending && (
-        <div>
-          <AdminFacilitiesTable facilitiesData={facilitiesData} />
-        </div>
-      )}
+      {!isPending && <AdminFacilitiesTable facilitiesData={facilitiesData} />}
       <Snackbar
         open={openSnackbar}
         autoHideDuration={3000}

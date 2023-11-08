@@ -6,8 +6,13 @@ import {
   EventClickArg,
   EventSourceInput,
 } from "@fullcalendar/core/index.js";
-import { Alert, Button, Snackbar, Typography } from "@mui/material";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import {
+  Alert,
+  Button,
+  CircularProgress,
+  Snackbar,
+  Typography,
+} from "@mui/material";
 import InsertInvitationIcon from "@mui/icons-material/InsertInvitation";
 import axios from "axios";
 import FullCalendar from "@fullcalendar/react";
@@ -15,11 +20,10 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 
-import AddEventModal from "./AddEventModal";
-import EventModal from "./EventModal";
+import AddEventModal from "./modals/AddEventModal";
+import EventModal from "./modals/EventModal";
 import isoToTime from "../utils/isoToTime";
 import isoToDate from "../utils/isoToDate";
-import Loader from "./Loader";
 
 const Calendar: FC = (): JSX.Element => {
   const [isAddOpen, setIsAddOpen] = useState<boolean>(false);
@@ -142,13 +146,13 @@ const Calendar: FC = (): JSX.Element => {
 
   if (isPending)
     return (
-      <div className="w-[80%] h-full flex flex-col items-center justify-center">
-        <Loader />
+      <div className="w-full min-h-screen h-full flex flex-col items-center justify-center">
+        <CircularProgress />
       </div>
     );
 
   return (
-    <div className="w-[80%] h-full flex flex-col items-center justify-center px-0 py-12">
+    <div className="w-full h-full flex flex-col items-center justify-center px-0 py-12">
       {isAddOpen && (
         <AddEventModal
           isOpen={isAddOpen}
@@ -171,7 +175,6 @@ const Calendar: FC = (): JSX.Element => {
           <Typography variant="h3" component="h1">
             Bookings Calender
           </Typography>
-          <CalendarMonthIcon sx={{ width: "40px", height: "40px" }} />
         </div>
         <Button
           variant="contained"

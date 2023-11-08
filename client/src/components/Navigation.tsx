@@ -1,16 +1,8 @@
-import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 
-import {
-  Avatar,
-  Collapse,
-  Divider,
-  ListItemIcon,
-  Typography,
-} from "@mui/material";
+import { Avatar, Divider, ListItemIcon, Typography } from "@mui/material";
 import { useAuth } from "../hooks/useAuth";
-import ApprovalIcon from "@mui/icons-material/Approval";
 import BookmarksIcon from "@mui/icons-material/Bookmarks";
 import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
 import SummarizeIcon from "@mui/icons-material/Summarize";
@@ -18,17 +10,13 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
-import ExpandLess from "@mui/icons-material/ExpandLess";
-import ExpandMore from "@mui/icons-material/ExpandMore";
-import { Link } from "react-router-dom";
+import ApprovalIcon from "@mui/icons-material/Approval";
+import CollectionsBookmarkIcon from "@mui/icons-material/CollectionsBookmark";
+import { NavLink } from "react-router-dom";
 
 const Navigation = (): JSX.Element => {
-  const [open, setOpen] = useState(false);
-
-  const handleClick = () => {
-    setOpen(!open);
-  };
   const auth = useAuth();
+  const role = auth?.user?.role;
 
   const mutation = useMutation({
     mutationFn: () =>
@@ -41,8 +29,8 @@ const Navigation = (): JSX.Element => {
   });
 
   return (
-    <div className="w-[20%] h-full min-h-[100dvh] bg-primary text-white pt-8 overflow-y-hidden sticky top-0">
-      <div className="w-full flex justify-center px-4 pt-4 pb-8 gap-8 flex-wrap">
+    <div className="w-[400px] h-full min-h-[100dvh] bg-primary text-white pt-8 overflow-y-hidden sticky top-0">
+      <div className="w-full flex justify-left px-4 pl-8 pt-4 pb-8 gap-8 flex-wrap">
         <Avatar
           sx={{ width: "80px", height: "80px" }}
           src={auth?.user?.image}
@@ -57,109 +45,170 @@ const Navigation = (): JSX.Element => {
       </div>
       <Divider color="#0c0051" />
 
-      <List
-        component="nav"
-        aria-labelledby="nested-list-subheader"
-        disablePadding
-      >
-        {auth?.user!.role === "ADMIN" && (
+      <List component="nav" disablePadding>
+        {role !== "ADMIN" && (
           <>
-            <ListItemButton
-              onClick={handleClick}
-              className="flex gap-4"
-              sx={{ padding: "1em" }}
-            >
-              <ListItemIcon sx={{ minWidth: "0px" }}>
-                <ApprovalIcon
-                  sx={{ width: "26px", height: "26px", color: "white" }}
-                />
-              </ListItemIcon>
-              <ListItemText
-                primaryTypographyProps={{
-                  variant: "h6",
-                  component: "li",
-                }}
-                primary="Admin"
-              />
-              {open ? <ExpandLess /> : <ExpandMore />}
-            </ListItemButton>
-            <Collapse in={open} timeout="auto" unmountOnExit>
-              <Link to="/admin/facilities" className="text-white">
-                <List
-                  component="div"
-                  disablePadding
-                  sx={{ paddingLeft: "1em", paddingBlock: "0.5em" }}
+            <NavLink to="/">
+              {({ isActive }) => (
+                <ListItemButton
+                  className="flex gap-3"
+                  sx={{
+                    paddingLeft: "1.4em",
+                    paddingBlock: "1.4em",
+                    borderLeft: isActive ? "4px solid white" : "",
+                    color: "white",
+                    backgroundColor: isActive
+                      ? " rgb(255, 255, 255, 0.02)"
+                      : "",
+                  }}
                 >
-                  <ListItemButton>
-                    <ListItemText
-                      primaryTypographyProps={{
-                        variant: "h6",
-                        component: "li",
-                      }}
-                      primary="Facilities"
+                  <ListItemIcon sx={{ minWidth: "0px" }}>
+                    <WorkspacePremiumIcon
+                      sx={{ width: "26px", height: "26px", color: "white" }}
                     />
-                  </ListItemButton>
-                </List>
-              </Link>
-              <Link to="/admin/bookings" className="text-white">
-                <List
-                  component="div"
-                  disablePadding
-                  sx={{ paddingLeft: "1em", paddingBlock: "0.5em" }}
-                >
-                  <ListItemButton>
-                    <ListItemText
-                      primaryTypographyProps={{
-                        variant: "h6",
-                        component: "li",
-                      }}
-                      primary="Bookings"
-                    />
-                  </ListItemButton>
-                </List>
-              </Link>
-            </Collapse>
+                  </ListItemIcon>
+                  <ListItemText
+                    primaryTypographyProps={{
+                      variant: "h6",
+                      component: "li",
+                    }}
+                    primary="Facilities"
+                  />
+                </ListItemButton>
+              )}
+            </NavLink>
             <Divider color="#0c0051" />
           </>
         )}
 
-        <Link to="/employee/mybookings" className="text-white">
-          <List
-            component="div"
-            disablePadding
-            sx={{ paddingLeft: "1em", paddingBlock: "0.5em" }}
-          >
-            <ListItemButton>
-              <ListItemText
-                primaryTypographyProps={{
-                  variant: "h6",
-                  component: "li",
-                }}
-                primary="My Bookings"
-              />
-            </ListItemButton>
-          </List>
-        </Link>
-
-        {auth?.user!.role !== "USER" && (
+        {role === "ADMIN" && (
           <>
+            <NavLink to="/admin/facilities">
+              {({ isActive }) => (
+                <ListItemButton
+                  className={"flex gap-3"}
+                  sx={{
+                    paddingLeft: "1.4em",
+                    paddingBlock: "1.4em",
+                    borderLeft: isActive ? "4px solid white" : "",
+                    color: "white",
+                    backgroundColor: isActive
+                      ? " rgb(255, 255, 255, 0.02)"
+                      : "",
+                  }}
+                >
+                  <ListItemIcon sx={{ minWidth: "0px" }}>
+                    <WorkspacePremiumIcon
+                      sx={{ width: "26px", height: "26px", color: "white" }}
+                    />
+                  </ListItemIcon>
+                  <ListItemText
+                    primaryTypographyProps={{
+                      variant: "h6",
+                      component: "li",
+                    }}
+                    primary="Admin Facilities"
+                  />
+                </ListItemButton>
+              )}
+            </NavLink>
             <Divider color="#0c0051" />
-            <Link
+            <NavLink to="/admin/bookings">
+              {({ isActive }) => (
+                <ListItemButton
+                  className="flex gap-3"
+                  sx={{
+                    paddingLeft: "1.4em",
+                    paddingBlock: "1.4em",
+                    borderLeft: isActive ? "4px solid white" : "",
+                    color: "white",
+                    backgroundColor: isActive
+                      ? " rgb(255, 255, 255, 0.02)"
+                      : "",
+                  }}
+                >
+                  <ListItemIcon sx={{ minWidth: "0px" }}>
+                    <BookmarksIcon
+                      sx={{ width: "26px", height: "26px", color: "white" }}
+                    />
+                  </ListItemIcon>
+                  <ListItemText
+                    primaryTypographyProps={{
+                      variant: "h6",
+                      component: "li",
+                    }}
+                    primary="Admin Bookings"
+                  />
+                </ListItemButton>
+              )}
+            </NavLink>
+            <Divider color="#0c0051" />
+          </>
+        )}
+
+        {role !== "ADMIN" && (
+          <>
+            <NavLink to="/employee/mybookings">
+              {({ isActive }) => (
+                <ListItemButton
+                  className="flex gap-3"
+                  sx={{
+                    paddingLeft: "1.4em",
+                    paddingBlock: "1.4em",
+                    borderLeft: isActive ? "4px solid white" : "",
+                    color: "white",
+                    backgroundColor: isActive
+                      ? " rgb(255, 255, 255, 0.02)"
+                      : "",
+                  }}
+                >
+                  <ListItemIcon sx={{ minWidth: "0px" }}>
+                    <BookmarksIcon
+                      sx={{ width: "26px", height: "26px", color: "white" }}
+                    />
+                  </ListItemIcon>
+                  <ListItemText
+                    primaryTypographyProps={{
+                      variant: "h6",
+                      component: "li",
+                    }}
+                    primary="My Bookings"
+                  />
+                </ListItemButton>
+              )}
+            </NavLink>
+            <Divider color="#0c0051" />
+          </>
+        )}
+        {role !== "USER" && role !== "ADMIN" && (
+          <>
+            <NavLink
               to={`/employee/approvals/${
-                auth?.user!.role === "GROUP_DIRECTOR"
+                role === "GROUP_DIRECTOR"
                   ? "gd"
-                  : auth?.user!.role === "FACILITY_MANAGER"
+                  : role === "FACILITY_MANAGER"
                   ? "fm"
                   : "admin"
               }`}
-              className="text-white"
             >
-              <List
-                component="div"
-                disablePadding
-                sx={{ paddingLeft: "1em", paddingBlock: "0.5em" }}
-              >
-                <ListItemButton>
+              {({ isActive }) => (
+                <ListItemButton
+                  className="flex gap-3"
+                  sx={{
+                    paddingLeft: "1.4em",
+                    paddingBlock: "1.4em",
+                    borderLeft: isActive ? "4px solid white" : "",
+                    color: "white",
+                    backgroundColor: isActive
+                      ? " rgb(255, 255, 255, 0.02)"
+                      : "",
+                  }}
+                >
+                  <ListItemIcon sx={{ minWidth: "0px" }}>
+                    <ApprovalIcon
+                      sx={{ width: "26px", height: "26px", color: "white" }}
+                    />
+                  </ListItemIcon>
                   <ListItemText
                     primaryTypographyProps={{
                       variant: "h6",
@@ -168,69 +217,89 @@ const Navigation = (): JSX.Element => {
                     primary="Approval Requests"
                   />
                 </ListItemButton>
-              </List>
-            </Link>
+              )}
+            </NavLink>
+            <Divider color="#0c0051" />
           </>
         )}
-        <Divider color="#0c0051" />
 
-        {auth?.user!.role === "FACILITY_MANAGER" && (
-          <Link to="/facility/bookings" className="text-white">
-            <ListItemButton className="flex gap-4" sx={{ padding: "1em" }}>
-              <ListItemIcon sx={{ minWidth: "0px" }}>
-                <BookmarksIcon
-                  sx={{ width: "26px", height: "26px", color: "white" }}
-                />
-              </ListItemIcon>
-              <ListItemText
-                primaryTypographyProps={{
-                  variant: "h6",
-                  component: "li",
-                }}
-                primary="Bookings"
-              />
-            </ListItemButton>
+        {role === "FACILITY_MANAGER" && (
+          <>
+            <NavLink to="/facility/bookings">
+              {({ isActive }) => (
+                <ListItemButton
+                  className="flex gap-3"
+                  sx={{
+                    paddingLeft: "1.4em",
+                    paddingBlock: "1.4em",
+                    borderLeft: isActive ? "4px solid white" : "",
+                    color: "white",
+                    backgroundColor: isActive
+                      ? " rgb(255, 255, 255, 0.02)"
+                      : "",
+                  }}
+                >
+                  <ListItemIcon sx={{ minWidth: "0px" }}>
+                    <CollectionsBookmarkIcon
+                      sx={{ width: "26px", height: "26px", color: "white" }}
+                    />
+                  </ListItemIcon>
+                  <ListItemText
+                    primaryTypographyProps={{
+                      variant: "h6",
+                      component: "li",
+                    }}
+                    primary="Bookings"
+                  />
+                </ListItemButton>
+              )}
+            </NavLink>
             <Divider color="#0c0051" />
-          </Link>
+          </>
         )}
 
-        <Link to="/" className="text-white">
-          <ListItemButton className="flex gap-4" sx={{ padding: "1em" }}>
-            <ListItemIcon sx={{ minWidth: "0px" }}>
-              <WorkspacePremiumIcon
-                sx={{ width: "26px", height: "26px", color: "white" }}
-              />
-            </ListItemIcon>
-            <ListItemText
-              primaryTypographyProps={{
-                variant: "h6",
-                component: "li",
-              }}
-              primary="Facilities"
-            />
-          </ListItemButton>
-        </Link>
-        <Divider color="#0c0051" />
-
-        <ListItemButton className="flex gap-4" sx={{ padding: "1em" }}>
-          <ListItemIcon sx={{ minWidth: "0px" }}>
-            <SummarizeIcon
-              sx={{ width: "26px", height: "26px", color: "white" }}
-            />
-          </ListItemIcon>
-          <ListItemText
-            primaryTypographyProps={{
-              variant: "h6",
-              component: "li",
-            }}
-            primary="Report"
-          />
-        </ListItemButton>
-        <Divider color="#0c0051" />
+        {(role === "GROUP_DIRECTOR" || role === "FACILITY_MANAGER") && (
+          <>
+            <NavLink to="/report">
+              {({ isActive }) => (
+                <ListItemButton
+                  className="flex gap-3"
+                  sx={{
+                    paddingLeft: "1.4em",
+                    paddingBlock: "1.4em",
+                    borderLeft: isActive ? "4px solid white" : "",
+                    color: "white",
+                    backgroundColor: isActive
+                      ? " rgb(255, 255, 255, 0.02)"
+                      : "",
+                  }}
+                >
+                  <ListItemIcon sx={{ minWidth: "0px" }}>
+                    <SummarizeIcon
+                      sx={{ width: "26px", height: "26px", color: "white" }}
+                    />
+                  </ListItemIcon>
+                  <ListItemText
+                    primaryTypographyProps={{
+                      variant: "h6",
+                      component: "li",
+                    }}
+                    primary="Report"
+                  />
+                </ListItemButton>
+              )}
+            </NavLink>
+            <Divider color="#0c0051" />
+          </>
+        )}
 
         <ListItemButton
-          className="flex gap-4"
-          sx={{ padding: "1em" }}
+          className="flex gap-3"
+          sx={{
+            paddingLeft: "1.4em",
+            paddingBlock: "1.4em",
+            color: "white",
+          }}
           onClick={() => {
             mutation.mutate();
             auth?.logout();

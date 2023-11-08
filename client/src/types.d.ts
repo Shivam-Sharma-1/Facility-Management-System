@@ -135,6 +135,7 @@ interface RequireAuthProps {
   GD: boolean;
   FM: boolean;
   Admin?: boolean;
+  noAdmin?: boolean;
 }
 
 interface EventInfoProps {
@@ -165,14 +166,24 @@ interface MyBookingCardProps {
   title: string;
   purpose: string;
   status: string;
+  cancelStatus?: string;
+  slug?: string;
   remark: string;
+  createdAt?: string;
   date: string;
   start: string;
   end: string;
   facility: string;
   requestedBy: string | null;
-  approvedByGD: string | null;
-  approvedByFM: string | null;
+  approvedByGD?: string | null;
+  approvedByFM?: string | null;
+  approvedAtGD?: string | null;
+  approvedAtFM?: string | null;
+  approvedAtAdmin?: string | null;
+  cancellationRequestedAt?: string | null;
+  cancellationRemark?: string | null;
+  cancellationUpdateAtGD?: string | null;
+  cancellationUpdateAtFM?: string | null;
 }
 
 interface ApprovalStatusProps {
@@ -195,7 +206,9 @@ interface AdminBookingsColumnData {
     | "reqBy"
     | "actions"
     | "gd"
-    | "fm";
+    | "fm"
+    | "admin"
+    | "remark";
   label: string;
   minWidth?: number;
 }
@@ -216,9 +229,11 @@ interface AdminBookingsRowData {
   createdAt: JSX.Element;
   reqBy: string;
   status: string;
+  remark: string;
   actions: string | JSX.Element;
   gd: JSX.Element | null;
   fm: JSX.Element | null;
+  admin: JSX.Element | null;
 }
 
 interface AdminFacilitiesColumnData {
@@ -266,6 +281,13 @@ interface EditFacilityModalProps {
   facilityData: FacilityData;
 }
 
+interface AdminBookingsModalProps {
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+  setOpenSnackbar: (isOpen: boolean) => void;
+  slug: string;
+}
+
 // ----------TYPES-----------
 
 type FacilityData = {
@@ -300,14 +322,19 @@ type LoginData = {
 };
 
 type ApprovalData = {
-  id: number;
   title: string;
-  slug: string;
   purpose: string;
-  remark: string;
-  userId: number;
-  status: string;
+  slug: string;
   createdAt: string;
+  remark: string;
+  status: string;
+  cancellationStatus?: string;
+  cancellationRequestedAt?: string | null;
+  cancellationRemark?: string;
+  cancelledAt?: string | null;
+  cancellationUpdateAtGD?: string | null;
+  cancellationUpdateAtFM?: string | null;
+  cancellationUpdateAtAdmin?: string | null;
   time: {
     date: string;
     start: string;
@@ -332,7 +359,14 @@ type ApprovalData = {
   };
   requestedBy: {
     name: string;
+    employeeId: number;
   };
+  statusUpdateByFM: string | null;
+  statusUpdateByGD: string | null;
+};
+
+type BookingCardProps = {
+  bookingData: ApprovalData;
 };
 
 type ApprovalType = {

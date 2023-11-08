@@ -8,6 +8,7 @@ export const RequireAuth: FC<RequireAuthProps> = ({
   GD,
   FM,
   Admin,
+  noAdmin,
 }): JSX.Element => {
   const location = useLocation();
   const auth = useAuth();
@@ -26,6 +27,10 @@ export const RequireAuth: FC<RequireAuthProps> = ({
 
   if (Admin && auth?.user!.role !== "ADMIN") {
     return <Navigate to="/" />;
+  }
+
+  if (noAdmin && auth?.user!.role === "ADMIN") {
+    return <Navigate to="/admin/facilities" />;
   }
 
   return children;

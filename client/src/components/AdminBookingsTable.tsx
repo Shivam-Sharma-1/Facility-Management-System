@@ -9,9 +9,11 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import isoToDate from "../utils/isoToDate";
 import isoToTime from "../utils/isoToTime";
-import { IconButton } from "@mui/material";
+import { Alert, IconButton, Snackbar } from "@mui/material";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import AdminBookingApprovalModal from "./modals/AdminBookingApprovalModal";
+import AdminBookingRejectModal from "./modals/AdminBookingRejectModal";
 
 const columns: readonly AdminBookingsColumnData[] = [
   { id: "title", label: "Title/Facility", minWidth: 140 },
@@ -22,6 +24,8 @@ const columns: readonly AdminBookingsColumnData[] = [
   { id: "reqBy", label: "Requested By", minWidth: 140 },
   { id: "gd", label: "Group Director", minWidth: 170 },
   { id: "fm", label: "Facility Manager", minWidth: 170 },
+  { id: "admin", label: "Admin", minWidth: 170 },
+  { id: "remark", label: "Remark", minWidth: 170 },
   { id: "status", label: "Status", minWidth: 170 },
   { id: "actions", label: "Operations", minWidth: 130 },
 ];
@@ -31,6 +35,13 @@ const AdminBookingsTable: FC<AdminBookingsTableProps> = (
 ): JSX.Element => {
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
+  const [isApproveModalOpen, setIsApproveModalOpen] = useState<boolean>(false);
+  const [isOpenApproveSnackbar, setIsOpenApproveSnackbar] =
+    useState<boolean>(false);
+  const [isRejectModalOpen, setIsRejectModalOpen] = useState<boolean>(false);
+  const [isOpenRejectSnackbar, setIsOpenRejectSnackbar] =
+    useState<boolean>(false);
+  const [selectedSlug, setSelectedSlug] = useState<string>("");
 
   const rows: AdminBookingsRowData[] =
     bookingsData &&
@@ -79,14 +90,37 @@ const AdminBookingsTable: FC<AdminBookingsTableProps> = (
             : null}
         </>
       ) : null,
+      admin: (
+        <>
+          {booking.statusUpdateAtAdmin
+            ? isoToTime(booking.statusUpdateAtAdmin!)
+            : "N/A"}
+          <br />
+          {booking.statusUpdateAtAdmin &&
+            isoToDate(booking.statusUpdateAtAdmin!)}
+        </>
+      ),
+      remark: booking.remark ? booking.remark : "N/A",
       status: booking.status.toLowerCase().replace(/_/g, " "),
       actions:
         booking.status === "PENDING" || booking.status === "APPROVED_BY_GD" ? (
           <div className="flex gap-1">
-            <IconButton color="success">
+            <IconButton
+              color="success"
+              onClick={() => {
+                setSelectedSlug(booking.slug);
+                setIsApproveModalOpen(true);
+              }}
+            >
               <TaskAltIcon />
             </IconButton>
-            <IconButton color="error">
+            <IconButton
+              color="error"
+              onClick={() => {
+                setSelectedSlug(booking.slug);
+                setIsRejectModalOpen(true);
+              }}
+            >
               <HighlightOffIcon />
             </IconButton>
           </div>
@@ -94,6 +128,11 @@ const AdminBookingsTable: FC<AdminBookingsTableProps> = (
           "No actions"
         ),
     }));
+
+  const handleCloseSnackbar = (): void => {
+    setIsOpenApproveSnackbar(false);
+    setIsOpenRejectSnackbar(false);
+  };
 
   const handleChangePage = (_event: unknown, newPage: number) => {
     setPage(newPage);
@@ -105,8 +144,24 @@ const AdminBookingsTable: FC<AdminBookingsTableProps> = (
   };
 
   return (
-    <Paper sx={{ width: "100%", overflow: "hidden" }}>
-      <TableContainer sx={{ maxHeight: 540 }}>
+    <Paper sx={{ width: "74vw", maxWidth: "1150px", overflow: "hidden" }}>
+      {isApproveModalOpen && (
+        <AdminBookingApprovalModal
+          isOpen={isApproveModalOpen}
+          setIsOpen={setIsApproveModalOpen}
+          setOpenSnackbar={setIsOpenApproveSnackbar}
+          slug={selectedSlug}
+        />
+      )}
+      {isRejectModalOpen && (
+        <AdminBookingRejectModal
+          isOpen={isRejectModalOpen}
+          setIsOpen={setIsRejectModalOpen}
+          setOpenSnackbar={setIsOpenRejectSnackbar}
+          slug={selectedSlug}
+        />
+      )}
+      <TableContainer sx={{ height: "480px", overflow: "auto" }}>
         <Table stickyHeader>
           <TableHead>
             <TableRow>
@@ -115,6 +170,7 @@ const AdminBookingsTable: FC<AdminBookingsTableProps> = (
                   key={column.id}
                   align="left"
                   style={{ minWidth: column.minWidth }}
+                  sx={{ backgroundColor: "#dfdfdf" }}
                 >
                   {column.label}
                 </TableCell>
@@ -150,6 +206,32 @@ const AdminBookingsTable: FC<AdminBookingsTableProps> = (
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
+      <Snackbar
+        open={isOpenApproveSnackbar}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          Booking approved successfully!
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={isOpenRejectSnackbar}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          Booking rejected successfully!
+        </Alert>
+      </Snackbar>
     </Paper>
   );
 };

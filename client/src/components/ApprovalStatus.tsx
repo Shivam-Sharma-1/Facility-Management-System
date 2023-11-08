@@ -1,10 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { FC, useEffect, useState } from "react";
-import { Typography } from "@mui/material";
+import { CircularProgress, Typography } from "@mui/material";
 import axios from "axios";
 
 import ApprovalCard from "./ApprovalCard";
-import Loader from "./Loader";
 
 const ApprovalStatus: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
   const [approvalData, setApprovalData] = useState<ApprovalData[]>([]);
@@ -33,13 +32,13 @@ const ApprovalStatus: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
 
   if (isPending)
     return (
-      <div className="w-[80%] h-full flex flex-col items-center justify-center">
-        <Loader />
+      <div className="w-full min-h-screen h-full flex flex-col items-center justify-center">
+        <CircularProgress />
       </div>
     );
 
   return (
-    <div className="w-[80%] h-full flex flex-col items-center justify-center px-6 py-12">
+    <div className="w-full h-full flex flex-col items-center justify-center px-6 py-12">
       <Typography variant="h3" component="h1">
         Approval Status
       </Typography>
