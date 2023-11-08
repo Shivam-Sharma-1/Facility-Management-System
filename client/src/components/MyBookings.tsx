@@ -51,12 +51,35 @@ const MyBookings = (): JSX.Element => {
                 key={booking.slug}
                 title={booking.title}
                 status={booking.status}
+                cancelStatus={booking.cancellationStatus!}
+                slug={booking.slug}
                 purpose={booking.purpose}
                 remark={booking.remark}
                 date={booking.time.date}
                 start={booking.time.start}
                 end={booking.time.end}
+                createdAt={booking.createdAt}
                 facility={booking.facility.name && booking.facility.name!}
+                cancellationRequestedAt={
+                  booking.cancellationRequestedAt
+                    ? booking.cancellationRequestedAt!
+                    : null
+                }
+                cancellationRemark={
+                  booking.cancellationRemark
+                    ? booking.cancellationRemark!
+                    : null
+                }
+                cancellationUpdateAtGD={
+                  booking.cancellationUpdateAtGD
+                    ? booking.cancellationUpdateAtGD!
+                    : null
+                }
+                cancellationUpdateAtFM={
+                  booking.cancellationUpdateAtFM
+                    ? booking.cancellationUpdateAtFM!
+                    : null
+                }
                 requestedBy={
                   booking.requestedBy.name ? booking.requestedBy.name! : null
                 }
@@ -65,9 +88,20 @@ const MyBookings = (): JSX.Element => {
                     ? booking.statusUpdateByGD!.user.name!
                     : null
                 }
+                approvedAtGD={
+                  booking.statusUpdateAtGD ? booking.statusUpdateAtGD! : null
+                }
                 approvedByFM={
                   booking.statusUpdateByFM
                     ? booking.statusUpdateByFM!.user.name!
+                    : null
+                }
+                approvedAtFM={
+                  booking.statusUpdateAtFM ? booking.statusUpdateAtFM! : null
+                }
+                approvedAtAdmin={
+                  booking.statusUpdateAtAdmin
+                    ? booking.statusUpdateAtAdmin!
                     : null
                 }
               />
