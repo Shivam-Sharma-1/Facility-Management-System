@@ -166,24 +166,24 @@ interface MyBookingCardProps {
   title: string;
   purpose: string;
   status: string;
-  cancelStatus: string;
-  slug: string;
+  cancelStatus?: string;
+  slug?: string;
   remark: string;
-  createdAt: string;
+  createdAt?: string;
   date: string;
   start: string;
   end: string;
   facility: string;
   requestedBy: string | null;
-  approvedByGD: string | null;
-  approvedByFM: string | null;
-  approvedAtGD: string | null;
-  approvedAtFM: string | null;
-  approvedAtAdmin: string | null;
-  cancellationRequestedAt: string | null;
-  cancellationRemark: string | null;
-  cancellationUpdateAtGD: string | null;
-  cancellationUpdateAtFM: string | null;
+  approvedByGD?: string | null;
+  approvedByFM?: string | null;
+  approvedAtGD?: string | null;
+  approvedAtFM?: string | null;
+  approvedAtAdmin?: string | null;
+  cancellationRequestedAt?: string | null;
+  cancellationRemark?: string | null;
+  cancellationUpdateAtGD?: string | null;
+  cancellationUpdateAtFM?: string | null;
 }
 
 interface ApprovalStatusProps {
