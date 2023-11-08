@@ -61,6 +61,9 @@ export const getFacilities: RequestHandler = async (
 			});
 		}
 		const facilities = await prisma.facility.findMany({
+			where: {
+				isActive: true,
+			},
 			include: {
 				facilityManager: {
 					select: {
