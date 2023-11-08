@@ -41,7 +41,7 @@ const router = createBrowserRouter(
         <Route
           index
           element={
-            <RequireAuth GD={false} FM={false}>
+            <RequireAuth GD={false} FM={false} noAdmin={true}>
               <DashboardPage />
             </RequireAuth>
           }
@@ -51,7 +51,7 @@ const router = createBrowserRouter(
           <Route
             path=":id"
             element={
-              <RequireAuth GD={false} FM={false}>
+              <RequireAuth GD={false} FM={false} noAdmin={true}>
                 <FacilityPage />
               </RequireAuth>
             }
@@ -59,7 +59,7 @@ const router = createBrowserRouter(
           <Route
             path="bookings"
             element={
-              <RequireAuth GD={false} FM={true}>
+              <RequireAuth GD={false} FM={true} noAdmin={true}>
                 <BookingsPage />
               </RequireAuth>
             }
@@ -71,7 +71,7 @@ const router = createBrowserRouter(
             <Route
               path="gd"
               element={
-                <RequireAuth GD={true} FM={false}>
+                <RequireAuth GD={true} FM={false} noAdmin={true}>
                   <ApprovalsPage GD={true} FM={false} />
                 </RequireAuth>
               }
@@ -79,7 +79,7 @@ const router = createBrowserRouter(
             <Route
               path="fm"
               element={
-                <RequireAuth GD={false} FM={true}>
+                <RequireAuth GD={false} FM={true} noAdmin={true}>
                   <ApprovalsPage GD={false} FM={true} />
                 </RequireAuth>
               }
@@ -89,7 +89,7 @@ const router = createBrowserRouter(
           <Route
             path="mybookings"
             element={
-              <RequireAuth GD={false} FM={false}>
+              <RequireAuth GD={false} FM={false} noAdmin={true}>
                 <MyBookingsPage />
               </RequireAuth>
             }
