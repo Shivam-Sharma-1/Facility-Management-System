@@ -195,7 +195,9 @@ interface AdminBookingsColumnData {
     | "reqBy"
     | "actions"
     | "gd"
-    | "fm";
+    | "fm"
+    | "admin"
+    | "remark";
   label: string;
   minWidth?: number;
 }
@@ -216,9 +218,11 @@ interface AdminBookingsRowData {
   createdAt: JSX.Element;
   reqBy: string;
   status: string;
+  remark: string;
   actions: string | JSX.Element;
   gd: JSX.Element | null;
   fm: JSX.Element | null;
+  admin: JSX.Element | null;
 }
 
 interface AdminFacilitiesColumnData {
@@ -264,6 +268,13 @@ interface EditFacilityModalProps {
   setIsOpen: (isOpen: boolean) => void;
   setOpenSnackbar: (isOpen: boolean) => void;
   facilityData: FacilityData;
+}
+
+interface AdminBookingsModalProps {
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+  setOpenSnackbar: (isOpen: boolean) => void;
+  slug: string;
 }
 
 // ----------TYPES-----------
