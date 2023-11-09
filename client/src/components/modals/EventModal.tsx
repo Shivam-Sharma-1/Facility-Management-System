@@ -30,41 +30,41 @@ const EventModal: FC<EventModalProps> = ({
             onClick={() => setIsOpen(false)}
           />
         </div>
-        <div className="flex flex-col gap-2 px-10 pb-10">
-          <Typography variant="h5" component="p">
+        <div className="flex flex-col gap-1 px-10 pb-10">
+          <Typography variant="h6" component="p">
             <span className="font-bold tracking-wide">Title:</span>{" "}
             {eventInfo.title}
           </Typography>
-          <Typography variant="h5" component="p">
+          <Typography variant="h6" component="p">
             <span className="font-bold tracking-wide">Purpose:</span>{" "}
             {eventInfo.purpose}
           </Typography>
-          <Typography variant="h5" component="p">
+          <Typography variant="h6" component="p">
             <span className="font-bold tracking-wide">Date:</span>{" "}
             {eventInfo.date}
           </Typography>
-          <Typography variant="h5" component="p">
+          <Typography variant="h6" component="p">
             <span className="font-bold tracking-wide">Time:</span>{" "}
             {eventInfo.start} - {eventInfo.end}
           </Typography>
           {eventInfo.status === "PENDING" && (
-            <Typography variant="h5" component="p">
+            <Typography variant="h6" component="p">
               <span className="font-bold tracking-wide">Status:</span> Pending
             </Typography>
           )}
 
-          <Typography variant="h5" component="p">
+          <Typography variant="h6" component="p">
             <span className="font-bold tracking-wide">Requested by:</span>{" "}
             {eventInfo.requestBy}
           </Typography>
           {eventInfo.statusUpdateByGD && (
-            <Typography variant="h5" component="p">
+            <Typography variant="h6" component="p">
               <span className="font-bold tracking-wide">Approved by GD:</span>{" "}
               {eventInfo.statusUpdateByGD}
             </Typography>
           )}
           {eventInfo.statusUpdateByFM && (
-            <Typography variant="h5" component="p">
+            <Typography variant="h6" component="p">
               <span className="font-bold tracking-wide">Approved by FM:</span>{" "}
               {eventInfo.statusUpdateByFM}
             </Typography>
