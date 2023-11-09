@@ -144,7 +144,7 @@ const AdminBookingsTable: FC<AdminBookingsTableProps> = (
   };
 
   return (
-    <Paper sx={{ width: "74vw", maxWidth: "1150px", overflow: "hidden" }}>
+    <Paper sx={{ width: "75vw", height: "75dvh", overflow: "hidden" }}>
       {isApproveModalOpen && (
         <AdminBookingApprovalModal
           isOpen={isApproveModalOpen}
@@ -161,7 +161,7 @@ const AdminBookingsTable: FC<AdminBookingsTableProps> = (
           slug={selectedSlug}
         />
       )}
-      <TableContainer sx={{ height: "480px", overflow: "auto" }}>
+      <TableContainer sx={{ height: "90%", overflow: "auto" }}>
         <Table stickyHeader>
           <TableHead>
             <TableRow>
