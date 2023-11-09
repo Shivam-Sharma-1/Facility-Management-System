@@ -18,6 +18,7 @@ import BookingsPage from "./pages/BookingsPage";
 import AdminBookingsPage from "./pages/AdminBookingsPage";
 import AdminFacilitiesPage from "./pages/AdminFacilitiesPage";
 import Layout from "./components/Layout";
+import CancellationsPage from "./pages/CancellationsPage";
 
 declare module "@tanstack/react-query" {
   interface Register {
@@ -81,6 +82,25 @@ const router = createBrowserRouter(
               element={
                 <RequireAuth GD={false} FM={true} noAdmin={true}>
                   <ApprovalsPage GD={false} FM={true} />
+                </RequireAuth>
+              }
+            />
+          </Route>
+
+          <Route path="cancellations">
+            <Route
+              path="gd"
+              element={
+                <RequireAuth GD={true} FM={false} noAdmin={true}>
+                  <CancellationsPage GD={true} FM={false} />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="fm"
+              element={
+                <RequireAuth GD={false} FM={true} noAdmin={true}>
+                  <CancellationsPage GD={false} FM={true} />
                 </RequireAuth>
               }
             />

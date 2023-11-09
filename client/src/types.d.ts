@@ -154,12 +154,15 @@ interface ApprovalProps {
   title: string;
   purpose: string;
   slug: string;
+  createdAt: string;
+  cancelledAt?: string | null;
   date: string;
   start: string;
   end: string;
   facility: string;
   requestedBy: string | null;
   approvedByGD: string | null;
+  approvedAtGD?: string | null;
 }
 
 interface MyBookingCardProps {

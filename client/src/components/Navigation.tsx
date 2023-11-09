@@ -12,6 +12,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import ApprovalIcon from "@mui/icons-material/Approval";
 import CollectionsBookmarkIcon from "@mui/icons-material/CollectionsBookmark";
+import EventBusyIcon from "@mui/icons-material/EventBusy";
 import { NavLink } from "react-router-dom";
 
 const Navigation = (): JSX.Element => {
@@ -29,7 +30,7 @@ const Navigation = (): JSX.Element => {
   });
 
   return (
-    <div className="w-[400px] h-full min-h-[100dvh] bg-primary text-white pt-8 overflow-y-hidden sticky top-0">
+    <div className="w-[400px] h-full min-h-[100dvh] bg-primary text-white pt-5 overflow-y-hidden sticky top-0">
       <div className="w-full flex justify-left px-4 pl-8 pt-4 pb-8 gap-8 flex-wrap">
         <Avatar
           sx={{ width: "80px", height: "80px" }}
@@ -107,7 +108,7 @@ const Navigation = (): JSX.Element => {
                       variant: "h6",
                       component: "li",
                     }}
-                    primary="Admin Facilities"
+                    primary="Manage Facilities"
                   />
                 </ListItemButton>
               )}
@@ -137,7 +138,7 @@ const Navigation = (): JSX.Element => {
                       variant: "h6",
                       component: "li",
                     }}
-                    primary="Admin Bookings"
+                    primary="Manage Bookings"
                   />
                 </ListItemButton>
               )}
@@ -188,7 +189,7 @@ const Navigation = (): JSX.Element => {
                   ? "gd"
                   : role === "FACILITY_MANAGER"
                   ? "fm"
-                  : "admin"
+                  : ""
               }`}
             >
               {({ isActive }) => (
@@ -215,6 +216,48 @@ const Navigation = (): JSX.Element => {
                       component: "li",
                     }}
                     primary="Approval Requests"
+                  />
+                </ListItemButton>
+              )}
+            </NavLink>
+            <Divider color="#0c0051" />
+          </>
+        )}
+        {role !== "USER" && role !== "ADMIN" && (
+          <>
+            <NavLink
+              to={`/employee/cancellations/${
+                role === "GROUP_DIRECTOR"
+                  ? "gd"
+                  : role === "FACILITY_MANAGER"
+                  ? "fm"
+                  : ""
+              }`}
+            >
+              {({ isActive }) => (
+                <ListItemButton
+                  className="flex gap-3"
+                  sx={{
+                    paddingLeft: "1.4em",
+                    paddingBlock: "1.4em",
+                    borderLeft: isActive ? "4px solid white" : "",
+                    color: "white",
+                    backgroundColor: isActive
+                      ? " rgb(255, 255, 255, 0.02)"
+                      : "",
+                  }}
+                >
+                  <ListItemIcon sx={{ minWidth: "0px" }}>
+                    <EventBusyIcon
+                      sx={{ width: "26px", height: "26px", color: "white" }}
+                    />
+                  </ListItemIcon>
+                  <ListItemText
+                    primaryTypographyProps={{
+                      variant: "h6",
+                      component: "li",
+                    }}
+                    primary="Cancellation Requests"
                   />
                 </ListItemButton>
               )}
