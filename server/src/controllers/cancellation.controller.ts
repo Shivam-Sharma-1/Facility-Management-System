@@ -123,26 +123,6 @@ export const getAllCancellationRequestsGD: RequestHandler = async (
 				cancellationRequestedAt: true,
 				cancellationStatus: true,
 				cancellationRemark: true,
-				statusUpdateByFM: {
-					select: {
-						user: {
-							select: {
-								name: true,
-								employeeId: true,
-							},
-						},
-					},
-				},
-				statusUpdateByGD: {
-					select: {
-						user: {
-							select: {
-								name: true,
-								employeeId: true,
-							},
-						},
-					},
-				},
 				time: {
 					select: {
 						start: true,
@@ -233,16 +213,6 @@ export const getAllCancellationRequestsFM: RequestHandler = async (
 									},
 								},
 								statusUpdateByGD: {
-									select: {
-										user: {
-											select: {
-												name: true,
-												employeeId: true,
-											},
-										},
-									},
-								},
-								statusUpdateByFM: {
 									select: {
 										user: {
 											select: {
