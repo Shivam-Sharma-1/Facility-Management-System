@@ -269,7 +269,7 @@ export const getAllCancellationRequestsFM: RequestHandler = async (
 				)
 			);
 		}
-		res.status(200).json(cancellationRequests);
+		res.status(200).json(cancellationRequests.facility.bookings);
 	} catch (error) {
 		console.error(error);
 		return next(
