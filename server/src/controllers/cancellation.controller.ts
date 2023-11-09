@@ -123,6 +123,7 @@ export const getAllCancellationRequestsGD: RequestHandler = async (
 				cancellationRequestedAt: true,
 				cancellationStatus: true,
 				cancellationRemark: true,
+				cancellationUpdateAtGD: true,
 				time: {
 					select: {
 						start: true,
