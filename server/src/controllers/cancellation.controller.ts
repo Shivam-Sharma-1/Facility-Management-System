@@ -194,6 +194,7 @@ export const getAllCancellationRequestsFM: RequestHandler = async (
 								cancellationRequestedAt: true,
 								cancellationStatus: true,
 								cancellationUpdateAtGD: true,
+								cancellationUpdateAtFM: true,
 								time: {
 									select: {
 										start: true,
