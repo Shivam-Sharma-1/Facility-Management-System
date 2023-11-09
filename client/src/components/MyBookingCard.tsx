@@ -132,7 +132,7 @@ const MyBookingCard: FC<MyBookingCardProps> = ({
           ? "bg-blue-100 border-blue-600"
           : (status.startsWith("APPROVED") &&
               cancelStatus === "NOT_REQUESTED") ||
-            cancelStatus!.startsWith("APPROVED")
+            cancelStatus!.startsWith("REJECTED")
           ? "bg-green-100 border-green-600"
           : status.startsWith("REJECTED") ||
             cancelStatus!.startsWith("APPROVED")
@@ -181,9 +181,7 @@ const MyBookingCard: FC<MyBookingCardProps> = ({
             <span className="font-bold tracking-wide">
               {status === "REJECTED_BY_GD" ? "Rejected" : "Approved"} By GD:{" "}
             </span>{" "}
-            {approvedByGD} at
-            <br />
-            &nbsp;&nbsp;&nbsp;
+            {approvedByGD} at{" "}
             {isoToDate(approvedAtGD!) + ", " + isoToTime(approvedAtGD!)}
           </Typography>
         )}
@@ -193,9 +191,7 @@ const MyBookingCard: FC<MyBookingCardProps> = ({
             <span className="font-bold tracking-wide">
               {status === "REJECTED_BY_FM" ? "Rejected" : "Approved"} By FM:{" "}
             </span>{" "}
-            {approvedByFM} at
-            <br />
-            &nbsp;&nbsp;&nbsp;
+            {approvedByFM} at{" "}
             {isoToDate(approvedAtFM!) + ", " + isoToTime(approvedAtFM!)}
           </Typography>
         )}
@@ -244,9 +240,7 @@ const MyBookingCard: FC<MyBookingCardProps> = ({
               {cancelStatus === "REJECTED_BY_GD" ? "Rejected" : "Approved"} By
               GD:{" "}
             </span>{" "}
-            {approvedByGD} at
-            <br />
-            &nbsp;&nbsp;&nbsp;
+            {approvedByGD} at{" "}
             {isoToDate(cancellationUpdateAtGD!) +
               ", " +
               isoToTime(cancellationUpdateAtGD!)}
@@ -259,9 +253,7 @@ const MyBookingCard: FC<MyBookingCardProps> = ({
               {cancelStatus === "REJECTED_BY_FM" ? "Rejected" : "Approved"} By
               FM:{" "}
             </span>{" "}
-            {approvedByFM} at
-            <br />
-            &nbsp;&nbsp;&nbsp;
+            {approvedByFM} at{" "}
             {isoToDate(cancellationUpdateAtFM!) +
               ", " +
               isoToTime(cancellationUpdateAtFM!)}
