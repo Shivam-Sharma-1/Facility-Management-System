@@ -17,11 +17,11 @@ import AdminBookingRejectModal from "./modals/AdminBookingRejectModal";
 
 const columns: readonly AdminBookingsColumnData[] = [
   { id: "title", label: "Title/Facility", minWidth: 140 },
+  { id: "reqBy", label: "Requested By", minWidth: 140 },
   { id: "purpose", label: "Purpose", minWidth: 140 },
   { id: "date", label: "Date", minWidth: 140 },
   { id: "time", label: "Time slot", minWidth: 170 },
   { id: "createdAt", label: "Requested At", minWidth: 150 },
-  { id: "reqBy", label: "Requested By", minWidth: 140 },
   { id: "gd", label: "Group Director", minWidth: 170 },
   { id: "fm", label: "Facility Manager", minWidth: 170 },
   { id: "admin", label: "Admin", minWidth: 170 },
@@ -53,6 +53,7 @@ const AdminBookingsTable: FC<AdminBookingsTableProps> = (
           {booking.facility.name}
         </>
       ),
+      reqBy: booking.requestedBy.name,
       purpose: booking.purpose,
       date: isoToDate(booking.time.date).toString(),
       time: isoToTime(booking.time.start) + " - " + isoToTime(booking.time.end),
@@ -63,7 +64,6 @@ const AdminBookingsTable: FC<AdminBookingsTableProps> = (
           {isoToDate(booking.createdAt).toString()}
         </>
       ),
-      reqBy: booking.requestedBy.name,
       gd: booking.statusUpdateByGD ? (
         <>
           {booking.statusUpdateByGD?.user.name || null}
