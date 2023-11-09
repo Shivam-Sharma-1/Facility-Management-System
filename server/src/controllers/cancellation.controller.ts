@@ -122,9 +122,7 @@ export const getAllCancellationRequestsGD: RequestHandler = async (
 				createdAt: true,
 				cancellationRequestedAt: true,
 				cancellationStatus: true,
-				statusUpdateAtAdmin: true,
-				statusUpdateAtFM: true,
-				statusUpdateAtGD: true,
+				cancellationRemark: true,
 				statusUpdateByFM: {
 					select: {
 						user: {
@@ -211,11 +209,9 @@ export const getAllCancellationRequestsFM: RequestHandler = async (
 								purpose: true,
 								status: true,
 								createdAt: true,
+								cancellationRemark: true,
 								cancellationRequestedAt: true,
 								cancellationStatus: true,
-								statusUpdateAtAdmin: true,
-								statusUpdateAtFM: true,
-								statusUpdateAtGD: true,
 								cancellationUpdateAtGD: true,
 								time: {
 									select: {
