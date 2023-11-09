@@ -11,7 +11,7 @@ const AdminBookingApprovalModal: FC<AdminBookingsModalProps> = ({
   slug,
 }): JSX.Element => {
   const mutation = useMutation({
-    mutationFn: (data: { slug: string; approved: boolean }) =>
+    mutationFn: (data: ApprovalType) =>
       axios.post(`http://localhost:3000/admin/approval`, data, {
         withCredentials: true,
       }),

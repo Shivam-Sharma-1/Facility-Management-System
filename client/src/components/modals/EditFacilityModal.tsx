@@ -32,10 +32,10 @@ const EditFacilityModal: FC<EditFacilityModalProps> = ({
       }),
     onSuccess: () => {
       setIsOpen(false);
+      setOpenSnackbar(true);
     },
     onError: (error) => {
       console.log(error);
-      console.log("slug", facilityData.slug);
     },
   });
 
@@ -49,7 +49,6 @@ const EditFacilityModal: FC<EditFacilityModalProps> = ({
       prevFacilityManagerId: facilityData.facilityManager.user.employeeId,
       newFacilityManagerId: parseInt(formData.FMId! as string),
     };
-    setOpenSnackbar(true);
     mutation.mutate(submitData);
   };
 

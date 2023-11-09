@@ -17,6 +17,7 @@ const DeleteFacilityModal: FC<EditFacilityModalProps> = ({
       }),
     onSuccess: () => {
       setIsOpen(false);
+      setOpenSnackbar(true);
     },
     onError: (error) => {
       console.log(error);
@@ -24,7 +25,6 @@ const DeleteFacilityModal: FC<EditFacilityModalProps> = ({
   });
 
   const handleSubmit = (): void => {
-    setOpenSnackbar(true);
     mutation.mutate({ slug: facilityData.slug });
   };
 

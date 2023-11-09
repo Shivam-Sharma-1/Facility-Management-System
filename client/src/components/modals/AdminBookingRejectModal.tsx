@@ -20,7 +20,7 @@ const AdminBookingRejectModal: FC<AdminBookingsModalProps> = ({
   const [remarkValue, setRemarkValue] = useState<string>("");
 
   const mutation = useMutation({
-    mutationFn: (data: { slug: string; approved: boolean; remark: string }) =>
+    mutationFn: (data: ApprovalType) =>
       axios.post(`http://localhost:3000/admin/approval`, data, {
         withCredentials: true,
       }),
