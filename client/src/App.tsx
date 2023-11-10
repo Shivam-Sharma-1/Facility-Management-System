@@ -57,11 +57,29 @@ const router = createBrowserRouter(
               </RequireAuth>
             }
           />
+        </Route>
+
+        <Route
+          path="bookings"
+          // element={
+          //   <RequireAuth GD={false} FM={true} noAdmin={true}>
+          //     <BookingsPage />
+          //   </RequireAuth>
+          // }
+        >
           <Route
-            path="bookings"
+            path="gd"
+            element={
+              <RequireAuth GD={true} FM={false} noAdmin={true}>
+                <BookingsPage GD={true} FM={false} />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="fm"
             element={
               <RequireAuth GD={false} FM={true} noAdmin={true}>
-                <BookingsPage />
+                <BookingsPage GD={false} FM={true} />
               </RequireAuth>
             }
           />
