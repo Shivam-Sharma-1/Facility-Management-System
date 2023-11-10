@@ -9,7 +9,9 @@ import validateSession from "../middleware/validateSession";
 
 const facilityRouter = Router();
 
-facilityRouter.route("/bookings").get(validateSession, getBookingsForFacility);
+facilityRouter
+	.route("/bookings/fm")
+	.get(validateSession, getBookingsForFacility);
 facilityRouter.route("/bookings/gd").get(validateSession, getBookingsForGroup);
 facilityRouter
 	.route("/:slug")
