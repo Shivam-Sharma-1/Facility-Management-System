@@ -2,7 +2,7 @@ import { CircularProgress, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import BookingCard from "./MyBookingCard";
+import BookingCard from "./cards/MyBookingCard";
 
 const MyBookings = (): JSX.Element => {
   const [myBookings, setMyBookings] = useState<ApprovalData[]>([]);

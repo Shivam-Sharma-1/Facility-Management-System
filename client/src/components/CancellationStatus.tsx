@@ -3,7 +3,7 @@ import { FC, useEffect, useState } from "react";
 import { CircularProgress, Typography } from "@mui/material";
 import axios from "axios";
 
-import CancellationCard from "./CancellationCard";
+import CancellationCard from "./cards/CancellationCard";
 
 const CancellationStatus: FC<ApprovalStatusProps> = ({
   GD,

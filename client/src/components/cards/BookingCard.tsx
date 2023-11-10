@@ -1,7 +1,7 @@
 import { Typography } from "@mui/material";
 import { FC, useEffect, useState } from "react";
-import isoToDate from "../utils/isoToDate";
-import isoToTime from "../utils/isoToTime";
+import isoToDate from "../../utils/isoToDate";
+import isoToTime from "../../utils/isoToTime";
 
 const BookingCard: FC<MyBookingCardProps> = ({
   title,

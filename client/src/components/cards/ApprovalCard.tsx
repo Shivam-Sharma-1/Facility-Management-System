@@ -13,8 +13,8 @@ import axios from "axios";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-import isoToDate from "../utils/isoToDate";
-import isoToTime from "../utils/isoToTime";
+import isoToDate from "../../utils/isoToDate";
+import isoToTime from "../../utils/isoToTime";
 
 const ApprovalCard: FC<ApprovalProps> = ({
   title,

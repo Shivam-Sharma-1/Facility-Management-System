@@ -3,7 +3,7 @@ import { FC, useEffect, useState } from "react";
 import { CircularProgress, Typography } from "@mui/material";
 import axios from "axios";
 
-import ApprovalCard from "./ApprovalCard";
+import ApprovalCard from "./cards/ApprovalCard";
 
 const ApprovalStatus: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
   const [approvalData, setApprovalData] = useState<ApprovalData[]>([]);
