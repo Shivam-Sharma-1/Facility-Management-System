@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { FC } from "react";
 import axios from "axios";
 
-import FacilityCard from "./FacilityCard";
+import FacilityCard from "./cards/FacilityCard";
 import { CircularProgress, Typography } from "@mui/material";
 
 const Facilities: FC = (): JSX.Element => {
