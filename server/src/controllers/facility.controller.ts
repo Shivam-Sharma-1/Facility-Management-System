@@ -1,3 +1,4 @@
+import { ApprovalStatus, Role } from "@prisma/client";
 import { PrismaClientValidationError } from "@prisma/client/runtime/library";
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import createHttpError from "http-errors";
@@ -116,14 +117,68 @@ export const addBookings: RequestHandler = async (
 				employeeId,
 			},
 			select: {
+				id: true,
 				groupId: true,
+				role: true,
+				facilityManager: {
+					select: {
+						facility: {
+							select: {
+								slug: true,
+							},
+						},
+					},
+				},
 			},
 		});
+
+		if (!user) {
+			return next(
+				createHttpError.NotFound(
+					`User with employeeId ${employeeId} not found.`
+				)
+			);
+		}
+
+		let status: ApprovalStatus;
+		let updateData: any = {};
+
+		if (user!.role === Role.GROUP_DIRECTOR) {
+			// If the user is a GROUP_DIRECTOR, set the status to APPROVED_BY_GD
+			status = ApprovalStatus.APPROVED_BY_GD;
+			updateData = {
+				statusUpdateAtGD: new Date(),
+				statusUpdateByGD: {
+					connect: {
+						userId: user.id,
+					},
+				},
+			};
+		} else if (
+			user!.role === Role.FACILITY_MANAGER &&
+			user.facilityManager?.facility.slug === facilitySlug
+		) {
+			// If the user is a FACILITY_MANAGER, set the status to APPROVED_BY_FM
+			status = ApprovalStatus.APPROVED_BY_FM;
+			updateData = {
+				statusUpdateAtFM: new Date(),
+				statusUpdateByFM: {
+					connect: {
+						userId: user.id,
+					},
+				},
+			};
+		} else {
+			// For other roles, set the status to PENDING (or other appropriate default)
+			status = ApprovalStatus.PENDING;
+		}
+
 		const event = await prisma.booking.create({
 			data: {
 				title,
 				slug,
 				purpose,
+				status,
 				requestedBy: { connect: { employeeId } },
 				facility: { connect: { slug: facilitySlug } },
 				time: {
@@ -138,6 +193,7 @@ export const addBookings: RequestHandler = async (
 						id: user?.groupId!,
 					},
 				},
+				...updateData,
 			},
 		});
 		if (!event) {
@@ -157,6 +213,13 @@ export const addBookings: RequestHandler = async (
 			return next(
 				createHttpError.Conflict(
 					`Field ${error.meta.target} must be unique.`
+				)
+			);
+		}
+		if (error.code === "P2025") {
+			return next(
+				createHttpError.NotFound(
+					`The given data didn't match any existing records. ${error.meta.cause}`
 				)
 			);
 		}

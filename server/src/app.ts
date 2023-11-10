@@ -18,7 +18,12 @@ import facilityRouter from "./routes/facility.routes";
 
 const PORT = process.env.PORT || 3000;
 const corsOptions = {
-	origin: "http://localhost:5173",
+	origin: [
+		"http://localhost:5173",
+		"http://192.168.0.101:5173",
+		"http://172.30.208.1:5173",
+	],
+	// defaultOrigin: "http://localhost:5173",
 	methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
 	credentials: true,
 };
