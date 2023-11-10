@@ -231,7 +231,7 @@ interface AdminBookingsRowData {
   time: string;
   createdAt: JSX.Element;
   reqBy: string;
-  status: string;
+  status: JSX.Element | string;
   remark: string;
   actions: string | JSX.Element;
   gd: JSX.Element | null;
