@@ -195,6 +195,16 @@ export const getBookingsForFacility: RequestHandler = async (
 			);
 		}
 
+		const facilities = await prisma.facility.findMany({
+			where: {
+				isActive: true,
+			},
+			select: {
+				slug: true,
+				name: true,
+			},
+		});
+
 		const bookings = await prisma.facilityManager.findFirst({
 			where: {
 				userId: facilityManager.id,
@@ -267,7 +277,10 @@ export const getBookingsForFacility: RequestHandler = async (
 			},
 		});
 
-		res.status(200).json(bookings?.facility.bookings);
+		res.status(200).json({
+			facilities,
+			bookings: bookings?.facility.bookings,
+		});
 	} catch (error) {
 		console.error(error);
 		return next(
@@ -374,7 +387,17 @@ export const getBookingsForGroup: RequestHandler = async (
 				)
 			);
 		}
-		res.status(200).json(bookings.group.bookings);
+
+		const facilities = await prisma.facility.findMany({
+			where: {
+				isActive: true,
+			},
+			select: {
+				slug: true,
+				name: true,
+			},
+		});
+		res.status(200).json({ facilities, bookings: bookings.group.bookings });
 	} catch (error) {
 		console.error(error);
 		return next(
