@@ -100,7 +100,7 @@ const Bookings: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
     <div className="w-full flex flex-col px-12 pt-8 gap-6">
       <div className="w-full flex justify-between">
         <Typography variant="h3" component="h1">
-          Manage bookings
+          Employee bookings
         </Typography>
       </div>
       <div className="w-full flex gap-4">
