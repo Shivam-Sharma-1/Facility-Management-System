@@ -25,8 +25,10 @@ const columns: readonly AdminBookingsColumnData[] = [
   { id: "gd", label: "Group Director", minWidth: 170 },
   { id: "fm", label: "Facility Manager", minWidth: 170 },
   { id: "admin", label: "Admin", minWidth: 170 },
-  { id: "remark", label: "Remark", minWidth: 170 },
-  { id: "status", label: "Status", minWidth: 170 },
+  { id: "remark", label: "Rejection Remark", minWidth: 170 },
+  { id: "cancellationremark", label: "Cancellation Remark", minWidth: 170 },
+  { id: "status", label: "Approval Status", minWidth: 170 },
+  { id: "cancellationstatus", label: "Cancellation Status", minWidth: 170 },
   { id: "actions", label: "Operations", minWidth: 130 },
 ];
 
@@ -125,6 +127,9 @@ const AdminBookingsTable: FC<AdminBookingsTableProps> = (
         </p>
       ),
       remark: booking.remark ? booking.remark : "N/A",
+      cancellationremark: booking.cancellationRemark
+        ? booking.cancellationRemark
+        : "N/A",
       status: (
         <p
           className={
@@ -137,6 +142,20 @@ const AdminBookingsTable: FC<AdminBookingsTableProps> = (
           }
         >
           {booking.status.toLowerCase().replace(/_/g, " ")}
+        </p>
+      ),
+      cancellationstatus: (
+        <p
+          className={
+            booking.cancellationStatus!.startsWith("APPROVED")
+              ? "text-green-600"
+              : booking.cancellationStatus!.startsWith("REJECTED") ||
+                booking.cancellationStatus!.startsWith("CANCELLED")
+              ? "text-red-600"
+              : "text-blue-600"
+          }
+        >
+          {booking.cancellationStatus!.toLowerCase().replace(/_/g, " ")}
         </p>
       ),
       actions:

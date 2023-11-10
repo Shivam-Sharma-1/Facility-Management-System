@@ -211,6 +211,8 @@ interface AdminBookingsColumnData {
     | "gd"
     | "fm"
     | "admin"
+    | "cancellationremark"
+    | "cancellationstatus"
     | "remark";
   label: string;
   minWidth?: number;
@@ -232,7 +234,9 @@ interface AdminBookingsRowData {
   createdAt: JSX.Element;
   reqBy: string;
   status: JSX.Element | string;
+  cancellationstatus: JSX.Element | string;
   remark: string;
+  cancellationremark: string;
   actions: string | JSX.Element;
   gd: JSX.Element | null;
   fm: JSX.Element | null;
