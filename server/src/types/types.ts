@@ -16,5 +16,4 @@ export type BookingInput = {
 	date: Date;
 	start: Date;
 	end: Date;
-	role: Role;
 };

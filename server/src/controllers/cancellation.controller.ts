@@ -1,4 +1,4 @@
-import { ApprovalStatus, CancellationStatus } from "@prisma/client";
+import { CancellationStatus } from "@prisma/client";
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import createHttpError from "http-errors";
 import prisma from "../db/prisma";
@@ -11,47 +11,12 @@ export const requestCancellation: RequestHandler = async (
 	try {
 		const { slug, remark } = req.body;
 
-		let allStatus: any = {};
-
-		const booking = await prisma.booking.findFirst({
-			where: {
-				slug,
-			},
-			select: {
-				id: true,
-				status: true,
-				cancellationStatus: true,
-				facility: {
-					select: {
-						slug: true,
-					},
-				},
-			},
-		});
-
-		if (!booking) {
-			return next(createHttpError.NotFound("Booking not found"));
-		}
-
-		if (booking.status === "CANCELLED") {
-			return next(
-				createHttpError.BadRequest("Booking already cancelled")
-			);
-		}
-
-		if (booking.status === ApprovalStatus.PENDING) {
-			allStatus = {
-				status: ApprovalStatus.CANCELLED,
-				cancellationStatus: CancellationStatus.CANCELLED_BY_USER,
-			};
-		}
-
 		const cancellationBooking = await prisma.booking.update({
 			where: {
 				slug,
 			},
 			data: {
-				...allStatus,
+				cancellationStatus: "PENDING",
 				cancellationRequestedAt: new Date().toISOString(),
 				cancellationRemark: remark,
 			},

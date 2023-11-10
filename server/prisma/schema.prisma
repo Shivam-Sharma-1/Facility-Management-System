@@ -31,7 +31,6 @@ enum ApprovalStatus {
 enum CancellationStatus {
   PENDING
   NOT_REQUESTED
-  CANCELLED_BY_USER
   APPROVED_BY_GD
   APPROVED_BY_FM
   APPROVED_BY_ADMIN
