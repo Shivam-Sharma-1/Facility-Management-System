@@ -158,7 +158,7 @@ const AdminFacilitiesTable: FC<AdminFacilitiesTableProps> = (
                   key={column.id}
                   align="left"
                   style={{ minWidth: column.minWidth }}
-                  sx={{ backgroundColor: "#dfdfdf" }}
+                  sx={{ backgroundColor: "#646464", color: "#fff" }}
                 >
                   {column.label}
                 </TableCell>

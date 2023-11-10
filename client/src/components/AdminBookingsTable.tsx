@@ -65,7 +65,18 @@ const AdminBookingsTable: FC<AdminBookingsTableProps> = (
         </>
       ),
       gd: booking.statusUpdateByGD ? (
-        <>
+        <p
+          className={
+            booking.status === "REJECTED_BY_GD"
+              ? "text-red-600"
+              : booking.status === "APPROVED_BY_GD" ||
+                booking.status === "APPROVED_BY_FM" ||
+                booking.status === "REJECTED_BY_FM" ||
+                booking.status === "CANCELLED"
+              ? "text-green-600"
+              : ""
+          }
+        >
           {booking.statusUpdateByGD?.user.name || null}
           <br />
           {booking.statusUpdateAtGD
@@ -75,10 +86,19 @@ const AdminBookingsTable: FC<AdminBookingsTableProps> = (
           {booking.statusUpdateAtGD
             ? isoToDate(booking.statusUpdateAtGD!)
             : null}
-        </>
+        </p>
       ) : null,
       fm: booking.statusUpdateByFM ? (
-        <>
+        <p
+          className={
+            booking.status === "REJECTED_BY_FM"
+              ? "text-red-600"
+              : booking.status === "APPROVED_BY_FM" ||
+                booking.status === "CANCELLED"
+              ? "text-green-600"
+              : ""
+          }
+        >
           {booking.statusUpdateByFM?.user.name || null}
           <br />
           {booking.statusUpdateAtFM
@@ -88,20 +108,37 @@ const AdminBookingsTable: FC<AdminBookingsTableProps> = (
           {booking.statusUpdateAtFM
             ? isoToDate(booking.statusUpdateAtFM!)
             : null}
-        </>
+        </p>
       ) : null,
       admin: (
-        <>
+        <p
+          className={
+            booking.status === "REJECTED_BY_ADMIN" ? "text-red-600" : ""
+          }
+        >
           {booking.statusUpdateAtAdmin
             ? isoToTime(booking.statusUpdateAtAdmin!)
             : "N/A"}
           <br />
           {booking.statusUpdateAtAdmin &&
             isoToDate(booking.statusUpdateAtAdmin!)}
-        </>
+        </p>
       ),
       remark: booking.remark ? booking.remark : "N/A",
-      status: booking.status.toLowerCase().replace(/_/g, " "),
+      status: (
+        <p
+          className={
+            booking.status.startsWith("APPROVED")
+              ? "text-green-600"
+              : booking.status.startsWith("REJECTED") ||
+                booking.status.startsWith("CANCELLED")
+              ? "text-red-600"
+              : "text-blue-600"
+          }
+        >
+          {booking.status.toLowerCase().replace(/_/g, " ")}
+        </p>
+      ),
       actions:
         booking.status === "PENDING" || booking.status === "APPROVED_BY_GD" ? (
           <div className="flex gap-1">
@@ -170,7 +207,7 @@ const AdminBookingsTable: FC<AdminBookingsTableProps> = (
                   key={column.id}
                   align="left"
                   style={{ minWidth: column.minWidth }}
-                  sx={{ backgroundColor: "#dfdfdf" }}
+                  sx={{ backgroundColor: "#646464", color: "#fff" }}
                 >
                   {column.label}
                 </TableCell>
@@ -187,7 +224,11 @@ const AdminBookingsTable: FC<AdminBookingsTableProps> = (
                       const value = row[column.id];
                       return (
                         <TableCell key={column.id} align={"left"}>
-                          {value ? value : "Not approved"}
+                          {value ? (
+                            value
+                          ) : (
+                            <p className="text-blue-600">Not approved</p>
+                          )}
                         </TableCell>
                       );
                     })}
