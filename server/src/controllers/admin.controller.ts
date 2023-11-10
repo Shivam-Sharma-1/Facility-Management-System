@@ -290,6 +290,9 @@ export const getAllBookings: RequestHandler = async (
 				slug: true,
 				createdAt: true,
 				remark: true,
+				cancellationStatus: true,
+				cancellationRemark: true,
+				cancelledAt: true,
 				time: {
 					select: {
 						start: true,
