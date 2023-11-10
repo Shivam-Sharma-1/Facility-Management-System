@@ -2,6 +2,7 @@
 
 interface FacilityCardProps {
   name: string;
+  description: string;
   icon: string;
   manager: string;
 }

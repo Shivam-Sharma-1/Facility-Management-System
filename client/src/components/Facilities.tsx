@@ -38,6 +38,7 @@ const Facilities: FC = (): JSX.Element => {
             <Link to={`/facility/${facility.slug}`} key={facility.name}>
               <FacilityCard
                 name={facility.name}
+                description={facility.description}
                 icon={facility.icon}
                 manager={facility.facilityManager.user.name}
               />
