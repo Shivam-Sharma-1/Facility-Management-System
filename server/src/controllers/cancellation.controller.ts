@@ -21,6 +21,11 @@ export const requestCancellation: RequestHandler = async (
 				id: true,
 				status: true,
 				cancellationStatus: true,
+				facility: {
+					select: {
+						slug: true,
+					},
+				},
 			},
 		});
 
