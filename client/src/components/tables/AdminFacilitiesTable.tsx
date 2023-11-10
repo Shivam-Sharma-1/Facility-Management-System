@@ -7,13 +7,13 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
-import isoToDate from "../utils/isoToDate";
-import isoToTime from "../utils/isoToTime";
+import isoToDate from "../../utils/isoToDate";
+import isoToTime from "../../utils/isoToTime";
 import { Alert, IconButton, Snackbar } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import EditFacilityModal from "./modals/EditFacilityModal";
-import DeleteFacilityModal from "./modals/DeleteFacilityModal";
+import EditFacilityModal from "../modals/EditFacilityModal";
+import DeleteFacilityModal from "../modals/DeleteFacilityModal";
 
 const columns: readonly AdminFacilitiesColumnData[] = [
   { id: "name", label: "Name", minWidth: 140 },

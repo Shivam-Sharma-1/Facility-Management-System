@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { FC, useEffect, useState } from "react";
 
-import AdminBookingsTable from "./AdminBookingsTable";
+import AdminBookingsTable from "./tables/AdminBookingsTable";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 

@@ -11,7 +11,6 @@ import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import ApprovalIcon from "@mui/icons-material/Approval";
-import CollectionsBookmarkIcon from "@mui/icons-material/CollectionsBookmark";
 import EventBusyIcon from "@mui/icons-material/EventBusy";
 import { NavLink } from "react-router-dom";
 
@@ -266,44 +265,17 @@ const Navigation = (): JSX.Element => {
           </>
         )}
 
-        {role === "FACILITY_MANAGER" && (
-          <>
-            <NavLink to="/facility/bookings">
-              {({ isActive }) => (
-                <ListItemButton
-                  className="flex gap-3"
-                  sx={{
-                    paddingLeft: "1.4em",
-                    paddingBlock: "1.4em",
-                    borderLeft: isActive ? "4px solid white" : "",
-                    color: "white",
-                    backgroundColor: isActive
-                      ? " rgb(255, 255, 255, 0.02)"
-                      : "",
-                  }}
-                >
-                  <ListItemIcon sx={{ minWidth: "0px" }}>
-                    <CollectionsBookmarkIcon
-                      sx={{ width: "26px", height: "26px", color: "white" }}
-                    />
-                  </ListItemIcon>
-                  <ListItemText
-                    primaryTypographyProps={{
-                      variant: "h6",
-                      component: "li",
-                    }}
-                    primary="Bookings"
-                  />
-                </ListItemButton>
-              )}
-            </NavLink>
-            <Divider color="#0c0051" />
-          </>
-        )}
-
         {(role === "GROUP_DIRECTOR" || role === "FACILITY_MANAGER") && (
           <>
-            <NavLink to="/report">
+            <NavLink
+              to={`/bookings/${
+                role === "GROUP_DIRECTOR"
+                  ? "gd"
+                  : role === "FACILITY_MANAGER"
+                  ? "fm"
+                  : ""
+              }`}
+            >
               {({ isActive }) => (
                 <ListItemButton
                   className="flex gap-3"

@@ -10,7 +10,7 @@ import InsertInvitationIcon from "@mui/icons-material/InsertInvitation";
 
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import AdminFacilitiesTable from "./AdminFacilitiesTable";
+import AdminFacilitiesTable from "./tables/AdminFacilitiesTable";
 import AddFacilityModal from "./modals/AddFacilityModal";
 
 const AdminFacilities: FC = (): JSX.Element => {

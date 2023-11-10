@@ -238,7 +238,7 @@ interface AdminBookingsRowData {
   cancellationstatus: JSX.Element | string;
   remark: string;
   cancellationremark: string;
-  actions: string | JSX.Element;
+  actions?: string | JSX.Element;
   gd: JSX.Element | null;
   fm: JSX.Element | null;
   admin: JSX.Element | null;
