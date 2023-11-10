@@ -15,6 +15,21 @@ import AdminBookingsTable from "./AdminBookingsTable";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
+const months: string[] = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "Octomber",
+  "November",
+  "December",
+];
+
 const AdminBookings: FC = (): JSX.Element => {
   const [bookingsData, setBookingsData] = useState<AdminBookingsData>({
     bookings: [],
@@ -24,6 +39,7 @@ const AdminBookings: FC = (): JSX.Element => {
   const [selectValue, setSelectValue] = useState<string>("");
   const [enabled, setEnabled] = useState<boolean>(true);
   const [slug, setSlug] = useState<string>("");
+  const [selectedMonth, setSelectedMonth] = useState<string>("");
 
   const d = new Date();
 
@@ -44,14 +60,26 @@ const AdminBookings: FC = (): JSX.Element => {
         }
       }
 
+      if (selectedMonth) {
+        if (selectValue) {
+          url += `&month=${months.indexOf(selectedMonth) + 1}`;
+        } else {
+          url += `?month=${months.indexOf(selectedMonth) + 1}`;
+        }
+      }
+
       const response = await axios.get(url, {
         withCredentials: true,
       });
       return response.data;
     },
     enabled: enabled,
-    refetchInterval: 5 * 1000,
+    refetchInterval: 20 * 1000,
   });
+
+  useEffect(() => {
+    selectedMonth && timeFilter && setTimeFilter(false);
+  }, [selectedMonth, timeFilter]);
 
   useEffect(() => {
     if (!isPending) {
@@ -96,34 +124,55 @@ const AdminBookings: FC = (): JSX.Element => {
             borderRadius: "4px",
           }}
           variant={timeFilter ? "filled" : "outlined"}
-          onClick={() => setTimeFilter(true)}
+          onClick={() => {
+            setSelectedMonth("");
+            setTimeFilter(true);
+          }}
         />
+        <FormControl size="small" className="w-[200px]">
+          <InputLabel>Select month</InputLabel>
+          <Select
+            label="Select a month"
+            size="small"
+            value={selectedMonth}
+            onChange={(e: SelectChangeEvent<string | null>) => {
+              setSelectedMonth(e.target.value!);
+            }}
+          >
+            {months.map((month) => (
+              <MenuItem key={month} value={month}>
+                {month}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
         <FormControl size="small" className="w-[200px]">
           <InputLabel>Select facility</InputLabel>
           <Select
-            label="Select a start time"
+            label="Select a facility"
             size="small"
             value={selectValue}
             onChange={(e: SelectChangeEvent<string | null>) => {
               setSelectValue(e.target.value!);
-              const facility = bookingsData.facilities.find(
-                (facility) => facility.name === e.target.value
+              setSlug(
+                bookingsData.facilities.find(
+                  (facility) => facility.name === e.target.value
+                )!.slug
               );
-              setSlug(facility!.slug);
             }}
           >
-            {!isPending &&
-              bookingsData!.facilities?.map((facility) => (
-                <MenuItem key={facility.name} value={facility.name}>
-                  {facility.name}
-                </MenuItem>
-              ))}
+            {bookingsData.facilities.map((facility) => (
+              <MenuItem key={facility.name} value={facility.name}>
+                {facility.name}
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
         <Button
           variant="contained"
           onClick={() => {
             setSelectValue("");
+            setSelectedMonth("");
             setTimeFilter(false);
             enabled && setEnabled(false);
             refetch();
