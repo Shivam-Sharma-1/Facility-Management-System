@@ -17,16 +17,18 @@ import AdminBookingRejectModal from "./modals/AdminBookingRejectModal";
 
 const columns: readonly AdminBookingsColumnData[] = [
   { id: "title", label: "Title/Facility", minWidth: 140 },
+  { id: "reqBy", label: "Requested By", minWidth: 140 },
   { id: "purpose", label: "Purpose", minWidth: 140 },
   { id: "date", label: "Date", minWidth: 140 },
   { id: "time", label: "Time slot", minWidth: 170 },
   { id: "createdAt", label: "Requested At", minWidth: 150 },
-  { id: "reqBy", label: "Requested By", minWidth: 140 },
   { id: "gd", label: "Group Director", minWidth: 170 },
   { id: "fm", label: "Facility Manager", minWidth: 170 },
   { id: "admin", label: "Admin", minWidth: 170 },
-  { id: "remark", label: "Remark", minWidth: 170 },
-  { id: "status", label: "Status", minWidth: 170 },
+  { id: "remark", label: "Rejection Remark", minWidth: 170 },
+  { id: "cancellationremark", label: "Cancellation Remark", minWidth: 170 },
+  { id: "status", label: "Approval Status", minWidth: 170 },
+  { id: "cancellationstatus", label: "Cancellation Status", minWidth: 170 },
   { id: "actions", label: "Operations", minWidth: 130 },
 ];
 
@@ -53,6 +55,7 @@ const AdminBookingsTable: FC<AdminBookingsTableProps> = (
           {booking.facility.name}
         </>
       ),
+      reqBy: booking.requestedBy.name,
       purpose: booking.purpose,
       date: isoToDate(booking.time.date).toString(),
       time: isoToTime(booking.time.start) + " - " + isoToTime(booking.time.end),
@@ -63,9 +66,19 @@ const AdminBookingsTable: FC<AdminBookingsTableProps> = (
           {isoToDate(booking.createdAt).toString()}
         </>
       ),
-      reqBy: booking.requestedBy.name,
       gd: booking.statusUpdateByGD ? (
-        <>
+        <p
+          className={
+            booking.status === "REJECTED_BY_GD"
+              ? "text-red-600"
+              : booking.status === "APPROVED_BY_GD" ||
+                booking.status === "APPROVED_BY_FM" ||
+                booking.status === "REJECTED_BY_FM" ||
+                booking.status === "CANCELLED"
+              ? "text-green-600"
+              : ""
+          }
+        >
           {booking.statusUpdateByGD?.user.name || null}
           <br />
           {booking.statusUpdateAtGD
@@ -75,10 +88,19 @@ const AdminBookingsTable: FC<AdminBookingsTableProps> = (
           {booking.statusUpdateAtGD
             ? isoToDate(booking.statusUpdateAtGD!)
             : null}
-        </>
+        </p>
       ) : null,
       fm: booking.statusUpdateByFM ? (
-        <>
+        <p
+          className={
+            booking.status === "REJECTED_BY_FM"
+              ? "text-red-600"
+              : booking.status === "APPROVED_BY_FM" ||
+                booking.status === "CANCELLED"
+              ? "text-green-600"
+              : ""
+          }
+        >
           {booking.statusUpdateByFM?.user.name || null}
           <br />
           {booking.statusUpdateAtFM
@@ -88,20 +110,54 @@ const AdminBookingsTable: FC<AdminBookingsTableProps> = (
           {booking.statusUpdateAtFM
             ? isoToDate(booking.statusUpdateAtFM!)
             : null}
-        </>
+        </p>
       ) : null,
       admin: (
-        <>
+        <p
+          className={
+            booking.status === "REJECTED_BY_ADMIN" ? "text-red-600" : ""
+          }
+        >
           {booking.statusUpdateAtAdmin
             ? isoToTime(booking.statusUpdateAtAdmin!)
             : "N/A"}
           <br />
           {booking.statusUpdateAtAdmin &&
             isoToDate(booking.statusUpdateAtAdmin!)}
-        </>
+        </p>
       ),
       remark: booking.remark ? booking.remark : "N/A",
-      status: booking.status.toLowerCase().replace(/_/g, " "),
+      cancellationremark: booking.cancellationRemark
+        ? booking.cancellationRemark
+        : "N/A",
+      status: (
+        <p
+          className={
+            booking.status.startsWith("APPROVED")
+              ? "text-green-600"
+              : booking.status.startsWith("REJECTED") ||
+                booking.status.startsWith("CANCELLED")
+              ? "text-red-600"
+              : "text-blue-600"
+          }
+        >
+          {booking.status.toLowerCase().replace(/_/g, " ")}
+        </p>
+      ),
+      cancellationstatus: (
+        <p
+          className={
+            booking.cancellationStatus!.startsWith("APPROVED")
+              ? "text-green-600"
+              : booking.cancellationStatus!.startsWith("REJECTED") ||
+                booking.cancellationStatus!.startsWith("CANCELLED")
+              ? "text-red-600"
+              : "text-blue-600"
+          }
+        >
+          {booking.cancellationStatus!.toLowerCase().replace(/_/g, " ")}
+        </p>
+      ),
       actions:
         booking.status === "PENDING" || booking.status === "APPROVED_BY_GD" ? (
           <div className="flex gap-1">
@@ -144,7 +200,7 @@ const AdminBookingsTable: FC<AdminBookingsTableProps> = (
   };
 
   return (
-    <Paper sx={{ width: "74vw", maxWidth: "1150px", overflow: "hidden" }}>
+    <Paper sx={{ width: "75vw", height: "75dvh", overflow: "hidden" }}>
       {isApproveModalOpen && (
         <AdminBookingApprovalModal
           isOpen={isApproveModalOpen}
@@ -161,7 +217,7 @@ const AdminBookingsTable: FC<AdminBookingsTableProps> = (
           slug={selectedSlug}
         />
       )}
-      <TableContainer sx={{ height: "480px", overflow: "auto" }}>
+      <TableContainer sx={{ height: "90%", overflow: "auto" }}>
         <Table stickyHeader>
           <TableHead>
             <TableRow>
@@ -170,7 +226,7 @@ const AdminBookingsTable: FC<AdminBookingsTableProps> = (
                   key={column.id}
                   align="left"
                   style={{ minWidth: column.minWidth }}
-                  sx={{ backgroundColor: "#dfdfdf" }}
+                  sx={{ backgroundColor: "#646464", color: "#fff" }}
                 >
                   {column.label}
                 </TableCell>
@@ -187,7 +243,11 @@ const AdminBookingsTable: FC<AdminBookingsTableProps> = (
                       const value = row[column.id];
                       return (
                         <TableCell key={column.id} align={"left"}>
-                          {value ? value : "Not approved"}
+                          {value ? (
+                            value
+                          ) : (
+                            <p className="text-blue-600">Not approved</p>
+                          )}
                         </TableCell>
                       );
                     })}

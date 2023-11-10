@@ -13,19 +13,21 @@ import axios from "axios";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-import isoToDate from "../utils/isoToDate";
-import isoToTime from "../utils/isoToTime";
+import isoToDate from "../../utils/isoToDate";
+import isoToTime from "../../utils/isoToTime";
 
 const ApprovalCard: FC<ApprovalProps> = ({
   title,
   purpose,
   slug,
   date,
+  createdAt,
   start,
   end,
   facility,
   requestedBy,
   approvedByGD,
+  approvedAtGD,
 }): JSX.Element => {
   const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
   const [isAccepted, setIsAccepted] = useState<boolean>(false);
@@ -43,6 +45,9 @@ const ApprovalCard: FC<ApprovalProps> = ({
           withCredentials: true,
         }
       ),
+    onSuccess: () => {
+      setOpenSnackbar(true);
+    },
     onError: (error) => {
       console.log(error);
     },
@@ -51,7 +56,6 @@ const ApprovalCard: FC<ApprovalProps> = ({
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     handleClick.mutate({ slug: slug, approved: true });
-    setOpenSnackbar(true);
     setIsAccepted(true);
   };
 
@@ -68,33 +72,37 @@ const ApprovalCard: FC<ApprovalProps> = ({
 
   return (
     <div className="justify-between items-center px-10 py-8 w-[60%] h-full flex mt-10 rounded-md bg-bgPrimary shadow-cardHover border-0 border-l-[10px] border-primary border-solid">
-      <div className="flex flex-col justify-center">
+      <div className="flex flex-col justify-center w-full">
         <Typography
-          variant="h5"
+          variant="h6"
           component="p"
           sx={{ marginBottom: ".3em", fontWeight: 600 }}
         >
           {facility} | {title}
         </Typography>
-        <Typography variant="h6" component="p">
+        <Typography variant="body1" component="p">
           <span className="font-bold tracking-wide">Purpose: </span> {purpose}
         </Typography>
-        <Typography variant="h6" component="p">
+        <Typography variant="body1" component="p">
           <span className="font-bold tracking-wide">Date:</span>{" "}
           {isoToDate(date)}
         </Typography>
-        <Typography variant="h6" component="p">
+        <Typography variant="body1" component="p">
           <span className="font-bold tracking-wide">Time:</span>{" "}
           {isoToTime(start)} - {isoToTime(end)}
         </Typography>
-        <Typography variant="h6" component="p">
+        <Typography variant="body1" component="p">
           <span className="font-bold tracking-wide">Requested By: </span>{" "}
-          {requestedBy}
+          {requestedBy} at <br />
+          &nbsp;&nbsp;&nbsp;
+          {isoToDate(createdAt) + ", " + isoToTime(createdAt)}
         </Typography>
         {approvedByGD && (
-          <Typography variant="h6" component="p">
+          <Typography variant="body1" component="p">
             <span className="font-bold tracking-wide">Approved By GD: </span>{" "}
-            {approvedByGD}
+            {approvedByGD} at <br />
+            &nbsp;&nbsp;&nbsp;
+            {isoToDate(approvedAtGD!) + ", " + isoToTime(approvedAtGD!)}
           </Typography>
         )}
       </div>

@@ -2,6 +2,7 @@
 
 interface FacilityCardProps {
   name: string;
+  description: string;
   icon: string;
   manager: string;
 }
@@ -154,12 +155,15 @@ interface ApprovalProps {
   title: string;
   purpose: string;
   slug: string;
+  createdAt: string;
+  cancelledAt?: string | null;
   date: string;
   start: string;
   end: string;
   facility: string;
   requestedBy: string | null;
   approvedByGD: string | null;
+  approvedAtGD?: string | null;
 }
 
 interface MyBookingCardProps {
@@ -208,6 +212,8 @@ interface AdminBookingsColumnData {
     | "gd"
     | "fm"
     | "admin"
+    | "cancellationremark"
+    | "cancellationstatus"
     | "remark";
   label: string;
   minWidth?: number;
@@ -228,8 +234,10 @@ interface AdminBookingsRowData {
   time: string;
   createdAt: JSX.Element;
   reqBy: string;
-  status: string;
+  status: JSX.Element | string;
+  cancellationstatus: JSX.Element | string;
   remark: string;
+  cancellationremark: string;
   actions: string | JSX.Element;
   gd: JSX.Element | null;
   fm: JSX.Element | null;

@@ -49,7 +49,7 @@ const AdminFacilities: FC = (): JSX.Element => {
     );
 
   return (
-    <div className="w-full flex flex-col px-12 py-8 gap-6">
+    <div className="w-full flex flex-col px-12 pt-8 gap-6">
       {isAddFacilityModalOpen && (
         <AddFacilityModal
           isOpen={isAddFacilityModalOpen}

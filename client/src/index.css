@@ -40,9 +40,13 @@ body::-webkit-scrollbar {
   border-radius: 14px;
 }
 
-.css-du4ylq-MuiTableContainer-root::-webkit-scrollbar {
+.css-18k8hm6-MuiTableContainer-root::-webkit-scrollbar {
   width: 8px;
   height: 8px;
+}
+
+.MuiTooltip-arrow {
+  color: #00275e !important;
 }
 
 a {
@@ -92,6 +96,10 @@ body {
 .fc-button-primary:hover {
   opacity: 0.9 !important;
   transition: all 0.2s ease-in-out !important;
+}
+
+.fc-timegrid-divider {
+  height: 0 !important;
 }
 
 .loader {

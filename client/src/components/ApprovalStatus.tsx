@@ -3,7 +3,7 @@ import { FC, useEffect, useState } from "react";
 import { CircularProgress, Typography } from "@mui/material";
 import axios from "axios";
 
-import ApprovalCard from "./ApprovalCard";
+import ApprovalCard from "./cards/ApprovalCard";
 
 const ApprovalStatus: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
   const [approvalData, setApprovalData] = useState<ApprovalData[]>([]);
@@ -19,8 +19,6 @@ const ApprovalStatus: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
       );
       return response.data;
     },
-    staleTime: 0,
-    gcTime: 0,
     refetchInterval: 5 * 1000,
   });
 
@@ -57,6 +55,7 @@ const ApprovalStatus: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
                 slug={approval.slug}
                 date={approval.time.date}
                 start={approval.time.start}
+                createdAt={approval.createdAt}
                 end={approval.time.end}
                 facility={approval.facility.name && approval.facility.name!}
                 requestedBy={
@@ -66,6 +65,9 @@ const ApprovalStatus: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
                   approval.statusUpdateByGD
                     ? approval.statusUpdateByGD!.user.name!
                     : null
+                }
+                approvedAtGD={
+                  approval.statusUpdateAtGD ? approval.statusUpdateAtGD! : null
                 }
               />
             ))}
