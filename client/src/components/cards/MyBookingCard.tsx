@@ -14,6 +14,7 @@ import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import { useMutation } from "@tanstack/react-query";
 
 import axios from "axios";
+import { useAuth } from "../../hooks/useAuth";
 
 const MyBookingCard: FC<MyBookingCardProps> = ({
   title,
@@ -42,8 +43,10 @@ const MyBookingCard: FC<MyBookingCardProps> = ({
   const [remarkValue, setRemarkValue] = useState<string>("");
   const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
 
+  const auth = useAuth();
+
   const mutation = useMutation({
-    mutationFn: (data: { slug: string; remark: string }) =>
+    mutationFn: (data: { slug: string; remark: string; role: string }) =>
       axios.post(`http://localhost:3000/bookings/cancel`, data, {
         withCredentials: true,
       }),
@@ -61,8 +64,11 @@ const MyBookingCard: FC<MyBookingCardProps> = ({
 
   const handleClick = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    console.log(slug, remarkValue);
-    mutation.mutate({ slug: slug!, remark: remarkValue });
+    mutation.mutate({
+      slug: slug!,
+      remark: remarkValue,
+      role: auth!.user!.role,
+    });
   };
 
   useEffect(() => {
