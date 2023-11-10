@@ -7,13 +7,13 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
-import isoToDate from "../utils/isoToDate";
-import isoToTime from "../utils/isoToTime";
+import isoToDate from "../../utils/isoToDate";
+import isoToTime from "../../utils/isoToTime";
 import { Alert, IconButton, Snackbar } from "@mui/material";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import AdminBookingApprovalModal from "./modals/AdminBookingApprovalModal";
-import AdminBookingRejectModal from "./modals/AdminBookingRejectModal";
+import AdminBookingApprovalModal from "../modals/AdminBookingApprovalModal";
+import AdminBookingRejectModal from "../modals/AdminBookingRejectModal";
 
 const columns: readonly AdminBookingsColumnData[] = [
   { id: "title", label: "Title/Facility", minWidth: 140 },
