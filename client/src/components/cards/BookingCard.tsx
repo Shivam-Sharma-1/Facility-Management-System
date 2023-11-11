@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material";
+import { Slide, Typography } from "@mui/material";
 import { FC, useEffect, useState } from "react";
 import isoToDate from "../../utils/isoToDate";
 import isoToTime from "../../utils/isoToTime";
@@ -48,61 +48,63 @@ const BookingCard: FC<MyBookingCardProps> = ({
   }, []);
 
   return (
-    <div
-      className={`justify-between items-center px-10 py-8 w-[60%] h-full flex mt-8 rounded-md bg-bgPrimary shadow-cardHover border-0 border-l-[10px] border-solid ${
-        status === "PENDING" || status === "APPROVED_BY_GD"
-          ? "bg-blue-100 border-blue-600"
-          : status === "APPROVED_BY_FM" || status === "APPROVED_BY_ADMIN"
-          ? "bg-green-100 border-green-600"
-          : "bg-red-100 border-red-600"
-      }`}
-    >
-      <div className="flex flex-col justify-center">
-        <Typography
-          variant="h5"
-          component="p"
-          sx={{ marginBottom: ".3em", fontWeight: 600 }}
-        >
-          {facility} | {title}
-        </Typography>
-        <Typography variant="h6" component="p">
-          <span className="font-bold tracking-wide">Purpose: </span> {purpose}
-        </Typography>
-        <Typography variant="h6" component="p">
-          <span className="font-bold tracking-wide">Date:</span>{" "}
-          {isoToDate(date)}
-        </Typography>
-        <Typography variant="h6" component="p">
-          <span className="font-bold tracking-wide">Time:</span>{" "}
-          {isoToTime(start)} - {isoToTime(end)}
-        </Typography>
-        <Typography variant="h6" component="p">
-          <span className="font-bold tracking-wide">Status:</span>{" "}
-          {statusMessage}
-        </Typography>
-        {status.startsWith("REJECTED") && remark && (
-          <Typography variant="h6" component="p">
-            <span className="font-bold tracking-wide">Remark:</span> {remark}
+    <Slide direction="up" in={true} mountOnEnter unmountOnExit>
+      <div
+        className={`justify-between items-center px-10 py-8 w-[60%] h-full flex mt-8 rounded-md bg-bgPrimary shadow-cardHover border-0 border-l-[10px] border-solid ${
+          status === "PENDING" || status === "APPROVED_BY_GD"
+            ? "bg-blue-100 border-blue-600"
+            : status === "APPROVED_BY_FM" || status === "APPROVED_BY_ADMIN"
+            ? "bg-green-100 border-green-600"
+            : "bg-red-100 border-red-600"
+        }`}
+      >
+        <div className="flex flex-col justify-center">
+          <Typography
+            variant="h5"
+            component="p"
+            sx={{ marginBottom: ".3em", fontWeight: 600 }}
+          >
+            {facility} | {title}
           </Typography>
-        )}
-        {approvedByGD && (
           <Typography variant="h6" component="p">
-            <span className="font-bold tracking-wide">
-              {status === "REJECTED_BY_GD" ? "Rejected" : "Approved"} By GD:{" "}
-            </span>{" "}
-            {approvedByGD}
+            <span className="font-bold tracking-wide">Purpose: </span> {purpose}
           </Typography>
-        )}
-        {approvedByFM && (
           <Typography variant="h6" component="p">
-            <span className="font-bold tracking-wide">
-              {status === "REJECTED_BY_FM" ? "Rejected" : "Approved"} By FM:{" "}
-            </span>{" "}
-            {approvedByFM}
+            <span className="font-bold tracking-wide">Date:</span>{" "}
+            {isoToDate(date)}
           </Typography>
-        )}
+          <Typography variant="h6" component="p">
+            <span className="font-bold tracking-wide">Time:</span>{" "}
+            {isoToTime(start)} - {isoToTime(end)}
+          </Typography>
+          <Typography variant="h6" component="p">
+            <span className="font-bold tracking-wide">Status:</span>{" "}
+            {statusMessage}
+          </Typography>
+          {status.startsWith("REJECTED") && remark && (
+            <Typography variant="h6" component="p">
+              <span className="font-bold tracking-wide">Remark:</span> {remark}
+            </Typography>
+          )}
+          {approvedByGD && (
+            <Typography variant="h6" component="p">
+              <span className="font-bold tracking-wide">
+                {status === "REJECTED_BY_GD" ? "Rejected" : "Approved"} By GD:{" "}
+              </span>{" "}
+              {approvedByGD}
+            </Typography>
+          )}
+          {approvedByFM && (
+            <Typography variant="h6" component="p">
+              <span className="font-bold tracking-wide">
+                {status === "REJECTED_BY_FM" ? "Rejected" : "Approved"} By FM:{" "}
+              </span>{" "}
+              {approvedByFM}
+            </Typography>
+          )}
+        </div>
       </div>
-    </div>
+    </Slide>
   );
 };
 
