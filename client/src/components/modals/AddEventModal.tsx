@@ -26,6 +26,7 @@ import { useAuth } from "../../hooks/useAuth";
 import "dayjs/locale/en-gb";
 import isoToDate from "../../utils/isoToDate";
 import isoToTime from "../../utils/isoToTime";
+import ErrorComponent from "../Error";
 
 const AddEventModal: FC<AddEventModalProps> = ({
   isOpen,
@@ -35,6 +36,12 @@ const AddEventModal: FC<AddEventModalProps> = ({
   bookingsData,
   defaultDate,
 }): JSX.Element => {
+  const [error, setError] = useState<ErrorMessage>({
+    error: {
+      status: null,
+      message: "",
+    },
+  });
   const auth = useAuth();
   const [formData, setFormData] = useState<AddEventDataProps>({
     title: "",
@@ -111,6 +118,7 @@ const AddEventModal: FC<AddEventModalProps> = ({
       setIsOpen(false);
     },
     onError: (error) => {
+      setError(error.response!.data as ErrorMessage);
       console.log(error);
     },
   });
@@ -182,6 +190,15 @@ const AddEventModal: FC<AddEventModalProps> = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [validationError]);
+
+  if (error.error.status) {
+    return (
+      <ErrorComponent
+        status={error.error.status!}
+        message={error.error.message}
+      />
+    );
+  }
 
   return (
     <Modal

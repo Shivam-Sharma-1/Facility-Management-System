@@ -17,6 +17,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import DownloadIcon from "@mui/icons-material/Download";
 import AdminBookingsReport from "../reports/AdminBookingsReport";
+import ErrorComponent from "./Error";
 
 const months: string[] = [
   "January",
@@ -48,7 +49,7 @@ const AdminBookings: FC = (): JSX.Element => {
 
   const d = new Date();
 
-  const { data, isPending, refetch } = useQuery({
+  const { data, isPending, refetch, isError, error } = useQuery({
     queryKey: ["adminbookings"],
     queryFn: async () => {
       let url = "http://localhost:3000/admin/bookings";
@@ -80,6 +81,7 @@ const AdminBookings: FC = (): JSX.Element => {
     },
     enabled: enabled,
     refetchInterval: 20 * 1000,
+    retry: 1,
   });
 
   useEffect(() => {
@@ -105,6 +107,16 @@ const AdminBookings: FC = (): JSX.Element => {
       document.body.style.overflowY = "auto";
     }
   }, [isPrint]);
+
+  if (isError) {
+    const errorData = error.response!.data as ErrorMessage;
+    return (
+      <ErrorComponent
+        status={errorData.error.status!}
+        message={errorData.error.message}
+      />
+    );
+  }
 
   if (isPending)
     return (

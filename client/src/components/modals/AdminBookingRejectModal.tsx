@@ -11,6 +11,7 @@ import { ChangeEvent, FC, FormEvent, useState } from "react";
 import ReportProblemOutlinedIcon from "@mui/icons-material/ReportProblemOutlined";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
+import ErrorComponent from "../Error";
 
 const AdminBookingRejectModal: FC<AdminBookingsModalProps> = ({
   isOpen,
@@ -19,6 +20,12 @@ const AdminBookingRejectModal: FC<AdminBookingsModalProps> = ({
   slug,
 }): JSX.Element => {
   const [remarkValue, setRemarkValue] = useState<string>("");
+  const [error, setError] = useState<ErrorMessage>({
+    error: {
+      status: null,
+      message: "",
+    },
+  });
 
   const mutation = useMutation({
     mutationFn: (data: ApprovalType) =>
@@ -30,6 +37,7 @@ const AdminBookingRejectModal: FC<AdminBookingsModalProps> = ({
       setOpenSnackbar(true);
     },
     onError: (error) => {
+      setError(error.response!.data as ErrorMessage);
       console.log(error);
     },
   });
@@ -42,6 +50,15 @@ const AdminBookingRejectModal: FC<AdminBookingsModalProps> = ({
   const handleCancel = (): void => {
     setIsOpen(false);
   };
+
+  if (error.error.status) {
+    return (
+      <ErrorComponent
+        status={error.error.status!}
+        message={error.error.message}
+      />
+    );
+  }
 
   return (
     <Modal

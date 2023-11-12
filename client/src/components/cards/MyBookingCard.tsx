@@ -16,6 +16,7 @@ import { useMutation } from "@tanstack/react-query";
 
 import axios from "axios";
 import { useAuth } from "../../hooks/useAuth";
+import ErrorComponent from "../Error";
 
 const MyBookingCard: FC<MyBookingCardProps> = ({
   title,
@@ -43,6 +44,12 @@ const MyBookingCard: FC<MyBookingCardProps> = ({
   const [cancelStatusMessage, setCancelStatusMessage] = useState<string>("");
   const [remarkValue, setRemarkValue] = useState<string>("");
   const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
+  const [error, setError] = useState<ErrorMessage>({
+    error: {
+      status: null,
+      message: "",
+    },
+  });
 
   const auth = useAuth();
 
@@ -55,6 +62,7 @@ const MyBookingCard: FC<MyBookingCardProps> = ({
       setOpenSnackbar(true);
     },
     onError: (error) => {
+      setError(error.response!.data as ErrorMessage);
       console.log(error);
     },
   });
@@ -137,6 +145,15 @@ const MyBookingCard: FC<MyBookingCardProps> = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cancelStatus, status]);
+
+  if (error.error.status) {
+    return (
+      <ErrorComponent
+        status={error.error.status!}
+        message={error.error.message}
+      />
+    );
+  }
 
   return (
     <Slide direction="up" in={true} mountOnEnter unmountOnExit>

@@ -4,6 +4,7 @@ import { CircularProgress, Typography } from "@mui/material";
 import axios from "axios";
 
 import CancellationCard from "./cards/CancellationCard";
+import ErrorComponent from "./Error";
 
 const CancellationStatus: FC<ApprovalStatusProps> = ({
   GD,
@@ -11,7 +12,7 @@ const CancellationStatus: FC<ApprovalStatusProps> = ({
 }): JSX.Element => {
   const [cancellationData, setCancellationData] = useState<ApprovalData[]>([]);
 
-  const { data, isPending } = useQuery<ApprovalData[]>({
+  const { data, isPending, isError, error } = useQuery<ApprovalData[]>({
     queryKey: ["cancellations"],
     queryFn: async () => {
       const response = await axios.get<ApprovalData[]>(
@@ -24,6 +25,7 @@ const CancellationStatus: FC<ApprovalStatusProps> = ({
     },
     gcTime: 0,
     refetchInterval: 5 * 1000,
+    retry: 1,
   });
 
   useEffect(() => {
@@ -31,6 +33,16 @@ const CancellationStatus: FC<ApprovalStatusProps> = ({
       setCancellationData(data || []);
     }
   }, [data, isPending]);
+
+  if (isError) {
+    const errorData = error.response!.data as ErrorMessage;
+    return (
+      <ErrorComponent
+        status={errorData.error.status!}
+        message={errorData.error.message}
+      />
+    );
+  }
 
   if (isPending)
     return (

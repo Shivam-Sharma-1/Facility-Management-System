@@ -17,6 +17,7 @@ import BookingsTable from "./tables/BookingsTable";
 import generatePDF, { Margin, Options } from "react-to-pdf";
 import DownloadIcon from "@mui/icons-material/Download";
 import BookingsReport from "../reports/BookingsReport";
+import ErrorComponent from "./Error";
 
 const months: string[] = [
   "January",
@@ -48,7 +49,7 @@ const Bookings: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
 
   const d = new Date();
 
-  const { data, isPending, refetch } = useQuery({
+  const { data, isPending, refetch, isError, error } = useQuery({
     queryKey: ["gd&fmbookings"],
     queryFn: async () => {
       let url = `http://localhost:3000/facility/bookings/${
@@ -82,6 +83,7 @@ const Bookings: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
     },
     enabled: enabled,
     refetchInterval: 20 * 1000,
+    retry: 1,
   });
 
   useEffect(() => {
@@ -107,6 +109,16 @@ const Bookings: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
       document.body.style.overflowY = "auto";
     }
   }, [isPrint]);
+
+  if (isError) {
+    const errorData = error.response!.data as ErrorMessage;
+    return (
+      <ErrorComponent
+        status={errorData.error.status!}
+        message={errorData.error.message}
+      />
+    );
+  }
 
   if (isPending)
     return (
