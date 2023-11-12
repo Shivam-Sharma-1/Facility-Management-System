@@ -226,6 +226,7 @@ interface AdminBookingsTableProps {
 
 interface AdminFacilitiesTableProps {
   facilitiesData: FacilityData[];
+  forwardedRef?: React.RefObject<HTMLDivElement>;
 }
 
 interface AdminBookingsRowData {
@@ -266,7 +267,7 @@ interface AdminFacilitiesRowData {
   createdAt: JSX.Element;
   updatedAt: JSX.Element;
   deletedAt: JSX.Element;
-  actions: string | JSX.Element;
+  actions?: string | JSX.Element;
   fm: JSX.Element | null;
 }
 
