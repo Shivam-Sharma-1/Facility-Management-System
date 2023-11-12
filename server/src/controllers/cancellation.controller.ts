@@ -11,8 +11,6 @@ export const requestCancellation: RequestHandler = async (
 	try {
 		const { slug, remark, employeeId } = req.body;
 
-		console.log({ employeeId, slug, remark });
-
 		const user = await prisma.user.findUnique({
 			where: {
 				employeeId,
@@ -82,6 +80,7 @@ export const requestCancellation: RequestHandler = async (
 			};
 		} else if (booking?.status === ApprovalStatus.PENDING) {
 			candelData = {
+				status: ApprovalStatus.CANCELLED,
 				cancellationStatus: CancellationStatus.CANCELLED_BY_USER,
 			};
 		} else {
