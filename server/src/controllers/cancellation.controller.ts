@@ -74,14 +74,6 @@ export const requestCancellation: RequestHandler = async (
 			user?.role === Role.FACILITY_MANAGER &&
 			user.facilityManager?.facility.slug === booking?.facility.slug
 		) {
-			//commented by me
-			console.log({
-				user: user.role,
-				slug:
-					user.facilityManager?.facility.slug ===
-					booking?.facility.slug,
-			});
-
 			candelData = {
 				status: ApprovalStatus.CANCELLED,
 				cancelledAt: new Date().toISOString(),
