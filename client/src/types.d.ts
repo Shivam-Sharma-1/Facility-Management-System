@@ -298,6 +298,12 @@ interface AdminBookingsModalProps {
   slug: string;
 }
 
+interface ErrorMessage {
+  error: {
+    message: string;
+  };
+}
+
 // ----------TYPES-----------
 
 type FacilityData = {
