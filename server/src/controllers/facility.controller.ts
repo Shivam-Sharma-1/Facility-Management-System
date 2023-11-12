@@ -182,17 +182,48 @@ export const getBookingsForFacility: RequestHandler = async (
 ) => {
 	try {
 		const employeeId = req.session.userId;
+
+		const { month } = req.query;
+
 		const facilityManager = await prisma.user.findFirst({
 			where: {
 				AND: [{ employeeId }, { role: "FACILITY_MANAGER" }],
 			},
+			include: {
+				facilityManager: {
+					select: {
+						facility: {
+							select: {
+								slug: true,
+							},
+						},
+					},
+				},
+			},
 		});
+
 		if (!facilityManager) {
 			return next(
 				createHttpError.Unauthorized(
 					"You do not have permission to access this route."
 				)
 			);
+		}
+
+		let filterConditions = {};
+
+		if (month) {
+			const startDate = new Date(`${month}-01`);
+			const endDate = new Date(`${month}-31`);
+			startDate.setFullYear(new Date().getFullYear());
+			endDate.setFullYear(new Date().getFullYear());
+
+			filterConditions = {
+				createdAt: {
+					gte: startDate,
+					lt: endDate,
+				},
+			};
 		}
 
 		const facilities = await prisma.facility.findMany({
@@ -213,6 +244,9 @@ export const getBookingsForFacility: RequestHandler = async (
 				facility: {
 					select: {
 						bookings: {
+							where: {
+								...filterConditions,
+							},
 							select: {
 								id: true,
 								title: true,
@@ -298,6 +332,40 @@ export const getBookingsForGroup: RequestHandler = async (
 ) => {
 	try {
 		const employeeId = req.session.userId;
+		const { month, facility } = req.query;
+
+		let filterConditions = {};
+
+		if (month) {
+			// Parse the month parameter as a Date object
+			const startDate = new Date(`${month}-01`);
+			const endDate = new Date(`${month}-31`);
+			startDate.setFullYear(new Date().getFullYear());
+			endDate.setFullYear(new Date().getFullYear());
+
+			filterConditions = {
+				...filterConditions,
+
+				createdAt: {
+					gte: startDate,
+					lt: endDate,
+				},
+			};
+		}
+
+		if (facility) {
+			filterConditions = {
+				AND: [
+					{ ...filterConditions },
+					{
+						facility: {
+							slug: facility,
+						},
+					},
+				],
+			};
+		}
+
 		const bookings = await prisma.groupDirector.findFirst({
 			where: {
 				AND: [
@@ -317,6 +385,9 @@ export const getBookingsForGroup: RequestHandler = async (
 				group: {
 					select: {
 						bookings: {
+							where: {
+								...filterConditions,
+							},
 							select: {
 								id: true,
 								title: true,
