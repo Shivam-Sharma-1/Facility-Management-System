@@ -40,12 +40,15 @@ const BookingCard: FC<MyBookingCardProps> = ({
       case "REJECTED_BY_ADMIN":
         setStatusMessage("Rejected by Admin");
         break;
+      case "CANCELLED":
+        setStatusMessage("Cancelled");
+        break;
       default:
         setStatusMessage("Rejected");
         break;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [status]);
 
   return (
     <Slide direction="up" in={true} mountOnEnter unmountOnExit>

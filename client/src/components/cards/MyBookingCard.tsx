@@ -47,7 +47,7 @@ const MyBookingCard: FC<MyBookingCardProps> = ({
   const auth = useAuth();
 
   const mutation = useMutation({
-    mutationFn: (data: { slug: string; remark: string; role: string }) =>
+    mutationFn: (data: { slug: string; remark: string; employeeId: number }) =>
       axios.post(`http://localhost:3000/bookings/cancel`, data, {
         withCredentials: true,
       }),
@@ -68,7 +68,7 @@ const MyBookingCard: FC<MyBookingCardProps> = ({
     mutation.mutate({
       slug: slug!,
       remark: remarkValue,
-      role: auth!.user!.role,
+      employeeId: auth!.user!.employeeId,
     });
   };
 
@@ -94,6 +94,9 @@ const MyBookingCard: FC<MyBookingCardProps> = ({
         break;
       case "REJECTED_BY_ADMIN":
         setStatusMessage("Rejected by Admin");
+        break;
+      case "CANCELLED":
+        setStatusMessage("Cancelled");
         break;
       default:
         setStatusMessage("Rejected");
@@ -125,12 +128,15 @@ const MyBookingCard: FC<MyBookingCardProps> = ({
       case "NOT_REQUESTED":
         setCancelStatusMessage("Not requested");
         break;
+      case "CANCELLED_BY_USER":
+        setCancelStatusMessage("Cancelled by user");
+        break;
       default:
         setCancelStatusMessage("Rejected");
         break;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [cancelStatus, status]);
 
   return (
     <Slide direction="up" in={true} mountOnEnter unmountOnExit>
