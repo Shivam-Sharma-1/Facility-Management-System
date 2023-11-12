@@ -5,18 +5,23 @@ import {
   Snackbar,
   Typography,
 } from "@mui/material";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import InsertInvitationIcon from "@mui/icons-material/InsertInvitation";
 
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import AdminFacilitiesTable from "./tables/AdminFacilitiesTable";
 import AddFacilityModal from "./modals/AddFacilityModal";
+import generatePDF, { Margin, Options } from "react-to-pdf";
+import DownloadIcon from "@mui/icons-material/Download";
+import FacilitiesReport from "../reports/FacilitiesReport";
 
 const AdminFacilities: FC = (): JSX.Element => {
   const [facilitiesData, setFacilitiesData] = useState<FacilityData[]>([]);
   const [isAddFacilityModalOpen, setIsAddFacilityModalOpen] =
     useState<boolean>(false);
+  const targetRef = useRef<HTMLDivElement>(null);
+  const [isPrint, setIsPrint] = useState<boolean>(false);
 
   const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
 
@@ -41,12 +46,34 @@ const AdminFacilities: FC = (): JSX.Element => {
     }
   }, [data, isPending]);
 
+  useEffect(() => {
+    if (isPrint) {
+      setTimeout(() => {
+        setIsPrint(false);
+      }, 3000);
+    }
+
+    if (isPrint) {
+      document.body.style.overflowY = "hidden";
+    } else {
+      document.body.style.overflowY = "auto";
+    }
+  }, [isPrint]);
+
   if (isPending)
     return (
       <div className="w-[74vw] min-h-screen h-full flex flex-col items-center justify-center">
         <CircularProgress />
       </div>
     );
+
+  const options: Options = {
+    filename: "admin-facilities-bookings-report.pdf",
+    page: {
+      orientation: "landscape",
+      margin: Margin.SMALL,
+    },
+  };
 
   return (
     <div className="w-full flex flex-col px-12 pt-8 gap-6">
@@ -61,7 +88,7 @@ const AdminFacilities: FC = (): JSX.Element => {
       <Typography variant="h3" component="h1">
         Manage facilities
       </Typography>
-      <div className="w-full flex ">
+      <div className="w-full flex justify-between items-center">
         <Button
           variant="contained"
           color="primary"
@@ -76,8 +103,32 @@ const AdminFacilities: FC = (): JSX.Element => {
         >
           Add facility
         </Button>
+
+        <Button
+          variant="contained"
+          color="primary"
+          endIcon={<DownloadIcon sx={{ height: "20px", width: "20px" }} />}
+          sx={{ paddingX: "2em", height: "45px" }}
+          size="large"
+          onClick={() => {
+            setIsPrint(true);
+            setTimeout(() => {
+              generatePDF(targetRef, options);
+            }, 1000);
+          }}
+        >
+          Export
+        </Button>
       </div>
       {!isPending && <AdminFacilitiesTable facilitiesData={facilitiesData} />}
+      {isPrint && (
+        <div className="mt-[100dvh]">
+          <FacilitiesReport
+            facilitiesData={facilitiesData}
+            forwardedRef={targetRef}
+          />
+        </div>
+      )}
       <Snackbar
         open={openSnackbar}
         autoHideDuration={3000}
