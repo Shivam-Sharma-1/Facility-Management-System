@@ -301,7 +301,13 @@ interface AdminBookingsModalProps {
 interface ErrorMessage {
   error: {
     message: string;
+    status: number | null;
   };
+}
+
+interface ErrorProps {
+  message: string;
+  status: number;
 }
 
 // ----------TYPES-----------

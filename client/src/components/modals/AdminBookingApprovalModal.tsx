@@ -1,8 +1,9 @@
 import { Button, Fade, Modal, Typography } from "@mui/material";
-import { FC } from "react";
+import { FC, useState } from "react";
 import ReportProblemOutlinedIcon from "@mui/icons-material/ReportProblemOutlined";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
+import ErrorComponent from "../Error";
 
 const AdminBookingApprovalModal: FC<AdminBookingsModalProps> = ({
   isOpen,
@@ -10,6 +11,13 @@ const AdminBookingApprovalModal: FC<AdminBookingsModalProps> = ({
   setOpenSnackbar,
   slug,
 }): JSX.Element => {
+  const [error, setError] = useState<ErrorMessage>({
+    error: {
+      status: null,
+      message: "",
+    },
+  });
+
   const mutation = useMutation({
     mutationFn: (data: ApprovalType) =>
       axios.post(`http://localhost:3000/admin/approval`, data, {
@@ -20,6 +28,7 @@ const AdminBookingApprovalModal: FC<AdminBookingsModalProps> = ({
       setOpenSnackbar(true);
     },
     onError: (error) => {
+      setError(error.response!.data as ErrorMessage);
       console.log(error);
     },
   });
@@ -31,6 +40,15 @@ const AdminBookingApprovalModal: FC<AdminBookingsModalProps> = ({
   const handleCancel = (): void => {
     setIsOpen(false);
   };
+
+  if (error.error.status) {
+    return (
+      <ErrorComponent
+        status={error.error.status!}
+        message={error.error.message}
+      />
+    );
+  }
 
   return (
     <Modal

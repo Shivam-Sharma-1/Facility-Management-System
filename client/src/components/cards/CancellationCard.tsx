@@ -7,6 +7,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 import isoToDate from "../../utils/isoToDate";
 import isoToTime from "../../utils/isoToTime";
+import ErrorComponent from "../Error";
 
 const CancellationCard: FC<ApprovalProps> = ({
   title,
@@ -24,6 +25,12 @@ const CancellationCard: FC<ApprovalProps> = ({
 }): JSX.Element => {
   const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
   const [snackbarMessage, setSnackbarMessage] = useState<string>("");
+  const [error, setError] = useState<ErrorMessage>({
+    error: {
+      status: null,
+      message: "",
+    },
+  });
 
   const handleClick = useMutation({
     mutationFn: (data: ApprovalType) =>
@@ -38,6 +45,7 @@ const CancellationCard: FC<ApprovalProps> = ({
       setOpenSnackbar(true);
     },
     onError: (error) => {
+      setError(error.response!.data as ErrorMessage);
       console.log(error);
     },
   });
@@ -55,6 +63,15 @@ const CancellationCard: FC<ApprovalProps> = ({
     });
     setOpenSnackbar(true);
   };
+
+  if (error.error.status) {
+    return (
+      <ErrorComponent
+        status={error.error.status!}
+        message={error.error.message}
+      />
+    );
+  }
 
   return (
     <Slide direction="up" in={true} mountOnEnter unmountOnExit>

@@ -15,6 +15,7 @@ import AddFacilityModal from "./modals/AddFacilityModal";
 import generatePDF, { Margin, Options } from "react-to-pdf";
 import DownloadIcon from "@mui/icons-material/Download";
 import FacilitiesReport from "../reports/FacilitiesReport";
+import ErrorComponent from "./Error";
 
 const AdminFacilities: FC = (): JSX.Element => {
   const [facilitiesData, setFacilitiesData] = useState<FacilityData[]>([]);
@@ -25,7 +26,7 @@ const AdminFacilities: FC = (): JSX.Element => {
 
   const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
 
-  const { data, isPending } = useQuery({
+  const { data, isPending, isError, error } = useQuery({
     queryKey: ["adminfacilities"],
     queryFn: async () => {
       const response = await axios.get("http://localhost:3000/admin/facility", {
@@ -34,6 +35,7 @@ const AdminFacilities: FC = (): JSX.Element => {
       return response.data;
     },
     refetchInterval: 5 * 1000,
+    retry: 1,
   });
 
   const handleCloseSnackbar = (): void => {
@@ -59,6 +61,16 @@ const AdminFacilities: FC = (): JSX.Element => {
       document.body.style.overflowY = "auto";
     }
   }, [isPrint]);
+
+  if (isError) {
+    const errorData = error.response!.data as ErrorMessage;
+    return (
+      <ErrorComponent
+        status={errorData.error.status!}
+        message={errorData.error.message}
+      />
+    );
+  }
 
   if (isPending)
     return (
