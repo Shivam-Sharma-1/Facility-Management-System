@@ -1,3 +1,4 @@
+import { Role } from "@prisma/client";
 import { PrismaClientValidationError } from "@prisma/client/runtime/library";
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import createHttpError from "http-errors";
@@ -116,11 +117,51 @@ export const addBookings: RequestHandler = async (
 				employeeId,
 			},
 			select: {
+				id: true,
 				groupId: true,
+				role: true,
+				facilityManager: {
+					select: {
+						facility: {
+							select: {
+								slug: true,
+							},
+						},
+					},
+				},
 			},
 		});
+
+		let updateData = {};
+
+		if (user?.role === Role.GROUP_DIRECTOR) {
+			updateData = {
+				status: "APPROVED_BY_GD",
+				statusUpdateAtGD: new Date().toISOString(),
+				statusUpdateByGD: {
+					connect: {
+						userId: user.id,
+					},
+				},
+			};
+		} else if (
+			user?.role === Role.FACILITY_MANAGER &&
+			user.facilityManager?.facility.slug === facilitySlug
+		) {
+			updateData = {
+				status: "APPROVED_BY_FM",
+				statusUpdateAtFM: new Date().toISOString(),
+				statusUpdateByFM: {
+					connect: {
+						userId: user.id,
+					},
+				},
+			};
+		}
+
 		const event = await prisma.booking.create({
 			data: {
+				...updateData,
 				title,
 				slug,
 				purpose,
@@ -182,17 +223,48 @@ export const getBookingsForFacility: RequestHandler = async (
 ) => {
 	try {
 		const employeeId = req.session.userId;
+
+		const { month } = req.query;
+
 		const facilityManager = await prisma.user.findFirst({
 			where: {
 				AND: [{ employeeId }, { role: "FACILITY_MANAGER" }],
 			},
+			include: {
+				facilityManager: {
+					select: {
+						facility: {
+							select: {
+								slug: true,
+							},
+						},
+					},
+				},
+			},
 		});
+
 		if (!facilityManager) {
 			return next(
 				createHttpError.Unauthorized(
 					"You do not have permission to access this route."
 				)
 			);
+		}
+
+		let filterConditions = {};
+
+		if (month) {
+			const startDate = new Date(`${month}-01`);
+			const endDate = new Date(`${month}-31`);
+			startDate.setFullYear(new Date().getFullYear());
+			endDate.setFullYear(new Date().getFullYear());
+
+			filterConditions = {
+				createdAt: {
+					gte: startDate,
+					lt: endDate,
+				},
+			};
 		}
 
 		const facilities = await prisma.facility.findMany({
@@ -213,6 +285,9 @@ export const getBookingsForFacility: RequestHandler = async (
 				facility: {
 					select: {
 						bookings: {
+							where: {
+								...filterConditions,
+							},
 							select: {
 								id: true,
 								title: true,
@@ -298,6 +373,40 @@ export const getBookingsForGroup: RequestHandler = async (
 ) => {
 	try {
 		const employeeId = req.session.userId;
+		const { month, facility } = req.query;
+
+		let filterConditions = {};
+
+		if (month) {
+			// Parse the month parameter as a Date object
+			const startDate = new Date(`${month}-01`);
+			const endDate = new Date(`${month}-31`);
+			startDate.setFullYear(new Date().getFullYear());
+			endDate.setFullYear(new Date().getFullYear());
+
+			filterConditions = {
+				...filterConditions,
+
+				createdAt: {
+					gte: startDate,
+					lt: endDate,
+				},
+			};
+		}
+
+		if (facility) {
+			filterConditions = {
+				AND: [
+					{ ...filterConditions },
+					{
+						facility: {
+							slug: facility,
+						},
+					},
+				],
+			};
+		}
+
 		const bookings = await prisma.groupDirector.findFirst({
 			where: {
 				AND: [
@@ -317,6 +426,9 @@ export const getBookingsForGroup: RequestHandler = async (
 				group: {
 					select: {
 						bookings: {
+							where: {
+								...filterConditions,
+							},
 							select: {
 								id: true,
 								title: true,

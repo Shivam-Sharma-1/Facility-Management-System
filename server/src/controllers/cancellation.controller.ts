@@ -1,4 +1,4 @@
-import { CancellationStatus } from "@prisma/client";
+import { ApprovalStatus, CancellationStatus, Role } from "@prisma/client";
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import createHttpError from "http-errors";
 import prisma from "../db/prisma";
@@ -9,14 +9,93 @@ export const requestCancellation: RequestHandler = async (
 	next: NextFunction
 ) => {
 	try {
-		const { slug, remark } = req.body;
+		const { slug, remark, employeeId } = req.body;
+
+		console.log({ employeeId, slug, remark });
+
+		const user = await prisma.user.findUnique({
+			where: {
+				employeeId,
+			},
+			select: {
+				role: true,
+				facilityManager: {
+					select: {
+						facility: {
+							select: {
+								slug: true,
+							},
+						},
+					},
+				},
+			},
+		});
+
+		const booking = await prisma.booking.findFirst({
+			where: {
+				slug,
+			},
+			include: {
+				facility: {
+					select: {
+						slug: true,
+					},
+				},
+			},
+		});
+
+		if (!user || !booking) {
+			return next(
+				createHttpError.InternalServerError(
+					"Unable to request cancellation"
+				)
+			);
+		}
+
+		let candelData = {};
+
+		if (
+			user?.role === Role.GROUP_DIRECTOR &&
+			booking?.status !== ApprovalStatus.APPROVED_BY_FM &&
+			booking?.status !== ApprovalStatus.APPROVED_BY_ADMIN
+		) {
+			candelData = {
+				status: ApprovalStatus.CANCELLED,
+				cancelledAt: new Date().toISOString(),
+				cancellationStatus: CancellationStatus.APPROVED_BY_GD,
+				cancellationUpdateAtGD: new Date().toISOString(),
+			};
+		} else if (user?.role === Role.GROUP_DIRECTOR) {
+			candelData = {
+				cancellationStatus: CancellationStatus.APPROVED_BY_GD,
+				cancellationUpdateAtGD: new Date().toISOString(),
+			};
+		} else if (
+			user?.role === Role.FACILITY_MANAGER &&
+			user.facilityManager?.facility.slug === booking?.facility.slug
+		) {
+			candelData = {
+				status: ApprovalStatus.CANCELLED,
+				cancelledAt: new Date().toISOString(),
+				cancellationStatus: CancellationStatus.APPROVED_BY_FM,
+				cancellationUpdateAtFM: new Date().toISOString(),
+			};
+		} else if (booking?.status === ApprovalStatus.PENDING) {
+			candelData = {
+				cancellationStatus: CancellationStatus.CANCELLED_BY_USER,
+			};
+		} else {
+			candelData = {
+				cancellationStatus: CancellationStatus.PENDING,
+			};
+		}
 
 		const cancellationBooking = await prisma.booking.update({
 			where: {
 				slug,
 			},
 			data: {
-				cancellationStatus: "PENDING",
+				...candelData,
 				cancellationRequestedAt: new Date().toISOString(),
 				cancellationRemark: remark,
 			},
