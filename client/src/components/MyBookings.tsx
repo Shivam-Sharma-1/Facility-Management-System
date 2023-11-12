@@ -3,11 +3,12 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import BookingCard from "./cards/MyBookingCard";
+import ErrorComponent from "./Error";
 
 const MyBookings = (): JSX.Element => {
   const [myBookings, setMyBookings] = useState<ApprovalData[]>([]);
 
-  const { data, isPending } = useQuery<ApprovalData[]>({
+  const { data, isPending, isError, error } = useQuery<ApprovalData[]>({
     queryKey: ["mybookings"],
     queryFn: async () => {
       const response = await axios.get<ApprovalData[]>(
@@ -20,6 +21,7 @@ const MyBookings = (): JSX.Element => {
     },
     gcTime: 0,
     refetchInterval: 5 * 1000,
+    retry: 1,
   });
 
   useEffect(() => {
@@ -27,6 +29,16 @@ const MyBookings = (): JSX.Element => {
       setMyBookings(data || []);
     }
   }, [data, isPending]);
+
+  if (isError) {
+    const errorData = error.response!.data as ErrorMessage;
+    return (
+      <ErrorComponent
+        status={errorData.error.status!}
+        message={errorData.error.message}
+      />
+    );
+  }
 
   if (isPending)
     return (

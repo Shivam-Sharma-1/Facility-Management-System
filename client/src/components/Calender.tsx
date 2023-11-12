@@ -24,6 +24,7 @@ import AddEventModal from "./modals/AddEventModal";
 import EventModal from "./modals/EventModal";
 import isoToTime from "../utils/isoToTime";
 import isoToDate from "../utils/isoToDate";
+import ErrorComponent from "./Error";
 
 const Calendar = () => {
   const [isAddOpen, setIsAddOpen] = useState<boolean>(false);
@@ -50,7 +51,7 @@ const Calendar = () => {
     setOpenSnackbar(false);
   };
 
-  const { data, isPending } = useQuery<BookingDataProps[]>({
+  const { data, isPending, isError, error } = useQuery<BookingDataProps[]>({
     queryKey: ["bookings"],
     queryFn: async () => {
       const response = await axios.get<BookingDataProps[]>(
@@ -63,6 +64,7 @@ const Calendar = () => {
     },
     refetchInterval: 5 * 1000,
     gcTime: 0,
+    retry: 1,
   });
 
   useEffect(() => {
@@ -143,6 +145,17 @@ const Calendar = () => {
       </div>
     );
   };
+
+  if (isError) {
+    const errorData = error.response!.data as ErrorMessage;
+    console.log("error");
+    return (
+      <ErrorComponent
+        status={errorData.error.status!}
+        message={errorData.error.message}
+      />
+    );
+  }
 
   if (isPending)
     return (

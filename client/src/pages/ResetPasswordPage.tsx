@@ -8,7 +8,7 @@ import {
   OutlinedInput,
   Typography,
 } from "@mui/material";
-import { FC, FormEvent, MouseEvent, useState } from "react";
+import { FC, FormEvent, MouseEvent, useEffect, useState } from "react";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useMutation } from "@tanstack/react-query";
@@ -21,6 +21,7 @@ const ResetPasswordPage: FC = (): JSX.Element => {
   const [oldPassword, setOldPassword] = useState<string>("");
   const [newPassword, setNewPassword] = useState<string>("");
   const [isError, setIsError] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
 
   const navigate = useNavigate();
 
@@ -33,6 +34,10 @@ const ResetPasswordPage: FC = (): JSX.Element => {
       navigate("/auth/login", { replace: true, preventScrollReset: true });
     },
     onError: (error) => {
+      if (error.response) {
+        const errorData = error.response.data as ErrorMessage;
+        setError(errorData.error.message);
+      }
       console.log(error);
     },
   });
@@ -60,6 +65,14 @@ const ResetPasswordPage: FC = (): JSX.Element => {
   ): void => {
     event.preventDefault();
   };
+
+  useEffect(() => {
+    if (error) {
+      setTimeout(() => {
+        setError("");
+      }, 3000);
+    }
+  }, [error]);
 
   return (
     <div className="w-full h-full min-h-screen flex justify-center items-center">
@@ -96,6 +109,9 @@ const ResetPasswordPage: FC = (): JSX.Element => {
               label="Old Password"
               required
             />
+            {error && (
+              <FormHelperText error={true}>Wrong old password</FormHelperText>
+            )}
           </FormControl>
           <FormControl variant="outlined" fullWidth>
             <InputLabel htmlFor="outlined-adornment-newpassword">

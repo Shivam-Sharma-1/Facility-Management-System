@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 
 import "dayjs/locale/en-gb";
+import ErrorComponent from "../Error";
 
 const EditFacilityModal: FC<EditFacilityModalProps> = ({
   isOpen,
@@ -25,6 +26,12 @@ const EditFacilityModal: FC<EditFacilityModalProps> = ({
     icon: facilityData ? facilityData.icon : "",
     FMId: facilityData ? facilityData.facilityManager.user.employeeId : "",
   });
+  const [error, setError] = useState<ErrorMessage>({
+    error: {
+      status: null,
+      message: "",
+    },
+  });
 
   const mutation = useMutation({
     mutationFn: (data: AdminFacilitiesEditData) =>
@@ -36,6 +43,7 @@ const EditFacilityModal: FC<EditFacilityModalProps> = ({
       setOpenSnackbar(true);
     },
     onError: (error) => {
+      setError(error.response!.data as ErrorMessage);
       console.log(error);
     },
   });
@@ -62,6 +70,15 @@ const EditFacilityModal: FC<EditFacilityModalProps> = ({
       FMId: "",
     });
   };
+
+  if (error.error.status) {
+    return (
+      <ErrorComponent
+        status={error.error.status!}
+        message={error.error.message}
+      />
+    );
+  }
 
   return (
     <Modal

@@ -1,4 +1,4 @@
-import { FC, FormEvent, MouseEvent, useState } from "react";
+import { FC, FormEvent, MouseEvent, useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -23,6 +23,7 @@ const LoginPage: FC = (): JSX.Element => {
   const [password, setPassword] = useState<string>("");
   const [isError, setIsError] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
 
   const auth = useAuth();
   const navigate = useNavigate();
@@ -41,6 +42,10 @@ const LoginPage: FC = (): JSX.Element => {
       navigate(redirectPath, { replace: true, preventScrollReset: true });
     },
     onError: (error) => {
+      if (error.response) {
+        const errorData = error.response.data as ErrorMessage;
+        setError(errorData.error.message);
+      }
       console.log(error);
     },
   });
@@ -62,6 +67,14 @@ const LoginPage: FC = (): JSX.Element => {
         password: password,
       });
   };
+
+  useEffect(() => {
+    if (error) {
+      setTimeout(() => {
+        setError("");
+      }, 3000);
+    }
+  }, [error]);
 
   return (
     <div className="w-full h-full min-h-screen flex justify-center items-center">
@@ -110,6 +123,11 @@ const LoginPage: FC = (): JSX.Element => {
             <FormHelperText error={isError}>
               The password must be minimum of 5 characters long
             </FormHelperText>
+            {error && (
+              <FormHelperText error={true}>
+                Invalid employee ID or password
+              </FormHelperText>
+            )}
           </FormControl>
           <Button
             type="submit"

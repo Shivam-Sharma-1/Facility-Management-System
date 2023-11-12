@@ -5,9 +5,10 @@ import axios from "axios";
 
 import FacilityCard from "./cards/FacilityCard";
 import { CircularProgress, Typography } from "@mui/material";
+import ErrorComponent from "./Error";
 
 const Facilities: FC = (): JSX.Element => {
-  const { data, isPending } = useQuery({
+  const { data, isPending, isError, error } = useQuery({
     queryKey: ["facilities"],
     queryFn: async () => {
       const response = await axios.get<DashboardData>(
@@ -18,7 +19,18 @@ const Facilities: FC = (): JSX.Element => {
       );
       return response.data;
     },
+    retry: 1,
   });
+
+  if (isError) {
+    const errorData = error.response!.data as ErrorMessage;
+    return (
+      <ErrorComponent
+        status={errorData.error.status!}
+        message={errorData.error.message}
+      />
+    );
+  }
 
   if (isPending)
     return (
