@@ -221,6 +221,7 @@ interface AdminBookingsColumnData {
 
 interface AdminBookingsTableProps {
   bookingsData: ApprovalData[];
+  forwardedRef?: React.RefObject<HTMLDivElement>;
 }
 
 interface AdminFacilitiesTableProps {
