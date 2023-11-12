@@ -1,3 +1,4 @@
+import { Role } from "@prisma/client";
 import { PrismaClientValidationError } from "@prisma/client/runtime/library";
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import createHttpError from "http-errors";
@@ -116,11 +117,51 @@ export const addBookings: RequestHandler = async (
 				employeeId,
 			},
 			select: {
+				id: true,
 				groupId: true,
+				role: true,
+				facilityManager: {
+					select: {
+						facility: {
+							select: {
+								slug: true,
+							},
+						},
+					},
+				},
 			},
 		});
+
+		let updateData = {};
+
+		if (user?.role === Role.GROUP_DIRECTOR) {
+			updateData = {
+				status: "APPROVED_BY_GD",
+				statusUpdateAtGD: new Date().toISOString(),
+				statusUpdateByGD: {
+					connect: {
+						userId: user.id,
+					},
+				},
+			};
+		} else if (
+			user?.role === Role.FACILITY_MANAGER &&
+			user.facilityManager?.facility.slug === facilitySlug
+		) {
+			updateData = {
+				status: "APPROVED_BY_FM",
+				statusUpdateAtFM: new Date().toISOString(),
+				statusUpdateByFM: {
+					connect: {
+						userId: user.id,
+					},
+				},
+			};
+		}
+
 		const event = await prisma.booking.create({
 			data: {
+				...updateData,
 				title,
 				slug,
 				purpose,
