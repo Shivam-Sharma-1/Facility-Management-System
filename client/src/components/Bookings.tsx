@@ -9,11 +9,14 @@ import {
   SelectChangeEvent,
   Typography,
 } from "@mui/material";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import BookingsTable from "./tables/BookingsTable";
+import generatePDF, { Margin, Options } from "react-to-pdf";
+import DownloadIcon from "@mui/icons-material/Download";
+import BookingsReport from "../reports/BookingsReport";
 
 const months: string[] = [
   "January",
@@ -40,6 +43,8 @@ const Bookings: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
   const [enabled, setEnabled] = useState<boolean>(true);
   const [slug, setSlug] = useState<string>("");
   const [selectedMonth, setSelectedMonth] = useState<string>("");
+  const targetRef = useRef<HTMLDivElement>(null);
+  const [isPrint, setIsPrint] = useState<boolean>(false);
 
   const d = new Date();
 
@@ -89,6 +94,20 @@ const Bookings: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
     }
   }, [data, isPending]);
 
+  useEffect(() => {
+    if (isPrint) {
+      setTimeout(() => {
+        setIsPrint(false);
+      }, 3000);
+    }
+
+    if (isPrint) {
+      document.body.style.overflowY = "hidden";
+    } else {
+      document.body.style.overflowY = "auto";
+    }
+  }, [isPrint]);
+
   if (isPending)
     return (
       <div className="w-[74vw] min-h-screen h-full flex flex-col items-center justify-center">
@@ -96,105 +115,138 @@ const Bookings: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
       </div>
     );
 
+  const options: Options = {
+    filename: "bookings-report.pdf",
+    page: {
+      orientation: "landscape",
+      margin: Margin.SMALL,
+    },
+  };
+
   return (
     <div className="w-full flex flex-col px-12 pt-8 gap-6">
       <div className="w-full flex justify-between">
         <Typography variant="h3" component="h1">
-          Employee bookings
+          {GD && !FM ? "Employee" : "Facility"} bookings
         </Typography>
       </div>
-      <div className="w-full flex gap-4">
-        <Chip
-          label="All"
-          clickable={true}
-          sx={{
-            minWidth: "100px",
-            minHeight: "40px",
-            fontSize: "1rem",
-            borderRadius: "4px",
-          }}
-          variant={timeFilter ? "outlined" : "filled"}
-          onClick={() => setTimeFilter(false)}
-        />
-        <Chip
-          label="This month"
-          clickable={true}
-          sx={{
-            minWidth: "100px",
-            minHeight: "40px",
-            fontSize: "1rem",
-            borderRadius: "4px",
-          }}
-          variant={timeFilter ? "filled" : "outlined"}
-          onClick={() => {
-            setSelectedMonth("");
-            setTimeFilter(true);
-          }}
-        />
-        <FormControl size="small" className="w-[200px]">
-          <InputLabel>Select month</InputLabel>
-          <Select
-            label="Select a month"
-            size="small"
-            value={selectedMonth}
-            onChange={(e: SelectChangeEvent<string | null>) => {
-              setSelectedMonth(e.target.value!);
+      <div className="w-full flex justify-center items-center">
+        <div className="w-full flex gap-4">
+          <Chip
+            label="All"
+            clickable={true}
+            sx={{
+              minWidth: "100px",
+              minHeight: "40px",
+              fontSize: "1rem",
+              borderRadius: "4px",
             }}
-          >
-            {months.map((month) => (
-              <MenuItem key={month} value={month}>
-                {month}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        {GD && (
+            variant={timeFilter ? "outlined" : "filled"}
+            onClick={() => setTimeFilter(false)}
+          />
+          <Chip
+            label="This month"
+            clickable={true}
+            sx={{
+              minWidth: "100px",
+              minHeight: "40px",
+              fontSize: "1rem",
+              borderRadius: "4px",
+            }}
+            variant={timeFilter ? "filled" : "outlined"}
+            onClick={() => {
+              setSelectedMonth("");
+              setTimeFilter(true);
+            }}
+          />
           <FormControl size="small" className="w-[200px]">
-            <InputLabel>Select facility</InputLabel>
+            <InputLabel>Select month</InputLabel>
             <Select
-              label="Select a facility"
+              label="Select a month"
               size="small"
-              value={selectValue}
+              value={selectedMonth}
               onChange={(e: SelectChangeEvent<string | null>) => {
-                setSelectValue(e.target.value!);
-                setSlug(
-                  bookingsData.facilities.find(
-                    (facility) => facility.name === e.target.value
-                  )!.slug
-                );
+                setSelectedMonth(e.target.value!);
               }}
             >
-              {bookingsData.facilities.map((facility) => (
-                <MenuItem key={facility.name} value={facility.name}>
-                  {facility.name}
+              {months.map((month) => (
+                <MenuItem key={month} value={month}>
+                  {month}
                 </MenuItem>
               ))}
             </Select>
           </FormControl>
-        )}
+          {GD && (
+            <FormControl size="small" className="w-[200px]">
+              <InputLabel>Select facility</InputLabel>
+              <Select
+                label="Select a facility"
+                size="small"
+                value={selectValue}
+                onChange={(e: SelectChangeEvent<string | null>) => {
+                  setSelectValue(e.target.value!);
+                  setSlug(
+                    bookingsData.facilities.find(
+                      (facility) => facility.name === e.target.value
+                    )!.slug
+                  );
+                }}
+              >
+                {bookingsData.facilities.map((facility) => (
+                  <MenuItem key={facility.name} value={facility.name}>
+                    {facility.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          )}
+          <Button
+            variant="contained"
+            onClick={() => {
+              setSelectValue("");
+              setSelectedMonth("");
+              setTimeFilter(false);
+              enabled && setEnabled(false);
+              refetch();
+            }}
+          >
+            Reset
+          </Button>
+          <Button
+            variant="contained"
+            onClick={() => {
+              enabled && setEnabled(false);
+              refetch();
+            }}
+          >
+            Filter
+          </Button>
+        </div>
         <Button
           variant="contained"
+          color="primary"
+          endIcon={<DownloadIcon sx={{ height: "20px", width: "20px" }} />}
+          sx={{ paddingX: "2em", height: "45px" }}
+          size="large"
           onClick={() => {
-            setSelectValue("");
-            setSelectedMonth("");
-            setTimeFilter(false);
-            enabled && setEnabled(false);
-            refetch();
+            setIsPrint(true);
+            setTimeout(() => {
+              generatePDF(targetRef, options);
+            }, 1000);
           }}
         >
-          Reset
-        </Button>
-        <Button
-          variant="contained"
-          onClick={() => {
-            enabled && setEnabled(false);
-            refetch();
-          }}
-        >
-          Filter
+          Export
         </Button>
       </div>
       {!isPending && <BookingsTable bookingsData={bookingsData.bookings} />}
+      {isPrint && (
+        <div className="mt-[100dvh]">
+          <BookingsReport
+            bookingsData={bookingsData.bookings}
+            forwardedRef={targetRef}
+          />
+        </div>
+      )}
     </div>
   );
 };

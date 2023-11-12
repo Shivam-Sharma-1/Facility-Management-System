@@ -264,7 +264,7 @@ const AddEventModal: FC<AddEventModalProps> = ({
                     onChange={(e: SelectChangeEvent<string | null>) => {
                       setFormData({ ...formData, start: e.target.value });
                     }}
-                    label="Select a start time"
+                    label="Start time"
                     size="small"
                     required
                   >
@@ -286,7 +286,7 @@ const AddEventModal: FC<AddEventModalProps> = ({
                     onChange={(e: SelectChangeEvent<string | null>) =>
                       setFormData({ ...formData, end: e.target.value })
                     }
-                    label="Select an end time"
+                    label="End time"
                     size="small"
                     required
                   >

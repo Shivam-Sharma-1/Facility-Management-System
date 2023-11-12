@@ -19,6 +19,7 @@ const ApprovalStatus: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
       );
       return response.data;
     },
+    gcTime: 0,
     refetchInterval: 5 * 1000,
   });
 

@@ -22,11 +22,11 @@ const CancellationStatus: FC<ApprovalStatusProps> = ({
       );
       return response.data;
     },
+    gcTime: 0,
     refetchInterval: 5 * 1000,
   });
 
   useEffect(() => {
-    console.log(data);
     if (!isPending) {
       setCancellationData(data || []);
     }

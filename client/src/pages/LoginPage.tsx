@@ -1,14 +1,29 @@
-import { FC, FormEvent, useState } from "react";
+import { FC, FormEvent, MouseEvent, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-import { Button, TextField } from "@mui/material";
+import {
+  Button,
+  FormControl,
+  FormHelperText,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  OutlinedInput,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useAuth } from "../hooks/useAuth";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 const LoginPage: FC = (): JSX.Element => {
-  const [id, setId] = useState<number | null>(null);
+  const [id, setId] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [isError, setIsError] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+
   const auth = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -30,15 +45,30 @@ const LoginPage: FC = (): JSX.Element => {
     },
   });
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleClickShowPassword = (): void => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (
+    event: MouseEvent<HTMLButtonElement>
+  ): void => {
+    event.preventDefault();
+  };
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    mutation.mutate({ employeeId: id, password: password });
+    password.length < 5 ? setIsError(true) : setIsError(false);
+    !isError &&
+      mutation.mutate({
+        employeeId: parseInt(id! as string),
+        password: password,
+      });
   };
 
   return (
     <div className="w-full h-full min-h-screen flex justify-center items-center">
-      <div className="w-[400px] bg-bgPrimary shadow-cardHover rounded-lg flex flex-col justify-center p-10 gap-6">
-        <h1>Employee Login</h1>
+      <div className="w-[450px] bg-bgPrimary shadow-cardHover rounded-lg flex flex-col justify-center p-10 gap-6">
+        <Typography variant="h4" className="text-left">
+          Employee Login
+        </Typography>
         <form
           onSubmit={handleSubmit}
           autoComplete="off"
@@ -46,23 +76,41 @@ const LoginPage: FC = (): JSX.Element => {
         >
           <TextField
             id="id"
-            label="Id"
+            label="Enter Employee ID"
             variant="outlined"
             className="w-full"
-            value={id?.toString() || ""}
-            onChange={(e) => setId(parseInt(e.target.value))}
+            value={id}
+            onChange={(e) => setId(e.target.value)}
             required
           />
-          <TextField
-            id="password"
-            label="Password"
-            variant="outlined"
-            className="w-full"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            type="password"
-          />
+          <FormControl variant="outlined" fullWidth>
+            <InputLabel htmlFor="outlined-adornment-password">
+              Enter Password
+            </InputLabel>
+            <OutlinedInput
+              id="outlined-adornment-password"
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+              label="Enter Password"
+              required
+            />
+            <FormHelperText error={isError}>
+              The password must be minimum of 5 characters long
+            </FormHelperText>
+          </FormControl>
           <Button
             type="submit"
             variant="contained"

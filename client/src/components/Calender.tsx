@@ -25,7 +25,7 @@ import EventModal from "./modals/EventModal";
 import isoToTime from "../utils/isoToTime";
 import isoToDate from "../utils/isoToDate";
 
-const Calendar: FC = (): JSX.Element => {
+const Calendar = () => {
   const [isAddOpen, setIsAddOpen] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
