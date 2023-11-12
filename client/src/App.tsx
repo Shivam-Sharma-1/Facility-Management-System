@@ -20,6 +20,7 @@ import AdminFacilitiesPage from "./pages/AdminFacilitiesPage";
 import Layout from "./components/Layout";
 import CancellationsPage from "./pages/CancellationsPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
+import PageNotFound from "./components/PageNotFound";
 
 declare module "@tanstack/react-query" {
   interface Register {
@@ -157,6 +158,7 @@ const router = createBrowserRouter(
           />
         </Route>
       </Route>
+      <Route path="*" element={<PageNotFound />} />
     </>
   )
 );
