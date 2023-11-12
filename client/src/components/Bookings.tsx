@@ -116,7 +116,7 @@ const Bookings: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
     );
 
   const options: Options = {
-    filename: "admin-bookings-report.pdf",
+    filename: "bookings-report.pdf",
     page: {
       orientation: "landscape",
       margin: Margin.SMALL,
