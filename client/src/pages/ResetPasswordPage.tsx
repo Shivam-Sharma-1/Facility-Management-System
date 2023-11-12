@@ -26,7 +26,7 @@ const ResetPasswordPage: FC = (): JSX.Element => {
 
   const mutation = useMutation({
     mutationFn: (data: { oldPassword: string; newPassword: string }) =>
-      axios.post("http://localhost:3000/auth/reset-password", data, {
+      axios.post("http://localhost:3000/auth/password", data, {
         withCredentials: true,
       }),
     onSuccess: () => {
