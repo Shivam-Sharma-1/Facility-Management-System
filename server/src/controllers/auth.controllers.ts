@@ -149,8 +149,6 @@ export const changePassword: RequestHandler = async (
 				},
 			},
 		});
-
-		res.redirect("/auth/logout");
 	} catch (error) {
 		console.error(error);
 		return next(
