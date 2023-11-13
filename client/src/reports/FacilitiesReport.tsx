@@ -84,8 +84,7 @@ const FacilitiesReport: FC<AdminFacilitiesTableProps> = ({
                       backgroundColor: "#646464",
                       color: "#fff",
                       fontSize: "10px",
-                      padding: "6px",
-                      paddingInline: "16px",
+                      paddingBlock: "6px",
                     }}
                   >
                     {column.label}
@@ -105,8 +104,7 @@ const FacilitiesReport: FC<AdminFacilitiesTableProps> = ({
                           align={"left"}
                           sx={{
                             fontSize: "10px",
-                            padding: "6px",
-                            paddingInline: "16px",
+                            paddingBlock: "6px",
                           }}
                         >
                           {value ? (
