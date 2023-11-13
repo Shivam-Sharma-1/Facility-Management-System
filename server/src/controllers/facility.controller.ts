@@ -18,6 +18,14 @@ export const getBookings: RequestHandler = async (
 ) => {
 	try {
 		const facilitySlug = req.params.slug;
+		const facility = await prisma.facility.findUnique({
+			where: {
+				slug: facilitySlug,
+			},
+			select: {
+				name: true,
+			},
+		});
 		const events = await prisma.booking.findMany({
 			where: {
 				facility: {
@@ -86,7 +94,7 @@ export const getBookings: RequestHandler = async (
 				},
 			},
 		});
-		res.status(200).json(events);
+		res.status(200).json({ facility, events });
 	} catch (error) {
 		return next(
 			createHttpError.InternalServerError(
