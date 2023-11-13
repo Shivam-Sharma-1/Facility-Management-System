@@ -149,6 +149,7 @@ interface EventInfoProps {
   requestBy: string;
   statusUpdateByGD: string | null;
   statusUpdateByFM: string | null;
+  statusUpdateByAdmin: string | null;
 }
 
 interface ApprovalProps {
