@@ -45,7 +45,7 @@ const ApprovalCard: FC<ApprovalProps> = ({
   const handleClick = useMutation({
     mutationFn: (data: ApprovalType) =>
       axios.post(
-        `http://localhost:3000/employee/approvals/${
+        `http://***REMOVED***/employee/approvals/${
           approvedByGD ? "fm" : "gd"
         }`,
         data,

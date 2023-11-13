@@ -20,7 +20,7 @@ const DeleteFacilityModal: FC<EditFacilityModalProps> = ({
 
   const mutation = useMutation({
     mutationFn: (data: { slug: string }) =>
-      axios.post(`http://localhost:3000/admin/facility`, data, {
+      axios.post(`http://***REMOVED***/admin/facility`, data, {
         withCredentials: true,
       }),
     onSuccess: () => {

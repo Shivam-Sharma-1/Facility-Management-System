@@ -52,7 +52,7 @@ const AdminBookings: FC = (): JSX.Element => {
   const { data, isPending, refetch, isError, error } = useQuery({
     queryKey: ["adminbookings"],
     queryFn: async () => {
-      let url = "http://localhost:3000/admin/bookings";
+      let url = "http://***REMOVED***/admin/bookings";
 
       if (selectValue) {
         url += `?facility=${slug}`;

@@ -16,7 +16,7 @@ const CancellationStatus: FC<ApprovalStatusProps> = ({
     queryKey: ["cancellations"],
     queryFn: async () => {
       const response = await axios.get<ApprovalData[]>(
-        `http://localhost:3000/bookings/cancel/${GD && !FM ? "gd" : "fm"}`,
+        `http://***REMOVED***/bookings/cancel/${GD && !FM ? "gd" : "fm"}`,
         {
           withCredentials: true,
         }

@@ -13,7 +13,7 @@ const ApprovalStatus: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
     queryKey: ["booking"],
     queryFn: async () => {
       const response = await axios.get<ApprovalData[]>(
-        `http://localhost:3000/employee/approvals/${GD && !FM ? "gd" : "fm"}`,
+        `http://***REMOVED***/employee/approvals/${GD && !FM ? "gd" : "fm"}`,
         {
           withCredentials: true,
         }

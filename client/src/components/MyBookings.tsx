@@ -12,7 +12,7 @@ const MyBookings = (): JSX.Element => {
     queryKey: ["mybookings"],
     queryFn: async () => {
       const response = await axios.get<ApprovalData[]>(
-        `http://localhost:3000/employee/status`,
+        `http://***REMOVED***/employee/status`,
         {
           withCredentials: true,
         }

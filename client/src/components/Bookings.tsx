@@ -52,7 +52,7 @@ const Bookings: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
   const { data, isPending, refetch, isError, error } = useQuery({
     queryKey: ["gd&fmbookings"],
     queryFn: async () => {
-      let url = `http://localhost:3000/facility/bookings/${
+      let url = `http://***REMOVED***/facility/bookings/${
         GD && !FM ? "gd" : "fm"
       }`;
 
