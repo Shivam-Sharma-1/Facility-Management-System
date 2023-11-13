@@ -57,7 +57,9 @@ const AddFacilityModal: FC<AddFacilityModalProps> = ({
       name: formData.name,
       description: formData.description,
       icon: formData.icon,
-      slug: formData.name.toLowerCase().replace(/\s/g, "-"),
+      slug: `${formData.name
+        .toLowerCase()
+        .replace(/\s/g, "-")}${new Date().getTime()}`,
       facilityManagerId: parseInt(formData.FMId! as string),
     };
     mutation.mutate(submitData);
