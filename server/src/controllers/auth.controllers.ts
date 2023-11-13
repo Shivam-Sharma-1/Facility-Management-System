@@ -130,7 +130,7 @@ export const changePassword: RequestHandler = async (
 			oldPassword
 		);
 		if (!verifyOldPassword) {
-			return next(createHttpError.Unauthorized("Invalid old password."));
+			return next(createHttpError.BadRequest("Invalid old password."));
 		}
 		const hashedPassword = await argon2.hash(newPassword);
 		await prisma.user.update({
