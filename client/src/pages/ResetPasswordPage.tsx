@@ -13,7 +13,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
 const ResetPasswordPage: FC = (): JSX.Element => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -23,16 +23,13 @@ const ResetPasswordPage: FC = (): JSX.Element => {
   const [isError, setIsError] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
 
-  const navigate = useNavigate();
+  const auth = useAuth();
 
   const mutation = useMutation({
     mutationFn: (data: { oldPassword: string; newPassword: string }) =>
-      axios.post("http://***REMOVED***/auth/password", data, {
+      axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/auth/password`, data, {
         withCredentials: true,
       }),
-    onSuccess: () => {
-      navigate("/auth/login", { replace: true, preventScrollReset: true });
-    },
     onError: (error) => {
       if (error.response) {
         const errorData = error.response.data as ErrorMessage;
@@ -45,8 +42,10 @@ const ResetPasswordPage: FC = (): JSX.Element => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     newPassword.length < 5 ? setIsError(true) : setIsError(false);
-    !isError &&
+    if (!isError) {
       mutation.mutate({ oldPassword: oldPassword, newPassword: newPassword });
+      auth?.logout();
+    }
   };
 
   const handleClickShowPassword = (): void => setShowPassword((show) => !show);
