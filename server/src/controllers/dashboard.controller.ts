@@ -39,7 +39,7 @@ export const getFacilities: RequestHandler = async (
 				)
 			);
 		}
-		res.status(200).json(facilities);
+		res.status(200).json({ facilities });
 	} catch (error) {
 		console.error(error);
 		return next(
