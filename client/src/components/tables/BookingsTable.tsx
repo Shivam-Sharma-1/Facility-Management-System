@@ -102,7 +102,11 @@ const BookingsTable: FC<AdminBookingsTableProps> = (
       admin: (
         <p
           className={
-            booking.status === "REJECTED_BY_ADMIN" ? "text-red-600" : ""
+            booking.status === "REJECTED_BY_ADMIN"
+              ? "text-red-600"
+              : booking.status === "APPROVED_BY_ADMIN"
+              ? "text-green-600"
+              : ""
           }
         >
           {booking.statusUpdateAtAdmin
