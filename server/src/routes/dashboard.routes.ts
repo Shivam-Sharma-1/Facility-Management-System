@@ -5,8 +5,6 @@ import validateSession from "../middleware/validateSession";
 const dashboardRouter = Router();
 
 dashboardRouter.route("/").get(validateSession, getFacilities);
-dashboardRouter
-	.route("/booking/count/:employeeId")
-	.get(validateSession, getCount);
+dashboardRouter.route("/count/:employeeId").get(validateSession, getCount);
 
 export default dashboardRouter;
