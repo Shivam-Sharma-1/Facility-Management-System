@@ -21,7 +21,7 @@ const Navigation = (): JSX.Element => {
 
   const mutation = useMutation({
     mutationFn: () =>
-      axios.post("http://localhost:3000/auth/logout", {
+      axios.post("http://192.168.1.6:3000/auth/logout", {
         withCredentials: true,
       }),
     onError: (error) => {

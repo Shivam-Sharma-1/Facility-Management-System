@@ -34,7 +34,7 @@ const AddFacilityModal: FC<AddFacilityModalProps> = ({
 
   const mutation = useMutation({
     mutationFn: (data: AdminFacilitiesSubmitData) =>
-      axios.post(`http://localhost:3000/admin/facility/add`, data, {
+      axios.post(`http://192.168.1.6:3000/admin/facility/add`, data, {
         withCredentials: true,
       }),
     onSuccess: () => {

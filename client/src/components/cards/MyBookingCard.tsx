@@ -55,7 +55,7 @@ const MyBookingCard: FC<MyBookingCardProps> = ({
 
   const mutation = useMutation({
     mutationFn: (data: { slug: string; remark: string; employeeId: number }) =>
-      axios.post(`http://localhost:3000/bookings/cancel`, data, {
+      axios.post(`http://192.168.1.6:3000/bookings/cancel`, data, {
         withCredentials: true,
       }),
     onSuccess: () => {

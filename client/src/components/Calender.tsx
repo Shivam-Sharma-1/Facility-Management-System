@@ -55,7 +55,7 @@ const Calendar = () => {
     queryKey: ["bookings"],
     queryFn: async () => {
       const response = await axios.get<BookingDataProps[]>(
-        `http://localhost:3000/facility/${slug}`,
+        `http://192.168.1.6:3000/facility/${slug}`,
         {
           withCredentials: true,
         }

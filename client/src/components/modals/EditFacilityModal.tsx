@@ -35,7 +35,7 @@ const EditFacilityModal: FC<EditFacilityModalProps> = ({
 
   const mutation = useMutation({
     mutationFn: (data: AdminFacilitiesEditData) =>
-      axios.put(`http://localhost:3000/admin/facility`, data, {
+      axios.put(`http://192.168.1.6:3000/admin/facility`, data, {
         withCredentials: true,
       }),
     onSuccess: () => {

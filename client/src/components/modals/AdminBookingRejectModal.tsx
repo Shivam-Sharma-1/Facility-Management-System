@@ -29,7 +29,7 @@ const AdminBookingRejectModal: FC<AdminBookingsModalProps> = ({
 
   const mutation = useMutation({
     mutationFn: (data: ApprovalType) =>
-      axios.post(`http://localhost:3000/admin/approval`, data, {
+      axios.post(`http://192.168.1.6:3000/admin/approval`, data, {
         withCredentials: true,
       }),
     onSuccess: () => {

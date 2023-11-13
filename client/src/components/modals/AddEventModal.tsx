@@ -111,7 +111,7 @@ const AddEventModal: FC<AddEventModalProps> = ({
 
   const mutation = useMutation({
     mutationFn: (data: AddEventDataProps) =>
-      axios.post(`http://localhost:3000/facility/${slug}`, data, {
+      axios.post(`http://192.168.1.6:3000/facility/${slug}`, data, {
         withCredentials: true,
       }),
     onSuccess: () => {

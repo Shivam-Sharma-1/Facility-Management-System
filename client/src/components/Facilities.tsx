@@ -12,7 +12,7 @@ const Facilities: FC = (): JSX.Element => {
     queryKey: ["facilities"],
     queryFn: async () => {
       const response = await axios.get<DashboardData>(
-        "http://localhost:3000/dashboard",
+        "http://192.168.1.6:3000/dashboard",
         {
           withCredentials: true,
         }

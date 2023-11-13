@@ -29,9 +29,12 @@ const AdminFacilities: FC = (): JSX.Element => {
   const { data, isPending, isError, error } = useQuery({
     queryKey: ["adminfacilities"],
     queryFn: async () => {
-      const response = await axios.get("http://localhost:3000/admin/facility", {
-        withCredentials: true,
-      });
+      const response = await axios.get(
+        "http://192.168.1.6:3000/admin/facility",
+        {
+          withCredentials: true,
+        }
+      );
       return response.data;
     },
     refetchInterval: 5 * 1000,

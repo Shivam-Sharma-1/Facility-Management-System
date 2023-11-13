@@ -27,7 +27,7 @@ const ResetPasswordPage: FC = (): JSX.Element => {
 
   const mutation = useMutation({
     mutationFn: (data: { oldPassword: string; newPassword: string }) =>
-      axios.post("http://localhost:3000/auth/password", data, {
+      axios.post("http://192.168.1.6:3000/auth/password", data, {
         withCredentials: true,
       }),
     onSuccess: () => {
@@ -109,9 +109,7 @@ const ResetPasswordPage: FC = (): JSX.Element => {
               label="Old Password"
               required
             />
-            {error && (
-              <FormHelperText error={true}>Wrong old password</FormHelperText>
-            )}
+            {error && <FormHelperText error={true}>{error}</FormHelperText>}
           </FormControl>
           <FormControl variant="outlined" fullWidth>
             <InputLabel htmlFor="outlined-adornment-newpassword">
