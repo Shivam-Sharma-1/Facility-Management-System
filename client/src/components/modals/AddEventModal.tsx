@@ -25,7 +25,6 @@ import { useAuth } from "../../hooks/useAuth";
 
 import "dayjs/locale/en-gb";
 import isoToDate from "../../utils/isoToDate";
-import isoToTime from "../../utils/isoToTime";
 import ErrorComponent from "../Error";
 
 const AddEventModal: FC<AddEventModalProps> = ({
@@ -82,10 +81,30 @@ const AddEventModal: FC<AddEventModalProps> = ({
     for (const event of bookingsData) {
       if (
         isoToDate(event.date!) === isoToDate(formData.date) &&
-        ((isoToTime(event.start!) <= selectedStartTime &&
-          isoToTime(event.end!) >= selectedStartTime) ||
-          (isoToTime(event.start!) <= selectedEndTime &&
-            isoToTime(event.end!) >= selectedEndTime))
+        ((dayjs(event.start!).isBefore(
+          dayjs(
+            `${selectedDate!.format("YYYY-MM-DD")} ${formData.start}`,
+            "YYYY-MM-DD hh:mm A"
+          )
+        ) &&
+          dayjs(event.end!).isAfter(
+            dayjs(
+              `${selectedDate!.format("YYYY-MM-DD")} ${formData.start}`,
+              "YYYY-MM-DD hh:mm A"
+            )
+          )) ||
+          (dayjs(event.start!).isBefore(
+            dayjs(
+              `${selectedDate!.format("YYYY-MM-DD")} ${formData.end}`,
+              "YYYY-MM-DD hh:mm A"
+            )
+          ) &&
+            dayjs(event.end!).isAfter(
+              dayjs(
+                `${selectedDate!.format("YYYY-MM-DD")} ${formData.end}`,
+                "YYYY-MM-DD hh:mm A"
+              )
+            )))
       ) {
         return true;
       }
