@@ -1,7 +1,13 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-import { Avatar, Divider, ListItemIcon, Typography } from "@mui/material";
+import {
+  Avatar,
+  Badge,
+  Divider,
+  ListItemIcon,
+  Typography,
+} from "@mui/material";
 import { useAuth } from "../hooks/useAuth";
 import BookmarksIcon from "@mui/icons-material/Bookmarks";
 import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
@@ -14,10 +20,13 @@ import ApprovalIcon from "@mui/icons-material/Approval";
 import EventBusyIcon from "@mui/icons-material/EventBusy";
 import { NavLink } from "react-router-dom";
 import PasswordIcon from "@mui/icons-material/Password";
+import { useEffect, useState } from "react";
 
 const Navigation = (): JSX.Element => {
   const auth = useAuth();
   const role = auth?.user?.role;
+  const [approvalCount, setApprovalCount] = useState<number>(0);
+  const [cancellationCount, setCancellationCount] = useState<number>(0);
 
   const mutation = useMutation({
     mutationFn: () =>
@@ -28,6 +37,29 @@ const Navigation = (): JSX.Element => {
       console.log(error);
     },
   });
+
+  const { data, isPending } = useQuery<NavigationProps>({
+    queryKey: ["navigation"],
+    queryFn: async () => {
+      const response = await axios.get<NavigationProps>(
+        `${import.meta.env.VITE_APP_SERVER_URL}/dashboard/count/${
+          auth?.user?.employeeId
+        }`,
+        {
+          withCredentials: true,
+        }
+      );
+      return response.data;
+    },
+    refetchInterval: 20 * 1000,
+  });
+
+  useEffect(() => {
+    if (!isPending) {
+      setApprovalCount(data!.approvalCount!);
+      setCancellationCount(data!.cancellationCount!);
+    }
+  }, [data, isPending]);
 
   return (
     <div className="w-[400px] h-full min-h-[100dvh] bg-primary text-white pt-5 overflow-y-hidden sticky top-0">
@@ -206,9 +238,11 @@ const Navigation = (): JSX.Element => {
                   }}
                 >
                   <ListItemIcon sx={{ minWidth: "0px" }}>
-                    <ApprovalIcon
-                      sx={{ width: "26px", height: "26px", color: "white" }}
-                    />
+                    <Badge badgeContent={approvalCount} color="primary">
+                      <ApprovalIcon
+                        sx={{ width: "26px", height: "26px", color: "white" }}
+                      />
+                    </Badge>
                   </ListItemIcon>
                   <ListItemText
                     primaryTypographyProps={{
@@ -248,9 +282,11 @@ const Navigation = (): JSX.Element => {
                   }}
                 >
                   <ListItemIcon sx={{ minWidth: "0px" }}>
-                    <EventBusyIcon
-                      sx={{ width: "26px", height: "26px", color: "white" }}
-                    />
+                    <Badge badgeContent={cancellationCount} color="primary">
+                      <EventBusyIcon
+                        sx={{ width: "26px", height: "26px", color: "white" }}
+                      />
+                    </Badge>
                   </ListItemIcon>
                   <ListItemText
                     primaryTypographyProps={{

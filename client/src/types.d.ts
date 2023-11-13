@@ -317,6 +317,11 @@ interface ErrorProps {
   status: number;
 }
 
+interface NavigationProps {
+  approvalCount: number;
+  cancellationCount: number;
+}
+
 // ----------TYPES-----------
 
 type FacilityData = {
