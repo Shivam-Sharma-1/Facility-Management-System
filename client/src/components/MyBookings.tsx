@@ -2,8 +2,8 @@ import { CircularProgress, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import BookingCard from "./cards/MyBookingCard";
 import ErrorComponent from "./Error";
+import MyBookingCard from "./cards/MyBookingCard";
 
 const MyBookings = (): JSX.Element => {
   const [myBookings, setMyBookings] = useState<ApprovalData[]>([]);
@@ -28,6 +28,7 @@ const MyBookings = (): JSX.Element => {
     if (!isPending) {
       setMyBookings(data || []);
     }
+    console.log(data);
   }, [data, isPending]);
 
   if (isError) {
@@ -60,7 +61,7 @@ const MyBookings = (): JSX.Element => {
         <div className="w-full flex flex-col items-center">
           {!isPending &&
             myBookings?.map((booking) => (
-              <BookingCard
+              <MyBookingCard
                 key={booking.slug}
                 title={booking.title}
                 status={booking.status}
