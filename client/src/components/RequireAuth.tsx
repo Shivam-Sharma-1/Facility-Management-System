@@ -1,4 +1,4 @@
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { FC } from "react";
 
 import { useAuth } from "../hooks/useAuth";
@@ -10,11 +10,10 @@ export const RequireAuth: FC<RequireAuthProps> = ({
   Admin,
   noAdmin,
 }): JSX.Element => {
-  const location = useLocation();
   const auth = useAuth();
 
   if (!auth!.user) {
-    return <Navigate to="/auth/login" state={{ path: location.pathname }} />;
+    return <Navigate to="/auth/login" />;
   }
 
   if (GD && auth?.user!.role !== "GROUP_DIRECTOR") {
