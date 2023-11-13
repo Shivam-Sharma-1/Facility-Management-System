@@ -169,8 +169,7 @@ const MyBookingCard: FC<MyBookingCardProps> = ({
                 cancelStatus === "NOT_REQUESTED") ||
               cancelStatus!.startsWith("REJECTED")
             ? "bg-green-100 border-green-600"
-            : status.startsWith("REJECTED") ||
-              cancelStatus!.startsWith("APPROVED")
+            : status.startsWith("REJECTED") || status!.startsWith("CANCELLED")
             ? "bg-red-100 border-red-600"
             : "bg-yellow-100 border-yellow-600"
         }`}
