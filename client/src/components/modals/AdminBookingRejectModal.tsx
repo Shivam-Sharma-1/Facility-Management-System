@@ -29,9 +29,13 @@ const AdminBookingRejectModal: FC<AdminBookingsModalProps> = ({
 
   const mutation = useMutation({
     mutationFn: (data: ApprovalType) =>
-      axios.post(`http://192.168.1.6:3000/admin/approval`, data, {
-        withCredentials: true,
-      }),
+      axios.post(
+        `${import.meta.env.VITE_APP_SERVER_URL}/admin/approval`,
+        data,
+        {
+          withCredentials: true,
+        }
+      ),
     onSuccess: () => {
       setIsOpen(false);
       setOpenSnackbar(true);

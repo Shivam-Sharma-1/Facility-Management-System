@@ -12,7 +12,7 @@ const MyBookings = (): JSX.Element => {
     queryKey: ["mybookings"],
     queryFn: async () => {
       const response = await axios.get<ApprovalData[]>(
-        `http://192.168.1.6:3000/employee/status`,
+        `${import.meta.env.VITE_APP_SERVER_URL}/employee/status`,
         {
           withCredentials: true,
         }

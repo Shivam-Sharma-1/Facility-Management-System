@@ -13,7 +13,9 @@ const ApprovalStatus: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
     queryKey: ["booking"],
     queryFn: async () => {
       const response = await axios.get<ApprovalData[]>(
-        `http://192.168.1.6:3000/employee/approvals/${GD && !FM ? "gd" : "fm"}`,
+        `${import.meta.env.VITE_APP_SERVER_URL}/employee/approvals/${
+          GD && !FM ? "gd" : "fm"
+        }`,
         {
           withCredentials: true,
         }

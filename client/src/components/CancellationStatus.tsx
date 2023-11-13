@@ -16,7 +16,9 @@ const CancellationStatus: FC<ApprovalStatusProps> = ({
     queryKey: ["cancellations"],
     queryFn: async () => {
       const response = await axios.get<ApprovalData[]>(
-        `http://192.168.1.6:3000/bookings/cancel/${GD && !FM ? "gd" : "fm"}`,
+        `${import.meta.env.VITE_APP_SERVER_URL}/bookings/cancel/${
+          GD && !FM ? "gd" : "fm"
+        }`,
         {
           withCredentials: true,
         }
