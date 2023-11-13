@@ -166,6 +166,7 @@ const MyBookingCard: FC<MyBookingCardProps> = ({
           status === "PENDING"
             ? "bg-blue-100 border-blue-600"
             : (status.startsWith("APPROVED") &&
+                !status.endsWith("GD") &&
                 cancelStatus === "NOT_REQUESTED") ||
               cancelStatus!.startsWith("REJECTED")
             ? "bg-green-100 border-green-600"
