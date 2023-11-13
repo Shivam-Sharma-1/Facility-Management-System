@@ -14,13 +14,58 @@ export const getFacilities: RequestHandler = async (
 	next: NextFunction
 ) => {
 	try {
+		const facilities = await prisma.facility.findMany({
+			where: {
+				isActive: true,
+			},
+			include: {
+				facilityManager: {
+					select: {
+						user: {
+							select: {
+								name: true,
+								employeeId: true,
+							},
+						},
+					},
+				},
+			},
+		});
+		if (!facilities) {
+			return next(
+				createHttpError.NotFound(
+					"Something went wrong. Please try again."
+				)
+			);
+		}
+		res.status(200).json({ facilities });
+	} catch (error) {
+		console.error(error);
+		return next(
+			createHttpError.InternalServerError(
+				"Something went wrong. Please try again."
+			)
+		);
+	}
+};
+
+export const getCount: RequestHandler = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
 		let count = null;
-		const employeeId = req.session.userId;
+		const employeeId = parseInt(req.params.employeeId);
 		const user = await prisma.user.findUnique({
 			where: {
 				employeeId,
 			},
 		});
+
+		if (!user) {
+			return next(createHttpError.NotFound("User does not exist."));
+		}
 
 		if (user?.role === "GROUP_DIRECTOR") {
 			count = await prisma.booking.count({
@@ -60,31 +105,8 @@ export const getFacilities: RequestHandler = async (
 				},
 			});
 		}
-		const facilities = await prisma.facility.findMany({
-			where: {
-				isActive: true,
-			},
-			include: {
-				facilityManager: {
-					select: {
-						user: {
-							select: {
-								name: true,
-								employeeId: true,
-							},
-						},
-					},
-				},
-			},
-		});
-		if (!facilities) {
-			return next(
-				createHttpError.NotFound(
-					"Something went wrong. Please try again."
-				)
-			);
-		}
-		res.status(200).json({ count, facilities });
+
+		res.status(200).json({ count });
 	} catch (error) {
 		console.error(error);
 		return next(
