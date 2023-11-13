@@ -32,46 +32,51 @@ const EventModal: FC<EventModalProps> = ({
           </div>
           <div className="flex flex-col gap-1 px-10 pb-10">
             <Typography variant="h6" component="p">
-              <span className="font-bold tracking-wide">Title:</span>{" "}
+              <span className="font-bold tracking-normal">Title:</span>{" "}
               {eventInfo.title}
             </Typography>
             <Typography variant="h6" component="p">
-              <span className="font-bold tracking-wide">Purpose:</span>{" "}
+              <span className="font-bold tracking-normal">Purpose:</span>{" "}
               {eventInfo.purpose}
             </Typography>
             <Typography variant="h6" component="p">
-              <span className="font-bold tracking-wide">Date:</span>{" "}
+              <span className="font-bold tracking-normal">Date:</span>{" "}
               {eventInfo.date}
             </Typography>
             <Typography variant="h6" component="p">
-              <span className="font-bold tracking-wide">Time:</span>{" "}
+              <span className="font-bold tracking-normal">Time:</span>{" "}
               {eventInfo.start} - {eventInfo.end}
             </Typography>
             {eventInfo.status === "PENDING" && (
               <Typography variant="h6" component="p">
-                <span className="font-bold tracking-wide">Status:</span> Pending
+                <span className="font-bold tracking-normal">Status:</span>{" "}
+                Pending
               </Typography>
             )}
 
             <Typography variant="h6" component="p">
-              <span className="font-bold tracking-wide">Requested by:</span>{" "}
+              <span className="font-bold tracking-normal">Requested by:</span>{" "}
               {eventInfo.requestBy}
             </Typography>
             {eventInfo.statusUpdateByGD && (
               <Typography variant="h6" component="p">
-                <span className="font-bold tracking-wide">Approved by GD:</span>{" "}
+                <span className="font-bold tracking-normal">
+                  Approved by GD:
+                </span>{" "}
                 {eventInfo.statusUpdateByGD}
               </Typography>
             )}
             {eventInfo.statusUpdateByFM && (
               <Typography variant="h6" component="p">
-                <span className="font-bold tracking-wide">Approved by FM:</span>{" "}
+                <span className="font-bold tracking-normal">
+                  Approved by FM:
+                </span>{" "}
                 {eventInfo.statusUpdateByFM}
               </Typography>
             )}
             {eventInfo.statusUpdateByAdmin && (
               <Typography variant="h6" component="p">
-                <span className="font-bold tracking-wide">
+                <span className="font-bold tracking-normal">
                   Approved by Admin
                 </span>
               </Typography>
