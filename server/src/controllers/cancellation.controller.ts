@@ -371,18 +371,26 @@ export const approveCancellationRequestFM: RequestHandler = async (
 ) => {
 	try {
 		const { slug, approved } = req.body;
-		const status = approved
-			? CancellationStatus.APPROVED_BY_FM
-			: CancellationStatus.REJECTED_BY_FM;
+		let status = {};
+
+		if (approved === true) {
+			status = {
+				cancellationStatus: CancellationStatus.APPROVED_BY_FM,
+				status: ApprovalStatus.CANCELLED,
+			};
+		} else {
+			status = {
+				cancellationStatus: CancellationStatus.REJECTED_BY_FM,
+			};
+		}
 
 		const cancellationRequest = await prisma.booking.update({
 			where: {
 				slug,
 			},
 			data: {
-				cancellationStatus: status,
+				...status,
 				cancellationUpdateAtFM: new Date().toISOString(),
-				status: "CANCELLED",
 				cancelledAt: new Date().toISOString(),
 			},
 		});
