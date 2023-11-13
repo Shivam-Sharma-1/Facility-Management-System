@@ -90,8 +90,8 @@ const CancellationStatus: FC<ApprovalStatusProps> = ({
                     : null
                 }
                 approvedAtGD={
-                  cancellation.statusUpdateAtGD
-                    ? cancellation.statusUpdateAtGD!
+                  cancellation.cancellationUpdateAtGD
+                    ? cancellation.cancellationUpdateAtGD!
                     : null
                 }
               />
