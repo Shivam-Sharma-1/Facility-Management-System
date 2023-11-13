@@ -33,7 +33,7 @@ const LoginPage: FC = (): JSX.Element => {
 
   const mutation = useMutation({
     mutationFn: (data: LoginData) =>
-      axios.post("http://***REMOVED***/auth/login", data, {
+      axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/auth/login`, data, {
         withCredentials: true,
       }),
     onSuccess: (data) => {

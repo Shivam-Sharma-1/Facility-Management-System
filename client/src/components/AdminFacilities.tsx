@@ -30,7 +30,7 @@ const AdminFacilities: FC = (): JSX.Element => {
     queryKey: ["adminfacilities"],
     queryFn: async () => {
       const response = await axios.get(
-        "http://***REMOVED***/admin/facility",
+        `${import.meta.env.VITE_APP_SERVER_URL}/admin/facility`,
         {
           withCredentials: true,
         }

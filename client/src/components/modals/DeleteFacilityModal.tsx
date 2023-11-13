@@ -20,9 +20,13 @@ const DeleteFacilityModal: FC<EditFacilityModalProps> = ({
 
   const mutation = useMutation({
     mutationFn: (data: { slug: string }) =>
-      axios.post(`http://***REMOVED***/admin/facility`, data, {
-        withCredentials: true,
-      }),
+      axios.post(
+        `${import.meta.env.VITE_APP_SERVER_URL}/admin/facility`,
+        data,
+        {
+          withCredentials: true,
+        }
+      ),
     onSuccess: () => {
       setIsOpen(false);
       setOpenSnackbar(true);

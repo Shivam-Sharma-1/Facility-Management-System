@@ -52,7 +52,7 @@ const Bookings: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
   const { data, isPending, refetch, isError, error } = useQuery({
     queryKey: ["gd&fmbookings"],
     queryFn: async () => {
-      let url = `http://***REMOVED***/facility/bookings/${
+      let url = `${import.meta.env.VITE_APP_SERVER_URL}/facility/bookings/${
         GD && !FM ? "gd" : "fm"
       }`;
 

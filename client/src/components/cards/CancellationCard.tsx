@@ -35,7 +35,9 @@ const CancellationCard: FC<ApprovalProps> = ({
   const handleClick = useMutation({
     mutationFn: (data: ApprovalType) =>
       axios.post(
-        `http://***REMOVED***/bookings/cancel/${approvedAtGD ? "fm" : "gd"}`,
+        `${import.meta.env.VITE_APP_SERVER_URL}/bookings/cancel/${
+          approvedAtGD ? "fm" : "gd"
+        }`,
         data,
         {
           withCredentials: true,

@@ -52,7 +52,7 @@ const AdminBookings: FC = (): JSX.Element => {
   const { data, isPending, refetch, isError, error } = useQuery({
     queryKey: ["adminbookings"],
     queryFn: async () => {
-      let url = "http://***REMOVED***/admin/bookings";
+      let url = `${import.meta.env.VITE_APP_SERVER_URL}/admin/bookings`;
 
       if (selectValue) {
         url += `?facility=${slug}`;

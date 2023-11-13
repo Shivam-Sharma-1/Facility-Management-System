@@ -21,7 +21,7 @@ const Navigation = (): JSX.Element => {
 
   const mutation = useMutation({
     mutationFn: () =>
-      axios.post("http://***REMOVED***/auth/logout", {
+      axios.post(`${import.meta.env.VITE_APP_SERVER_URL}/auth/logout`, {
         withCredentials: true,
       }),
     onError: (error) => {

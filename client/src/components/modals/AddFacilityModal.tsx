@@ -34,9 +34,13 @@ const AddFacilityModal: FC<AddFacilityModalProps> = ({
 
   const mutation = useMutation({
     mutationFn: (data: AdminFacilitiesSubmitData) =>
-      axios.post(`http://***REMOVED***/admin/facility/add`, data, {
-        withCredentials: true,
-      }),
+      axios.post(
+        `${import.meta.env.VITE_APP_SERVER_URL}/admin/facility/add`,
+        data,
+        {
+          withCredentials: true,
+        }
+      ),
     onSuccess: () => {
       setIsOpen(false);
       setOpenSnackbar(true);

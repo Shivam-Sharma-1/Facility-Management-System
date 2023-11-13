@@ -55,9 +55,13 @@ const MyBookingCard: FC<MyBookingCardProps> = ({
 
   const mutation = useMutation({
     mutationFn: (data: { slug: string; remark: string; employeeId: number }) =>
-      axios.post(`http://***REMOVED***/bookings/cancel`, data, {
-        withCredentials: true,
-      }),
+      axios.post(
+        `${import.meta.env.VITE_APP_SERVER_URL}/bookings/cancel`,
+        data,
+        {
+          withCredentials: true,
+        }
+      ),
     onSuccess: () => {
       setOpenSnackbar(true);
     },

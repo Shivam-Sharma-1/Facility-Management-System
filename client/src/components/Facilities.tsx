@@ -12,7 +12,7 @@ const Facilities: FC = (): JSX.Element => {
     queryKey: ["facilities"],
     queryFn: async () => {
       const response = await axios.get<DashboardData>(
-        "http://***REMOVED***/dashboard",
+        `${import.meta.env.VITE_APP_SERVER_URL}/dashboard`,
         {
           withCredentials: true,
         }

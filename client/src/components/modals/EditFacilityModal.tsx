@@ -35,7 +35,7 @@ const EditFacilityModal: FC<EditFacilityModalProps> = ({
 
   const mutation = useMutation({
     mutationFn: (data: AdminFacilitiesEditData) =>
-      axios.put(`http://***REMOVED***/admin/facility`, data, {
+      axios.put(`${import.meta.env.VITE_APP_SERVER_URL}/admin/facility`, data, {
         withCredentials: true,
       }),
     onSuccess: () => {

@@ -55,7 +55,7 @@ const Calendar = () => {
     queryKey: ["bookings"],
     queryFn: async () => {
       const response = await axios.get<BookingDataProps[]>(
-        `http://***REMOVED***/facility/${slug}`,
+        `${import.meta.env.VITE_APP_SERVER_URL}/facility/${slug}`,
         {
           withCredentials: true,
         }

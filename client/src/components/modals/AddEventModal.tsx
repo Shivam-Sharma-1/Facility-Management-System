@@ -111,9 +111,13 @@ const AddEventModal: FC<AddEventModalProps> = ({
 
   const mutation = useMutation({
     mutationFn: (data: AddEventDataProps) =>
-      axios.post(`http://***REMOVED***/facility/${slug}`, data, {
-        withCredentials: true,
-      }),
+      axios.post(
+        `${import.meta.env.VITE_APP_SERVER_URL}/facility/${slug}`,
+        data,
+        {
+          withCredentials: true,
+        }
+      ),
     onSuccess: () => {
       setIsOpen(false);
     },
