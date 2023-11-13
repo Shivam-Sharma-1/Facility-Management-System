@@ -65,7 +65,7 @@ model Booking {
   id                        String              @id @default(cuid())
   title                     String
   slug                      String              @unique
-  purpose                   String
+  purpose                   String              @db.Text
   requestedBy               User                @relation(fields: [userId], references: [id])
   userId                    String
   status                    ApprovalStatus      @default(PENDING)
@@ -104,7 +104,7 @@ model BookingTime {
 model Facility {
   id              String           @id @default(cuid())
   name            String
-  description     String
+  description     String           @db.Text
   icon            String
   slug            String           @unique
   createdAt       DateTime         @default(now())
