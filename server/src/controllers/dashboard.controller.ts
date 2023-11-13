@@ -1,3 +1,4 @@
+import { CancellationStatus } from "@prisma/client";
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import createHttpError from "http-errors";
 import prisma from "../db/prisma";
@@ -38,7 +39,7 @@ export const getFacilities: RequestHandler = async (
 				)
 			);
 		}
-		res.status(200).json({ facilities });
+		res.status(200).json(facilities);
 	} catch (error) {
 		console.error(error);
 		return next(
@@ -55,7 +56,7 @@ export const getCount: RequestHandler = async (
 	next: NextFunction
 ) => {
 	try {
-		let count = null;
+		let count = {};
 		const employeeId = parseInt(req.params.employeeId);
 		const user = await prisma.user.findUnique({
 			where: {
@@ -68,7 +69,7 @@ export const getCount: RequestHandler = async (
 		}
 
 		if (user?.role === "GROUP_DIRECTOR") {
-			count = await prisma.booking.count({
+			const approvalCount = await prisma.booking.count({
 				where: {
 					AND: [
 						{
@@ -80,6 +81,23 @@ export const getCount: RequestHandler = async (
 					],
 				},
 			});
+			const cancellationCount = await prisma.booking.count({
+				where: {
+					AND: [
+						{
+							groupId: user.groupId!,
+						},
+						{
+							cancellationStatus: CancellationStatus.PENDING,
+						},
+					],
+				},
+			});
+
+			count = {
+				approvalCount,
+				cancellationCount,
+			};
 		}
 
 		if (user?.role === "FACILITY_MANAGER") {
@@ -92,7 +110,7 @@ export const getCount: RequestHandler = async (
 				},
 			});
 
-			count = await prisma.booking.count({
+			const approvalCount = await prisma.booking.count({
 				where: {
 					AND: [
 						{
@@ -104,9 +122,27 @@ export const getCount: RequestHandler = async (
 					],
 				},
 			});
+			const cancellationCount = await prisma.booking.count({
+				where: {
+					AND: [
+						{
+							facilityId: facility?.facilityId,
+						},
+						{
+							cancellationStatus:
+								CancellationStatus.APPROVED_BY_GD,
+						},
+					],
+				},
+			});
+
+			count = {
+				approvalCount,
+				cancellationCount,
+			};
 		}
 
-		res.status(200).json({ count });
+		res.status(200).json(count);
 	} catch (error) {
 		console.error(error);
 		return next(
