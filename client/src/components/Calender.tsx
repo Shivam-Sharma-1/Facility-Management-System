@@ -52,10 +52,10 @@ const Calendar = () => {
     setOpenSnackbar(false);
   };
 
-  const { data, isPending, isError, error } = useQuery<BookingDataProps[]>({
+  const { data, isPending, isError, error } = useQuery<BookingDataProps>({
     queryKey: ["bookings"],
     queryFn: async () => {
-      const response = await axios.get<BookingDataProps[]>(
+      const response = await axios.get<BookingDataProps>(
         `${import.meta.env.VITE_APP_SERVER_URL}/facility/${slug}`,
         {
           withCredentials: true,
@@ -70,7 +70,7 @@ const Calendar = () => {
 
   useEffect(() => {
     if (!isPending) {
-      const newData = data?.map((booking) => {
+      const newData = data?.bookings.map((booking) => {
         return {
           ...booking,
           start: booking.time.start,
@@ -189,7 +189,7 @@ const Calendar = () => {
       <div className="w-[90%] flex justify-between items-center pb-2">
         <div className="flex gap-4 items-center">
           <Typography variant="h3" component="h1">
-            Bookings Calender
+            {data.facility.name} Calender
           </Typography>
         </div>
         <Button
