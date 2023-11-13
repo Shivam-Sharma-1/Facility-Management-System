@@ -39,6 +39,7 @@ export const authLogin: RequestHandler = async (
 			return next(createHttpError.Unauthorized("Invalid credentials."));
 		}
 		req.session.userId = employeeId;
+
 		res.status(200).json({
 			name: user.name,
 			employeeId: user.employeeId,
@@ -66,18 +67,41 @@ export const authLogout: RequestHandler = async (
 	res: Response,
 	next: NextFunction
 ) => {
-	req.session.destroy((err: any) => {
+	req.sessionStore.destroy(req.sessionID, (err) => {
 		if (err) {
-			return next(
-				createHttpError.InternalServerError(
-					"Something went wrong. Please try again."
-				)
-			);
+			console.error("Error destroying session in store:", err);
 		} else {
-			res.clearCookie("sid");
-			res.status(200).json({ message: "Log out successful." });
+			req.session.destroy((err) => {
+				if (err) {
+					console.error("Error destroying session:", err);
+				} else {
+					res.redirect("/auth/login");
+				}
+			});
 		}
 	});
+
+	// req.sessionStore.destroy(req.sessionID, (err: any) => {
+	// 	if (err) {
+	// 		return next(
+	// 			createHttpError.InternalServerError(
+	// 				"Something went wrong. Please try again."
+	// 			)
+	// 		);
+	// 	}
+	// });
+	// req.session.destroy((err: any) => {
+	// 	if (err) {
+	// 		return next(
+	// 			createHttpError.InternalServerError(
+	// 				"Something went wrong. Please try again."
+	// 			)
+	// 		);
+	// 	} else {
+	// 		res.clearCookie("sid");
+	// 		res.status(200).json({ message: "Log out successful." });
+	// 	}
+	// });
 };
 
 /**
@@ -111,7 +135,7 @@ export const changePassword: RequestHandler = async (
 			return next(createHttpError.Unauthorized("Invalid old password."));
 		}
 		const hashedPassword = await argon2.hash(newPassword);
-		const updatedAdmin = await prisma.user.update({
+		await prisma.user.update({
 			where: {
 				employeeId: adminId,
 			},
@@ -119,35 +143,16 @@ export const changePassword: RequestHandler = async (
 				password: hashedPassword,
 			},
 		});
-		res.status(200).json(updatedAdmin);
-	} catch (error) {
-		console.error(error);
-		return next(
-			createHttpError.InternalServerError(
-				"Something went wrong. Please try again."
-			)
-		);
-	}
-};
 
-/**
- * @description acess employee
- * @method GET
- * @access private
- * @returns {id, name, employeeId}
- */
-export const getUser: RequestHandler = async (
-	_req: Request,
-	res: Response,
-	next: NextFunction
-) => {
-	try {
-		const users = await prisma.user.findMany({});
-		if (!users) {
-			return next(createHttpError.NotFound("User not found."));
-		}
+		await prisma.session.deleteMany({
+			where: {
+				data: {
+					contains: '"userId":9999',
+				},
+			},
+		});
 
-		res.status(200).json(users);
+		res.redirect("/auth/logout");
 	} catch (error) {
 		console.error(error);
 		return next(
