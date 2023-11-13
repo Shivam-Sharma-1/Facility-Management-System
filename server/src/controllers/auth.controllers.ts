@@ -74,8 +74,6 @@ export const authLogout: RequestHandler = async (
 			req.session.destroy((err) => {
 				if (err) {
 					console.error("Error destroying session:", err);
-				} else {
-					res.redirect("/auth/login");
 				}
 			});
 		}
