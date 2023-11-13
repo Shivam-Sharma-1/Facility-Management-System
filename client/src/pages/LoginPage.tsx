@@ -1,6 +1,6 @@
 import { FC, FormEvent, MouseEvent, useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import {
@@ -27,9 +27,8 @@ const LoginPage: FC = (): JSX.Element => {
 
   const auth = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
 
-  const redirectPath = location.state?.path || "/";
+  const redirectPath = "/";
 
   const mutation = useMutation({
     mutationFn: (data: LoginData) =>
