@@ -90,7 +90,7 @@ const ApprovalCard: FC<ApprovalProps> = ({
 
   return (
     <Slide direction="up" in={true} mountOnEnter unmountOnExit>
-      <div className="justify-between items-center px-10 py-8 w-[60%] h-full flex mt-10 rounded-md bg-bgPrimary shadow-cardHover border-0 border-l-[10px] border-primary border-solid">
+      <div className="justify-between items-center px-10 py-8 xl:w-[60%] lg:w-[80%] w-full h-full flex flex-row mt-10 rounded-md bg-bgPrimary shadow-cardHover border-0 border-l-[10px] border-primary border-solid">
         <div className="flex flex-col justify-center w-full">
           <Typography
             variant="h6"
@@ -157,7 +157,7 @@ const ApprovalCard: FC<ApprovalProps> = ({
                   color="success"
                   type="submit"
                   size="large"
-                  sx={{ minWidth: "48%" }}
+                  sx={{ minWidth: "110px" }}
                 >
                   {isCancel ? "Ok" : "Accept"}
                 </Button>
@@ -166,7 +166,7 @@ const ApprovalCard: FC<ApprovalProps> = ({
                   startIcon={<DeleteIcon />}
                   color="error"
                   size="large"
-                  sx={{ minWidth: "48%" }}
+                  sx={{ minWidth: "110px" }}
                   onClick={() => {
                     setIsCancel((state) => !state);
                   }}

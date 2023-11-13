@@ -102,7 +102,11 @@ const BookingsReport: FC<AdminBookingsTableProps> = ({
       admin: (
         <p
           className={
-            booking.status === "REJECTED_BY_ADMIN" ? "text-red-600" : ""
+            booking.status === "REJECTED_BY_ADMIN"
+              ? "text-red-600"
+              : booking.status === "APPROVED_BY_ADMIN"
+              ? "text-green-600"
+              : ""
           }
         >
           {booking.statusUpdateAtAdmin
@@ -170,7 +174,7 @@ const BookingsReport: FC<AdminBookingsTableProps> = ({
                       backgroundColor: "#646464",
                       color: "#fff",
                       fontSize: "10px",
-                      padding: "6px",
+                      paddingBlock: "6px",
                     }}
                   >
                     {column.label}
@@ -188,7 +192,7 @@ const BookingsReport: FC<AdminBookingsTableProps> = ({
                         <TableCell
                           key={column.id}
                           align={"left"}
-                          sx={{ fontSize: "10px", padding: "6px" }}
+                          sx={{ fontSize: "10px", paddingBlock: "6px" }}
                         >
                           {value ? (
                             value
