@@ -69,6 +69,13 @@ const EventModal: FC<EventModalProps> = ({
                 {eventInfo.statusUpdateByFM}
               </Typography>
             )}
+            {eventInfo.statusUpdateByAdmin && (
+              <Typography variant="h6" component="p">
+                <span className="font-bold tracking-wide">
+                  Approved by Admin
+                </span>
+              </Typography>
+            )}
           </div>
         </div>
       </Fade>

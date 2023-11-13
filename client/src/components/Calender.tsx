@@ -43,6 +43,7 @@ const Calendar = () => {
     requestBy: "",
     statusUpdateByGD: null,
     statusUpdateByFM: null,
+    statusUpdateByAdmin: null,
   });
   const location = useLocation();
   const slug = location.pathname.split("/")[2];
@@ -86,7 +87,6 @@ const Calendar = () => {
       (event: BookingNewDataProps) =>
         event.slug === info.event.extendedProps.slug
     ) as BookingNewDataProps;
-
     setEventInfo({
       title: clickData.title,
       purpose: clickData.purpose,
@@ -100,6 +100,9 @@ const Calendar = () => {
         : null,
       statusUpdateByFM: clickData.statusUpdateByFM
         ? clickData.statusUpdateByFM!.user.name
+        : null,
+      statusUpdateByAdmin: clickData.statusUpdateAtAdmin
+        ? clickData.statusUpdateAtAdmin
         : null,
     });
     setIsOpen(true);
