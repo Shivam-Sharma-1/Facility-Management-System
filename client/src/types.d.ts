@@ -31,6 +31,12 @@ interface EventContentProps {
 }
 
 interface BookingDataProps {
+  facility: {
+    name: string;
+  };
+  bookings: BookingData[];
+}
+interface BookingData {
   id: string;
   title: string;
   slug: string;
@@ -309,6 +315,11 @@ interface ErrorMessage {
 interface ErrorProps {
   message: string;
   status: number;
+}
+
+interface NavigationProps {
+  approvalCount: number;
+  cancellationCount: number;
 }
 
 // ----------TYPES-----------
