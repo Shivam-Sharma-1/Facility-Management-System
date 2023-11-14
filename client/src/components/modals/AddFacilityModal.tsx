@@ -124,6 +124,7 @@ const AddFacilityModal: FC<AddFacilityModalProps> = ({
                   setFormData({ ...formData, description: e.target.value })
                 }
                 required
+                multiline
                 size="small"
               />
               <TextField
