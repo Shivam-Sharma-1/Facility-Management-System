@@ -12,6 +12,7 @@ import ErrorComponent from "../Error";
 const CancellationCard: FC<ApprovalProps> = ({
   title,
   purpose,
+  cancellationRemark,
   slug,
   date,
   createdAt,
@@ -77,7 +78,7 @@ const CancellationCard: FC<ApprovalProps> = ({
 
   return (
     <Slide direction="up" in={true} mountOnEnter unmountOnExit>
-      <div className="justify-between items-center px-10 py-8 w-[60%] h-full flex mt-10 rounded-md bg-bgPrimary shadow-cardHover border-0 border-l-[10px] border-primary border-solid">
+      <div className="justify-between items-center px-10 py-8 xl:w-[60%] lg:w-[80%] w-full h-full flex mt-10 rounded-md bg-bgPrimary shadow-cardHover border-0 border-l-[10px] border-primary border-solid">
         <div className="flex flex-col justify-center w-full">
           <Typography
             variant="h6"
@@ -87,33 +88,42 @@ const CancellationCard: FC<ApprovalProps> = ({
             {facility} | {title}
           </Typography>
           <Typography variant="body1" component="p">
-            <span className="font-bold tracking-wide">Purpose: </span> {purpose}
+            <span className="font-bold tracking-normal">Purpose: </span>{" "}
+            {purpose}
           </Typography>
           <Typography variant="body1" component="p">
-            <span className="font-bold tracking-wide">Date:</span>{" "}
+            <span className="font-bold tracking-normal">Date:</span>{" "}
             {isoToDate(date)}
           </Typography>
           <Typography variant="body1" component="p">
-            <span className="font-bold tracking-wide">Time:</span>{" "}
+            <span className="font-bold tracking-normal">Time:</span>{" "}
             {isoToTime(start)} - {isoToTime(end)}
           </Typography>
           <Typography variant="body1" component="p">
-            <span className="font-bold tracking-wide">Requested By: </span>{" "}
+            <span className="font-bold tracking-normal">Requested By: </span>{" "}
             {requestedBy} at <br />
             &nbsp;&nbsp;&nbsp;
             {isoToDate(createdAt) + ", " + isoToTime(createdAt)}
           </Typography>
           <Typography variant="body1" component="p">
-            <span className="font-bold tracking-wide">
+            <span className="font-bold tracking-normal">
               Cancellation Requested At:{" "}
             </span>{" "}
             <br />
             &nbsp;&nbsp;&nbsp;
             {isoToDate(cancelledAt!) + ", " + isoToTime(cancelledAt!)}
           </Typography>
+          <Typography variant="body1" component="p">
+            <span className="font-bold tracking-normal">
+              Cancellation Remark:{" "}
+            </span>{" "}
+            {cancelledAt && cancellationRemark}
+          </Typography>
           {approvedByGD && (
             <Typography variant="body1" component="p">
-              <span className="font-bold tracking-wide">Approved By GD: </span>{" "}
+              <span className="font-bold tracking-normal">
+                Approved By GD:{" "}
+              </span>{" "}
               {approvedByGD} at <br />
               &nbsp;&nbsp;&nbsp;
               {isoToDate(approvedAtGD!) + ", " + isoToTime(approvedAtGD!)}
@@ -127,7 +137,7 @@ const CancellationCard: FC<ApprovalProps> = ({
               startIcon={<TaskAltIcon />}
               color="success"
               size="large"
-              sx={{ minWidth: "48%" }}
+              sx={{ minWidth: "110px" }}
               onClick={() => handleSubmit()}
             >
               Accept
@@ -137,7 +147,7 @@ const CancellationCard: FC<ApprovalProps> = ({
               startIcon={<DeleteIcon />}
               color="error"
               size="large"
-              sx={{ minWidth: "48%" }}
+              sx={{ minWidth: "110px" }}
               onClick={() => handleReject()}
             >
               Reject
