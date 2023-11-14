@@ -28,7 +28,6 @@ const MyBookings = (): JSX.Element => {
     if (!isPending) {
       setMyBookings(data || []);
     }
-    console.log(data);
   }, [data, isPending]);
 
   if (isError) {
