@@ -1,4 +1,4 @@
-import { CancellationStatus } from "@prisma/client";
+import { ApprovalStatus, CancellationStatus } from "@prisma/client";
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import createHttpError from "http-errors";
 import prisma from "../db/prisma";
@@ -129,15 +129,24 @@ export const getCount: RequestHandler = async (
 							facilityId: facility?.facilityId,
 						},
 						{
-							cancellationStatus:
-								CancellationStatus.APPROVED_BY_GD,
+							AND: [
+								{
+									cancellationStatus:
+										CancellationStatus.APPROVED_BY_GD,
+								},
+								{
+									status:
+										ApprovalStatus.APPROVED_BY_ADMIN ||
+										ApprovalStatus.APPROVED_BY_FM,
+								},
+							],
 						},
 					],
 				},
 			});
 
 			count = {
-				approvalCount,
+				approvalCount: approvalCount || 0,
 				cancellationCount,
 			};
 		}
