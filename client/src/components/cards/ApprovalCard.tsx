@@ -100,25 +100,28 @@ const ApprovalCard: FC<ApprovalProps> = ({
             {facility} | {title}
           </Typography>
           <Typography variant="body1" component="p">
-            <span className="font-bold tracking-wide">Purpose: </span> {purpose}
+            <span className="font-bold tracking-normal">Purpose: </span>{" "}
+            {purpose}
           </Typography>
           <Typography variant="body1" component="p">
-            <span className="font-bold tracking-wide">Date:</span>{" "}
+            <span className="font-bold tracking-normal">Date:</span>{" "}
             {isoToDate(date)}
           </Typography>
           <Typography variant="body1" component="p">
-            <span className="font-bold tracking-wide">Time:</span>{" "}
+            <span className="font-bold tracking-normal">Time:</span>{" "}
             {isoToTime(start)} - {isoToTime(end)}
           </Typography>
           <Typography variant="body1" component="p">
-            <span className="font-bold tracking-wide">Requested By: </span>{" "}
+            <span className="font-bold tracking-normal">Requested By: </span>{" "}
             {requestedBy} at <br />
             &nbsp;&nbsp;&nbsp;
             {isoToDate(createdAt) + ", " + isoToTime(createdAt)}
           </Typography>
           {approvedByGD && (
             <Typography variant="body1" component="p">
-              <span className="font-bold tracking-wide">Approved By GD: </span>{" "}
+              <span className="font-bold tracking-normal">
+                Approved By GD:{" "}
+              </span>{" "}
               {approvedByGD} at <br />
               &nbsp;&nbsp;&nbsp;
               {isoToDate(approvedAtGD!) + ", " + isoToTime(approvedAtGD!)}
