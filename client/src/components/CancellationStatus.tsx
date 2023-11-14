@@ -70,6 +70,7 @@ const CancellationStatus: FC<ApprovalStatusProps> = ({
                 key={cancellation.slug}
                 title={cancellation.title}
                 purpose={cancellation.purpose}
+                cancellationRemark={cancellation.cancellationRemark!}
                 slug={cancellation.slug}
                 date={cancellation.time.date}
                 start={cancellation.time.start}
