@@ -259,7 +259,17 @@ export const getAllCancellationRequestsFM: RequestHandler = async (
 					select: {
 						bookings: {
 							where: {
-								cancellationStatus: "APPROVED_BY_GD",
+								AND: [
+									{
+										cancellationStatus:
+											CancellationStatus.APPROVED_BY_GD,
+									},
+									{
+										status:
+											ApprovalStatus.APPROVED_BY_FM ||
+											ApprovalStatus.APPROVED_BY_ADMIN,
+									},
+								],
 							},
 							select: {
 								id: true,
