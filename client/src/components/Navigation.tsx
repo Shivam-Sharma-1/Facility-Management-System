@@ -20,9 +20,9 @@ import ApprovalIcon from "@mui/icons-material/Approval";
 import EventBusyIcon from "@mui/icons-material/EventBusy";
 import { NavLink } from "react-router-dom";
 import PasswordIcon from "@mui/icons-material/Password";
-import { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 
-const Navigation = (): JSX.Element => {
+const Navigation: FC = (): JSX.Element => {
   const auth = useAuth();
   const role = auth?.user?.role;
   const [approvalCount, setApprovalCount] = useState<number>(0);
