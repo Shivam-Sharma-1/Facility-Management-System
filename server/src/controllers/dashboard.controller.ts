@@ -3,6 +3,12 @@ import { NextFunction, Request, RequestHandler, Response } from "express";
 import createHttpError from "http-errors";
 import prisma from "../db/prisma";
 
+declare module "express-session" {
+	export interface SessionData {
+		userId: number;
+	}
+}
+
 /**
  * @description Get all facilities
  * @method GET
@@ -15,6 +21,26 @@ export const getFacilities: RequestHandler = async (
 	next: NextFunction
 ) => {
 	try {
+		const employeeId = parseInt(req.params.employeeId);
+
+		const user = await prisma.user.findUnique({
+			where: {
+				employeeId,
+			},
+			select: {
+				name: true,
+				employeeId: true,
+				role: true,
+				image: true,
+			},
+		});
+
+		if (!user) {
+			return next(createHttpError.NotFound("User does not exist."));
+		}
+
+		req.session.userId = user.employeeId;
+
 		const facilities = await prisma.facility.findMany({
 			where: {
 				isActive: true,
@@ -39,7 +65,7 @@ export const getFacilities: RequestHandler = async (
 				)
 			);
 		}
-		res.status(200).json({ facilities });
+		res.status(200).json({ user, facilities });
 	} catch (error) {
 		console.error(error);
 		return next(

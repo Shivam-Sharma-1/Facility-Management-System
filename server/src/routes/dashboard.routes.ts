@@ -4,7 +4,7 @@ import validateSession from "../middleware/validateSession";
 
 const dashboardRouter = Router();
 
-dashboardRouter.route("/").get(validateSession, getFacilities);
 dashboardRouter.route("/count/:employeeId").get(validateSession, getCount);
+dashboardRouter.route("/:employeeId").get(validateSession, getFacilities);
 
 export default dashboardRouter;

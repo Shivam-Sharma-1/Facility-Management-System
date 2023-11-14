@@ -1,15 +1,10 @@
 import argon2 from "argon2";
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import createHttpError from "http-errors";
+
 import prisma from "../db/prisma";
 import { AuthInput } from "../types/types";
 import authSchema from "../utils/validation";
-
-declare module "express-session" {
-	export interface SessionData {
-		userId: number;
-	}
-}
 
 /**
  * @description Employee login
@@ -23,36 +18,28 @@ export const authLogin: RequestHandler = async (
 	next: NextFunction
 ) => {
 	try {
-		const { employeeId, password }: AuthInput =
-			await authSchema.validateAsync(req.body);
-		const user = await prisma.user.findUnique({
+		const { employeeId, fullName }: AuthInput = req.body;
+		let user = await prisma.user.findUnique({
 			where: {
-				employeeId,
+				employeeId: parseInt(employeeId),
 			},
 		});
 		if (!user) {
-			return next(createHttpError.Unauthorized("User does not exist."));
+			user = await prisma.user.create({
+				data: {
+					employeeId: parseInt(employeeId),
+					name: fullName,
+				},
+			});
 		}
-		const validPassword = await argon2.verify(user.password, password);
-
-		if (!validPassword) {
-			return next(createHttpError.Unauthorized("Invalid credentials."));
-		}
-		req.session.userId = employeeId;
-
-		res.status(200).json({
-			name: user.name,
-			employeeId: user.employeeId,
-			image: user.image,
-			role: user.role,
-		});
 	} catch (error) {
+		console.error(error);
 		if (error.isJoi === true) {
 			return next(
 				createHttpError.BadRequest(`Invalid ${error.details[0].path}`)
 			);
 		}
-		return next(createHttpError.Unauthorized("Invalid credentials."));
+		return next(createHttpError.BadRequest("Please try again."));
 	}
 };
 
@@ -78,28 +65,6 @@ export const authLogout: RequestHandler = async (
 			});
 		}
 	});
-
-	// req.sessionStore.destroy(req.sessionID, (err: any) => {
-	// 	if (err) {
-	// 		return next(
-	// 			createHttpError.InternalServerError(
-	// 				"Something went wrong. Please try again."
-	// 			)
-	// 		);
-	// 	}
-	// });
-	// req.session.destroy((err: any) => {
-	// 	if (err) {
-	// 		return next(
-	// 			createHttpError.InternalServerError(
-	// 				"Something went wrong. Please try again."
-	// 			)
-	// 		);
-	// 	} else {
-	// 		res.clearCookie("sid");
-	// 		res.status(200).json({ message: "Log out successful." });
-	// 	}
-	// });
 };
 
 /**
@@ -126,7 +91,7 @@ export const changePassword: RequestHandler = async (
 			return next(createHttpError.Unauthorized("User does not exist."));
 		}
 		const verifyOldPassword = await argon2.verify(
-			admin.password,
+			admin.password!,
 			oldPassword
 		);
 		if (!verifyOldPassword) {
@@ -175,7 +140,7 @@ export const authRegister: RequestHandler = async (
 			await authSchema.validateAsync(req.body);
 		const userExists = await prisma.user.findUnique({
 			where: {
-				employeeId,
+				employeeId: parseInt(employeeId),
 			},
 		});
 		if (userExists) {
@@ -187,7 +152,7 @@ export const authRegister: RequestHandler = async (
 			data: {
 				image,
 				name: name,
-				employeeId: employeeId,
+				employeeId: parseInt(employeeId),
 				password: hashedPassword,
 				role: role,
 			},
