@@ -2,10 +2,11 @@ import { Role } from "@prisma/client";
 
 export type AuthInput = {
 	image: string;
-	name: string;
-	employeeId: number;
+	fullName: string;
+	employeeId: string;
 	password: string;
 	role: Role;
+	name: string;
 };
 
 export type BookingInput = {
