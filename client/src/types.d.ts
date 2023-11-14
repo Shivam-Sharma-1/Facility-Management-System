@@ -161,6 +161,7 @@ interface EventInfoProps {
 interface ApprovalProps {
   title: string;
   purpose: string;
+  cancellationRemark?: string;
   slug: string;
   createdAt: string;
   cancelledAt?: string | null;
