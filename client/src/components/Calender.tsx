@@ -26,7 +26,7 @@ import isoToTime from "../utils/isoToTime";
 import isoToDate from "../utils/isoToDate";
 import ErrorComponent from "./Error";
 
-const Calendar = () => {
+const Calendar: FC = (): JSX.Element => {
   const [isAddOpen, setIsAddOpen] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
