@@ -7,7 +7,7 @@ generator client {
 
 datasource db {
   provider = "postgres"
-  url      = env("DATABASE_URL")
+  url      = env("DATABASE_URL_DEV")
 }
 
 enum Role {
@@ -51,8 +51,8 @@ model User {
   id              String           @id @default(cuid())
   image           String?
   name            String
+  password        String?
   employeeId      Int              @unique
-  password        String
   role            Role             @default(USER)
   bookings        Booking[]
   groupDirector   GroupDirector?
