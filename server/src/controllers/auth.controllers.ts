@@ -4,7 +4,6 @@ import createHttpError from "http-errors";
 
 import prisma from "../db/prisma";
 import { AuthInput } from "../types/types";
-import authSchema from "../utils/validation";
 
 /**
  * @description Employee login
@@ -34,11 +33,6 @@ export const authLogin: RequestHandler = async (
 		}
 	} catch (error) {
 		console.error(error);
-		if (error.isJoi === true) {
-			return next(
-				createHttpError.BadRequest(`Invalid ${error.details[0].path}`)
-			);
-		}
 		return next(createHttpError.BadRequest("Please try again."));
 	}
 };
@@ -64,18 +58,6 @@ export const authLogout: RequestHandler = async (
 				},
 			},
 		});
-
-		// req.sessionStore.destroy(req.sessionID, (err) => {
-		// 	if (err) {
-		// 		console.error("Error destroying session in store:", err);
-		// 	} else {
-		// 		req.session.destroy((err) => {
-		// 			if (err) {
-		// 				console.error("Error destroying session:", err);
-		// 			}
-		// 		});
-		// 	}
-		// });
 	} catch (error) {
 		console.error(error);
 		return next(
@@ -133,101 +115,6 @@ export const changePassword: RequestHandler = async (
 				},
 			},
 		});
-	} catch (error) {
-		console.error(error);
-		return next(
-			createHttpError.InternalServerError(
-				"Something went wrong. Please try again."
-			)
-		);
-	}
-};
-
-/**
- * @description Employee register
- * @method POST
- * @access public
- * @returns {id, image, name, employeeId, password}
- */
-export const authRegister: RequestHandler = async (
-	req: Request,
-	res: Response,
-	next: NextFunction
-) => {
-	try {
-		const { image, name, employeeId, password, role }: AuthInput =
-			await authSchema.validateAsync(req.body);
-		const userExists = await prisma.user.findUnique({
-			where: {
-				employeeId: parseInt(employeeId),
-			},
-		});
-		if (userExists) {
-			return next(createHttpError.Conflict("User already exists."));
-		}
-		const hashedPassword = await argon2.hash(password);
-
-		const user = await prisma.user.create({
-			data: {
-				image,
-				name: name,
-				employeeId: parseInt(employeeId),
-				password: hashedPassword,
-				role: role,
-			},
-		});
-		return res.status(200).json(user);
-	} catch (error) {
-		console.error(error);
-		if (error.isJoi === true)
-			return next(createHttpError.BadRequest(error.message));
-		next(error);
-	}
-};
-
-export const createGroup: RequestHandler = async (
-	req: Request,
-	res: Response,
-	next: NextFunction
-) => {
-	try {
-		const { name } = req.body;
-		const group = await prisma.group.create({
-			data: {
-				name,
-			},
-		});
-		if (!group) {
-			return next(createHttpError.BadRequest("Group not created."));
-		}
-		res.status(201).json(group);
-	} catch (error) {
-		console.error(error);
-		return next(
-			createHttpError.InternalServerError(
-				"Something went wrong. Please try again."
-			)
-		);
-	}
-};
-
-export const addGroupDirector: RequestHandler = async (
-	req: Request,
-	res: Response,
-	next: NextFunction
-) => {
-	try {
-		const { groupId, groupDirectorId } = req.body;
-		const group = await prisma.groupDirector.create({
-			data: {
-				userId: groupDirectorId,
-				groupId,
-			},
-		});
-		if (!group) {
-			return next(createHttpError.BadRequest("Group not created."));
-		}
-		res.status(201).json(group);
 	} catch (error) {
 		console.error(error);
 		return next(
