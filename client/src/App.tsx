@@ -21,6 +21,7 @@ import Layout from "./components/Layout";
 import CancellationsPage from "./pages/CancellationsPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import PageNotFound from "./components/PageNotFound";
+import SetUser from "./pages/SetUser";
 
 declare module "@tanstack/react-query" {
   interface Register {
@@ -32,6 +33,7 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route path="/auth">
+        <Route index element={<SetUser />} />
         <Route path="login" element={<LoginPage />} />
         <Route
           path="reset-password"
