@@ -374,6 +374,13 @@ export const getBookingsForFacility: RequestHandler = async (
 	}
 };
 
+/**
+ * @description get all bookings of the particular group for group director
+ * @method GET
+ * @access private
+ * @returns {booking}
+ */
+
 export const getBookingsForGroup: RequestHandler = async (
 	req: Request,
 	res: Response,

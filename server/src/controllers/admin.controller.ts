@@ -2,6 +2,12 @@ import { NextFunction, Request, RequestHandler, Response } from "express";
 import createHttpError from "http-errors";
 import prisma from "../db/prisma";
 
+/**
+ * @description Get facilities for filtering
+ * @method GET
+ * @access private
+ * @returns {Facility}
+ */
 export const getFacilities: RequestHandler = async (
 	req: Request,
 	res: Response,
@@ -165,6 +171,14 @@ export const deleteFacility: RequestHandler = async (
 		);
 	}
 };
+
+/**
+ * @description Update facility
+ * @method POST
+ * @access private
+ * @returns {Facility}
+ */
+
 export const updateFacility: RequestHandler = async (
 	req: Request,
 	res: Response,
@@ -241,6 +255,13 @@ export const updateFacility: RequestHandler = async (
 		);
 	}
 };
+
+/**
+ * @description Get all bookings
+ * @method GET
+ * @access private
+ * @returns {Booking}
+ */
 
 export const getAllBookings: RequestHandler = async (
 	req: Request,
@@ -358,6 +379,13 @@ export const getAllBookings: RequestHandler = async (
 		);
 	}
 };
+
+/**
+ * @description Approve Booking for admin
+ * @method POST
+ * @access private
+ * @returns {Booking}
+ */
 
 export const approveBooking: RequestHandler = async (
 	req: Request,

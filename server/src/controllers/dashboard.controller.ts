@@ -56,6 +56,13 @@ export const getFacilities: RequestHandler = async (
 	}
 };
 
+/**
+ * @description Get count of pending approvals and cancellations
+ * @method GET
+ * @access private
+ * @returns {approvalCount, cancellationCount}
+ */
+
 export const getCount: RequestHandler = async (
 	req: Request,
 	res: Response,
@@ -167,6 +174,13 @@ export const getCount: RequestHandler = async (
 		);
 	}
 };
+
+/**
+ * @description Get employee details
+ * @method GET
+ * @access public
+ * @returns {name, employeeId, role}
+ */
 
 export const getEmployeeDetails: RequestHandler = async (
 	req: Request,

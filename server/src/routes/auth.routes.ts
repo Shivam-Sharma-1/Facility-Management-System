@@ -1,11 +1,8 @@
 import express from "express";
 import {
-	addGroupDirector,
 	authLogin,
 	authLogout,
-	authRegister,
 	changePassword,
-	createGroup,
 } from "../controllers/auth.controllers";
 
 import validateAdmin from "../middleware/validateAdmin";
@@ -18,9 +15,5 @@ authRouter.post("/logout", authLogout);
 authRouter
 	.route("/password")
 	.post(validateSession, validateAdmin, changePassword);
-
-authRouter.post("/register", authRegister);
-authRouter.post("/group", createGroup);
-authRouter.post("/group/gd", addGroupDirector);
 
 export default authRouter;

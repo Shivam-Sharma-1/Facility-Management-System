@@ -3,6 +3,13 @@ import { NextFunction, Request, RequestHandler, Response } from "express";
 import createHttpError from "http-errors";
 import prisma from "../db/prisma";
 
+/**
+ * @description Request Cancellation
+ * @method POST
+ * @access private
+ * @returns {Booking}
+ */
+
 export const requestCancellation: RequestHandler = async (
 	req: Request,
 	res: Response,
@@ -166,6 +173,13 @@ export const requestCancellation: RequestHandler = async (
 	}
 };
 
+/**
+ * @description Get cancellation requests for Group Director
+ * @method GET
+ * @access private
+ * @returns {Booking}
+ */
+
 export const getAllCancellationRequestsGD: RequestHandler = async (
 	req: Request,
 	res: Response,
@@ -240,6 +254,13 @@ export const getAllCancellationRequestsGD: RequestHandler = async (
 		);
 	}
 };
+
+/**
+ * @description Get cancellation requests for Facility Manager
+ * @method GET
+ * @access private
+ * @returns {Booking}
+ */
 
 export const getAllCancellationRequestsFM: RequestHandler = async (
 	req: Request,
@@ -336,6 +357,13 @@ export const getAllCancellationRequestsFM: RequestHandler = async (
 	}
 };
 
+/**
+ * @description Approve cancellation request by Group Director
+ * @method POST
+ * @access private
+ * @returns {Booking}
+ */
+
 export const approveCancellationRequestGD: RequestHandler = async (
 	req: Request,
 	res: Response,
@@ -373,6 +401,13 @@ export const approveCancellationRequestGD: RequestHandler = async (
 		);
 	}
 };
+
+/**
+ * @description Approve cancellation request by Facility Manager
+ * @method POST
+ * @access private
+ * @returns {Booking}
+ */
 
 export const approveCancellationRequestFM: RequestHandler = async (
 	req: Request,
