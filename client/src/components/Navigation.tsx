@@ -21,6 +21,7 @@ import EventBusyIcon from "@mui/icons-material/EventBusy";
 import { NavLink } from "react-router-dom";
 import PasswordIcon from "@mui/icons-material/Password";
 import { FC, useEffect, useState } from "react";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 
 const Navigation: FC = (): JSX.Element => {
   const auth = useAuth();
@@ -372,6 +373,41 @@ const Navigation: FC = (): JSX.Element => {
                       component: "li",
                     }}
                     primary="Reset Password"
+                  />
+                </ListItemButton>
+              )}
+            </NavLink>
+            <Divider color="#0c0051" />
+          </>
+        )}
+
+        {role !== "ADMIN" && (
+          <>
+            <NavLink to="/auth/login">
+              {({ isActive }) => (
+                <ListItemButton
+                  className="flex gap-3"
+                  sx={{
+                    paddingLeft: "1.4em",
+                    paddingBlock: "1.4em",
+                    borderLeft: isActive ? "4px solid white" : "",
+                    color: "white",
+                    backgroundColor: isActive
+                      ? " rgb(255, 255, 255, 0.02)"
+                      : "",
+                  }}
+                >
+                  <ListItemIcon sx={{ minWidth: "0px" }}>
+                    <AdminPanelSettingsIcon
+                      sx={{ width: "26px", height: "26px", color: "white" }}
+                    />
+                  </ListItemIcon>
+                  <ListItemText
+                    primaryTypographyProps={{
+                      variant: "h6",
+                      component: "li",
+                    }}
+                    primary="Log in as admin"
                   />
                 </ListItemButton>
               )}
