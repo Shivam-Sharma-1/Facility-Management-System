@@ -1,8 +1,15 @@
 import { FC } from "react";
 import ReportProblemOutlinedIcon from "@mui/icons-material/ReportProblemOutlined";
 import { Typography } from "@mui/material";
+import { useAuth } from "../hooks/useAuth";
 
 const ErrorComponent: FC<ErrorProps> = ({ status, message }): JSX.Element => {
+  const auth = useAuth();
+
+  if (status === 401) {
+    auth?.logout();
+  }
+
   return (
     <div className="w-full">
       <div className="w-full h-full min-h-screen flex-col flex items-center gap-6 mt-20">
