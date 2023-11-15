@@ -1,9 +1,15 @@
 import { Router } from "express";
-import { getCount, getFacilities } from "../controllers/dashboard.controller";
+import validateSession from "src/middleware/validateSession";
+import {
+	getCount,
+	getEmployeeDetails,
+	getFacilities,
+} from "../controllers/dashboard.controller";
 
 const dashboardRouter = Router();
 
-dashboardRouter.route("/count/:employeeId").get(getCount);
-dashboardRouter.route("/:employeeId").get(getFacilities);
+dashboardRouter.route("/count/:employeeId").get(validateSession, getCount);
+dashboardRouter.route("/employee/:employeeId").get(getEmployeeDetails);
+dashboardRouter.route("/").get(validateSession, getFacilities);
 
 export default dashboardRouter;
