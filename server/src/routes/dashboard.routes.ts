@@ -1,10 +1,10 @@
 import { Router } from "express";
-import validateSession from "src/middleware/validateSession";
 import {
 	getCount,
 	getEmployeeDetails,
 	getFacilities,
 } from "../controllers/dashboard.controller";
+import validateSession from "../middleware/validateSession";
 
 const dashboardRouter = Router();
 
