@@ -2,6 +2,7 @@ import { Navigate } from "react-router-dom";
 import { FC } from "react";
 
 import { useAuth } from "../hooks/useAuth";
+import ErrorComponent from "./Error";
 
 export const RequireAuth: FC<RequireAuthProps> = ({
   children,
@@ -13,23 +14,29 @@ export const RequireAuth: FC<RequireAuthProps> = ({
   const auth = useAuth();
 
   if (!auth!.user) {
-    return <Navigate to="/auth/login" />;
+    window.open("http://localhost:5000", "_self");
   }
 
-  if (GD && auth?.user!.role !== "GROUP_DIRECTOR") {
-    return <Navigate to="/" />;
-  }
+  try {
+    if (GD && auth?.user!.role !== "GROUP_DIRECTOR") {
+      return <Navigate to="/" />;
+    }
 
-  if (FM && auth?.user!.role !== "FACILITY_MANAGER") {
-    return <Navigate to="/" />;
-  }
+    if (FM && auth?.user!.role !== "FACILITY_MANAGER") {
+      return <Navigate to="/" />;
+    }
 
-  if (Admin && auth?.user!.role !== "ADMIN") {
-    return <Navigate to="/" />;
-  }
+    if (Admin && auth?.user!.role !== "ADMIN") {
+      return <Navigate to="/" />;
+    }
 
-  if (noAdmin && auth?.user!.role === "ADMIN") {
-    return <Navigate to="/admin/facilities" />;
+    if (noAdmin && auth?.user!.role === "ADMIN") {
+      return <Navigate to="/admin/facilities" />;
+    }
+  } catch (err) {
+    return (
+      <ErrorComponent status={401} message="Please log in and try again" />
+    );
   }
 
   return children;
