@@ -54,17 +54,36 @@ export const authLogout: RequestHandler = async (
 	res: Response,
 	next: NextFunction
 ) => {
-	req.sessionStore.destroy(req.sessionID, (err) => {
-		if (err) {
-			console.error("Error destroying session in store:", err);
-		} else {
-			req.session.destroy((err) => {
-				if (err) {
-					console.error("Error destroying session:", err);
-				}
-			});
-		}
-	});
+	try {
+		const { employeeId } = req.body;
+
+		await prisma.session.deleteMany({
+			where: {
+				data: {
+					contains: `"userId":${employeeId}`,
+				},
+			},
+		});
+
+		// req.sessionStore.destroy(req.sessionID, (err) => {
+		// 	if (err) {
+		// 		console.error("Error destroying session in store:", err);
+		// 	} else {
+		// 		req.session.destroy((err) => {
+		// 			if (err) {
+		// 				console.error("Error destroying session:", err);
+		// 			}
+		// 		});
+		// 	}
+		// });
+	} catch (error) {
+		console.error(error);
+		return next(
+			createHttpError.InternalServerError(
+				"Something went wrong. Please try again."
+			)
+		);
+	}
 };
 
 /**
