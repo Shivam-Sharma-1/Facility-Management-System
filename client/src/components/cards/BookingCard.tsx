@@ -53,7 +53,7 @@ const BookingCard: FC<MyBookingCardProps> = ({
   return (
     <Slide direction="up" in={true} mountOnEnter unmountOnExit>
       <div
-        className={`justify-between items-center px-10 py-8 w-[60%] h-full flex mt-8 rounded-md bg-bgPrimary shadow-cardHover border-0 border-l-[10px] border-solid ${
+        className={`justify-between items-center px-10 py-8 w-[60%] h-full flex mt-6 rounded-md bg-bgPrimary shadow-cardHover border-0 border-l-[10px] border-solid ${
           status === "PENDING" || status === "APPROVED_BY_GD"
             ? "bg-blue-100 border-blue-600"
             : status === "APPROVED_BY_FM" || status === "APPROVED_BY_ADMIN"
