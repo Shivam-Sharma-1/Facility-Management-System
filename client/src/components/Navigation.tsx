@@ -22,6 +22,7 @@ import { NavLink } from "react-router-dom";
 import PasswordIcon from "@mui/icons-material/Password";
 import { FC, useEffect, useState } from "react";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+import ErrorComponent from "./Error";
 
 const Navigation: FC = (): JSX.Element => {
   const auth = useAuth();
@@ -39,7 +40,7 @@ const Navigation: FC = (): JSX.Element => {
     },
   });
 
-  const { data, isPending } = useQuery<NavigationProps>({
+  const { data, isPending, isError, error } = useQuery<NavigationProps>({
     queryKey: ["navigation"],
     queryFn: async () => {
       const response = await axios.get<NavigationProps>(
@@ -61,6 +62,16 @@ const Navigation: FC = (): JSX.Element => {
       setCancellationCount(data!.cancellationCount!);
     }
   }, [data, isPending]);
+
+  if (isError) {
+    const errorData = error.response!.data as ErrorMessage;
+    return (
+      <ErrorComponent
+        status={errorData.error.status!}
+        message={errorData.error.message}
+      />
+    );
+  }
 
   return (
     <div className="w-[400px] h-full min-h-[100dvh] bg-primary text-white pt-5 overflow-y-hidden sticky top-0">
