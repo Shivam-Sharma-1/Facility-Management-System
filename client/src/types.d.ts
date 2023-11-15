@@ -347,7 +347,6 @@ type FacilityManager = {
 };
 
 type DashboardData = {
-  count: number;
   facilities: FacilityData[];
 };
 
