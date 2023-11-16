@@ -6,7 +6,11 @@ import {
   Button,
   Fade,
   FormControl,
+  InputLabel,
+  MenuItem,
   Modal,
+  Select,
+  SelectChangeEvent,
   TextField,
   Typography,
 } from "@mui/material";
@@ -18,10 +22,12 @@ const AddFacilityModal: FC<AddFacilityModalProps> = ({
   isOpen,
   setIsOpen,
   setOpenSnackbar,
+  buildings,
 }): JSX.Element => {
   const [formData, setFormData] = useState<AddFacilityDataProps>({
     name: "",
     description: "",
+    building: "",
     icon: "",
     FMId: "",
   });
@@ -56,6 +62,7 @@ const AddFacilityModal: FC<AddFacilityModalProps> = ({
     const submitData: AdminFacilitiesSubmitData = {
       name: formData.name,
       description: formData.description,
+      building: formData.building!,
       icon: formData.icon,
       slug: `${formData.name
         .toLowerCase()
@@ -70,6 +77,7 @@ const AddFacilityModal: FC<AddFacilityModalProps> = ({
     setFormData({
       name: "",
       description: "",
+      building: "",
       icon: "",
       FMId: "",
     });
@@ -127,6 +135,24 @@ const AddFacilityModal: FC<AddFacilityModalProps> = ({
                 multiline
                 size="small"
               />
+              <FormControl size="small" fullWidth>
+                <InputLabel>Select Building</InputLabel>
+                <Select
+                  label="Select a month"
+                  size="small"
+                  value={formData.building}
+                  onChange={(e: SelectChangeEvent<string | null>) => {
+                    setFormData({ ...formData, building: e.target.value });
+                  }}
+                  required
+                >
+                  {buildings.map((building) => (
+                    <MenuItem key={building.name} value={building.name}>
+                      {building.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
               <TextField
                 id="icon"
                 label="Icon"
