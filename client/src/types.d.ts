@@ -233,7 +233,13 @@ interface AdminBookingsTableProps {
 }
 
 interface AdminFacilitiesTableProps {
-  facilitiesData: FacilityData[];
+  facilitiesData?: FacilityData[];
+  facilities: FacilityData[];
+  buildings?: [
+    {
+      name: string;
+    }
+  ];
   forwardedRef?: React.RefObject<HTMLDivElement>;
 }
 
@@ -269,7 +275,7 @@ interface AdminFacilitiesColumnData {
 }
 
 interface AdminFacilitiesRowData {
-  name: string;
+  name: string | JSX.Element;
   description: string;
   status: string;
   createdAt: JSX.Element;
@@ -282,6 +288,7 @@ interface AdminFacilitiesRowData {
 interface AddFacilityDataProps {
   name: string;
   description: string;
+  building: string | null;
   icon: string;
   FMId: string | number | null;
 }
@@ -290,6 +297,11 @@ interface AddFacilityModalProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
   setOpenSnackbar: (isOpen: boolean) => void;
+  buildings: [
+    {
+      name: string;
+    }
+  ];
 }
 
 interface EditFacilityModalProps {
@@ -297,6 +309,11 @@ interface EditFacilityModalProps {
   setIsOpen: (isOpen: boolean) => void;
   setOpenSnackbar: (isOpen: boolean) => void;
   facilityData: FacilityData;
+  buildingData?: [
+    {
+      name: string;
+    }
+  ];
 }
 
 interface AdminBookingsModalProps {
@@ -329,6 +346,9 @@ type FacilityData = {
   id: string;
   name: string;
   description: string;
+  building?: {
+    name: string;
+  };
   status?: string;
   icon: string;
   slug: string;
@@ -347,7 +367,8 @@ type FacilityManager = {
 };
 
 type DashboardData = {
-  facilities: FacilityData[];
+  facility: FacilityData[];
+  name: string;
 };
 
 type LoginData = {
@@ -423,6 +444,7 @@ type AdminBookingsData = {
 type AdminFacilitiesSubmitData = {
   name: string;
   description: string;
+  building: string;
   icon: string;
   slug: string;
   facilityManagerId: number | null;
