@@ -16,7 +16,7 @@ import EditFacilityModal from "../modals/EditFacilityModal";
 import DeleteFacilityModal from "../modals/DeleteFacilityModal";
 
 const columns: readonly AdminFacilitiesColumnData[] = [
-  { id: "name", label: "Name", minWidth: 140 },
+  { id: "name", label: "Name/Building", minWidth: 145 },
   { id: "description", label: "Description", minWidth: 140 },
   { id: "status", label: "Status", minWidth: 100 },
   { id: "createdAt", label: "Created At", minWidth: 150 },
@@ -26,9 +26,10 @@ const columns: readonly AdminFacilitiesColumnData[] = [
   { id: "actions", label: "Operations", minWidth: 130 },
 ];
 
-const AdminFacilitiesTable: FC<AdminFacilitiesTableProps> = (
-  facilitiesData
-): JSX.Element => {
+const AdminFacilitiesTable: FC<AdminFacilitiesTableProps> = ({
+  facilities,
+  buildings,
+}): JSX.Element => {
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
   const [isEditFacilityModalOpen, setIsEditFacilityModalOpen] =
@@ -39,6 +40,9 @@ const AdminFacilitiesTable: FC<AdminFacilitiesTableProps> = (
     id: "",
     name: "",
     description: "",
+    building: {
+      name: "",
+    },
     status: "",
     icon: "",
     slug: "",
@@ -58,9 +62,15 @@ const AdminFacilitiesTable: FC<AdminFacilitiesTableProps> = (
   };
 
   const rows: AdminFacilitiesRowData[] =
-    facilitiesData &&
-    facilitiesData.facilitiesData.map((facility) => ({
-      name: facility.name,
+    facilities &&
+    facilities.map((facility) => ({
+      name: (
+        <>
+          {facility.name} /
+          <br />
+          {facility.building!.name}
+        </>
+      ),
       description: facility.description,
       status: facility.isActive ? "Active" : "Inactive",
       createdAt: (
@@ -139,6 +149,7 @@ const AdminFacilitiesTable: FC<AdminFacilitiesTableProps> = (
           setIsOpen={setIsEditFacilityModalOpen}
           setOpenSnackbar={setOpenEditSnackbar}
           facilityData={modalData}
+          buildingData={buildings}
         />
       )}
       {isDeleteFacilityModalOpen && (
@@ -166,22 +177,23 @@ const AdminFacilitiesTable: FC<AdminFacilitiesTableProps> = (
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row, index) => {
-                return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                    {columns.map((column) => {
-                      const value = row[column.id];
-                      return (
-                        <TableCell key={column.id} align={"left"}>
-                          {value ? value : "Not approved"}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                );
-              })}
+            {rows &&
+              rows
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row, index) => {
+                  return (
+                    <TableRow hover role="checkbox" tabIndex={-1} key={index}>
+                      {columns.map((column) => {
+                        const value = row[column.id];
+                        return (
+                          <TableCell key={column.id} align={"left"}>
+                            {value ? value : "Not approved"}
+                          </TableCell>
+                        );
+                      })}
+                    </TableRow>
+                  );
+                })}
           </TableBody>
         </Table>
       </TableContainer>

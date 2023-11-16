@@ -18,7 +18,15 @@ import FacilitiesReport from "../reports/FacilitiesReport";
 import ErrorComponent from "./Error";
 
 const AdminFacilities: FC = (): JSX.Element => {
-  const [facilitiesData, setFacilitiesData] = useState<FacilityData[]>([]);
+  const [facilitiesData, setFacilitiesData] =
+    useState<AdminFacilitiesTableProps>({
+      facilities: [],
+      buildings: [
+        {
+          name: "",
+        },
+      ],
+    });
   const [isAddFacilityModalOpen, setIsAddFacilityModalOpen] =
     useState<boolean>(false);
   const targetRef = useRef<HTMLDivElement>(null);
@@ -97,6 +105,7 @@ const AdminFacilities: FC = (): JSX.Element => {
           isOpen={isAddFacilityModalOpen}
           setIsOpen={setIsAddFacilityModalOpen}
           setOpenSnackbar={setOpenSnackbar}
+          buildings={facilitiesData.buildings!}
         />
       )}
 
@@ -135,11 +144,16 @@ const AdminFacilities: FC = (): JSX.Element => {
           Export
         </Button>
       </div>
-      {!isPending && <AdminFacilitiesTable facilitiesData={facilitiesData} />}
+      {!isPending && (
+        <AdminFacilitiesTable
+          facilities={facilitiesData.facilities}
+          buildings={facilitiesData.buildings}
+        />
+      )}
       {isPrint && (
         <div className="mt-[100dvh]">
           <FacilitiesReport
-            facilitiesData={facilitiesData}
+            facilities={facilitiesData.facilities}
             forwardedRef={targetRef}
           />
         </div>

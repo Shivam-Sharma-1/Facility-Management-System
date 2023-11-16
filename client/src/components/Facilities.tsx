@@ -4,14 +4,14 @@ import { FC } from "react";
 import axios from "axios";
 
 import FacilityCard from "./cards/FacilityCard";
-import { CircularProgress, Typography } from "@mui/material";
+import { CircularProgress, Divider, Typography } from "@mui/material";
 import ErrorComponent from "./Error";
 
 const Facilities: FC = (): JSX.Element => {
   const { data, isPending, isError, error } = useQuery({
     queryKey: ["facilities"],
     queryFn: async () => {
-      const response = await axios.get<DashboardData>(
+      const response = await axios.get<DashboardData[]>(
         `${import.meta.env.VITE_APP_SERVER_URL}/dashboard`,
         {
           withCredentials: true,
@@ -40,21 +40,31 @@ const Facilities: FC = (): JSX.Element => {
     );
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center pt-12">
+    <div className="w-full h-full flex flex-col items-center justify-center pt-12 px-6">
       <Typography variant="h2" component="h1">
         Facilities
       </Typography>
-      <div className="w-full flex justify-center items-center flex-wrap pt-4">
+      <div className="w-full flex flex-col justify-center items-center flex-wrap pt-4 gap-2">
         {!isPending &&
-          data?.facilities.map((facility: FacilityData) => (
-            <Link to={`/facility/${facility.slug}`} key={facility.name}>
-              <FacilityCard
-                name={facility.name}
-                description={facility.description}
-                icon={facility.icon}
-                manager={facility.facilityManager.user.name}
-              />
-            </Link>
+          data?.map((section) => (
+            <div className="w-full flex flex-col gap-2">
+              <Typography variant="h4" component="h2">
+                {section.name}
+              </Typography>
+              <Divider color="gray" />
+              <div className="w-full flex items-center justify-center flex-wrap">
+                {section.facility.map((facility: FacilityData) => (
+                  <Link to={`/facility/${facility.slug}`} key={facility.name}>
+                    <FacilityCard
+                      name={facility.name}
+                      description={facility.description}
+                      icon={facility.icon}
+                      manager={facility.facilityManager.user.name}
+                    />
+                  </Link>
+                ))}
+              </div>
+            </div>
           ))}
       </div>
     </div>
