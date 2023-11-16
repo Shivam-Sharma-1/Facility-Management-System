@@ -33,7 +33,7 @@ export const authLogin: RequestHandler = async (
 		if (!user) {
 			return next(createHttpError.Unauthorized("User does not exist."));
 		}
-		const validPassword = await argon2.verify(user.password, password);
+		const validPassword = await argon2.verify(user.password!, password);
 
 		if (!validPassword) {
 			return next(createHttpError.Unauthorized("Invalid credentials."));
@@ -78,28 +78,6 @@ export const authLogout: RequestHandler = async (
 			});
 		}
 	});
-
-	// req.sessionStore.destroy(req.sessionID, (err: any) => {
-	// 	if (err) {
-	// 		return next(
-	// 			createHttpError.InternalServerError(
-	// 				"Something went wrong. Please try again."
-	// 			)
-	// 		);
-	// 	}
-	// });
-	// req.session.destroy((err: any) => {
-	// 	if (err) {
-	// 		return next(
-	// 			createHttpError.InternalServerError(
-	// 				"Something went wrong. Please try again."
-	// 			)
-	// 		);
-	// 	} else {
-	// 		res.clearCookie("sid");
-	// 		res.status(200).json({ message: "Log out successful." });
-	// 	}
-	// });
 };
 
 /**
@@ -126,7 +104,7 @@ export const changePassword: RequestHandler = async (
 			return next(createHttpError.Unauthorized("User does not exist."));
 		}
 		const verifyOldPassword = await argon2.verify(
-			admin.password,
+			admin.password!,
 			oldPassword
 		);
 		if (!verifyOldPassword) {
@@ -171,8 +149,7 @@ export const authRegister: RequestHandler = async (
 	next: NextFunction
 ) => {
 	try {
-		const { image, name, employeeId, password, role }: AuthInput =
-			await authSchema.validateAsync(req.body);
+		const { image, name, employeeId, password, role }: AuthInput = req.body;
 		const userExists = await prisma.user.findUnique({
 			where: {
 				employeeId,

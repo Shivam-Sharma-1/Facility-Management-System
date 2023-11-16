@@ -154,7 +154,7 @@ export const addBookings: RequestHandler = async (
 			};
 		} else if (
 			user?.role === Role.FACILITY_MANAGER &&
-			user.facilityManager?.facility.slug === facilitySlug
+			user.facilityManager?.facility.some((f) => f.slug === facilitySlug)
 		) {
 			updateData = {
 				status: "APPROVED_BY_FM",
@@ -362,7 +362,7 @@ export const getBookingsForFacility: RequestHandler = async (
 
 		res.status(200).json({
 			facilities,
-			bookings: bookings?.facility.bookings,
+			bookings: bookings?.facility,
 		});
 	} catch (error) {
 		console.error(error);

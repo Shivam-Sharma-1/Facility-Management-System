@@ -105,6 +105,30 @@ export const getAllGDApprovals: RequestHandler = async (
 ) => {
 	try {
 		const employeeId = req.session.userId;
+		let count = null;
+		const user = await prisma.user.findUnique({
+			where: {
+				employeeId,
+			},
+		});
+
+		if (!user) {
+			return next(createHttpError.NotFound("User does not exist."));
+		}
+
+		count = await prisma.booking.count({
+			where: {
+				AND: [
+					{
+						groupId: user.groupId!,
+					},
+					{
+						status: "PENDING",
+					},
+				],
+			},
+		});
+
 		const bookings = await prisma.booking.findMany({
 			where: {
 				AND: [
@@ -157,7 +181,7 @@ export const getAllGDApprovals: RequestHandler = async (
 				)
 			);
 		}
-		res.status(200).json(bookings);
+		res.status(200).json({ count, bookings });
 	} catch (error) {
 		console.error(error);
 		return next(createHttpError.InternalServerError(error.message));
@@ -177,6 +201,33 @@ export const getAllFMApprovals: RequestHandler = async (
 ) => {
 	try {
 		const employeeId = req.session.userId;
+		let count = null;
+		const user = await prisma.user.findUnique({
+			where: {
+				employeeId,
+			},
+		});
+
+		if (!user) {
+			return next(createHttpError.NotFound("User does not exist."));
+		}
+		count = await prisma.booking.count({
+			where: {
+				AND: [
+					{
+						facility: {
+							facilityManager: {
+								userId: user.id,
+							},
+						},
+					},
+					{
+						status: "APPROVED_BY_GD",
+					},
+				],
+			},
+		});
+
 		const bookings = await prisma.facilityManager.findFirst({
 			where: {
 				user: {
@@ -240,7 +291,7 @@ export const getAllFMApprovals: RequestHandler = async (
 				)
 			);
 		}
-		res.status(200).json(bookings.facility.bookings);
+		res.status(200).json({ count, facilities: bookings.facility });
 	} catch (error) {
 		console.error(error);
 		return next(createHttpError.InternalServerError(error.message));
@@ -340,6 +391,15 @@ export const approveByFM: RequestHandler = async (
 			},
 			select: {
 				id: true,
+				facilityManager: {
+					select: {
+						facility: {
+							select: {
+								id: true,
+							},
+						},
+					},
+				},
 			},
 		});
 		if (!user) {

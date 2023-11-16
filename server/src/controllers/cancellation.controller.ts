@@ -70,7 +70,9 @@ export const requestCancellation: RequestHandler = async (
 			};
 		} else if (
 			user?.role === Role.FACILITY_MANAGER &&
-			user.facilityManager?.facility.slug === booking?.facility.slug
+			user.facilityManager?.facility.some(
+				(f) => f.slug === booking.facility.slug
+			)
 		) {
 			candelData = {
 				status: ApprovalStatus.CANCELLED,
@@ -325,7 +327,7 @@ export const getAllCancellationRequestsFM: RequestHandler = async (
 				)
 			);
 		}
-		res.status(200).json(cancellationRequests.facility.bookings);
+		res.status(200).json(cancellationRequests.facility);
 	} catch (error) {
 		console.error(error);
 		return next(

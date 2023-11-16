@@ -101,20 +101,28 @@ export const getCount: RequestHandler = async (
 		}
 
 		if (user?.role === "FACILITY_MANAGER") {
-			const facility = await prisma.facilityManager.findUnique({
-				where: {
-					userId: user.id,
-				},
-				select: {
-					facilityId: true,
-				},
-			});
+			// const facility = await prisma.facilityManager.findUnique({
+			// 	where: {
+			// 		userId: user.id,
+			// 	},
+			// 	select: {
+			// 		facility: {
+			// 			select: {
+			// 				id: true,
+			// 			},
+			// 		},
+			// 	},
+			// });
 
 			const approvalCount = await prisma.booking.count({
 				where: {
 					AND: [
 						{
-							facilityId: facility?.facilityId,
+							facility: {
+								facilityManager: {
+									userId: user.id,
+								},
+							},
 						},
 						{
 							status: "APPROVED_BY_GD",
@@ -126,7 +134,11 @@ export const getCount: RequestHandler = async (
 				where: {
 					AND: [
 						{
-							facilityId: facility?.facilityId,
+							facility: {
+								facilityManager: {
+									userId: user.id,
+								},
+							},
 						},
 						{
 							AND: [
