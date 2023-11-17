@@ -17,7 +17,7 @@ export const authLogin: RequestHandler = async (
 	next: NextFunction
 ) => {
 	try {
-		const { employeeId, fullName }: AuthInput = req.body;
+		const { employeeId, fullName, image }: AuthInput = req.body;
 		let user = await prisma.user.findUnique({
 			where: {
 				employeeId: parseInt(employeeId),
@@ -28,6 +28,28 @@ export const authLogin: RequestHandler = async (
 				data: {
 					employeeId: parseInt(employeeId),
 					name: fullName,
+					image,
+					isSignedIn: true,
+				},
+			});
+		} else if (user.name !== fullName || user.image !== image) {
+			await prisma.user.update({
+				where: {
+					employeeId: parseInt(employeeId),
+				},
+				data: {
+					name: fullName,
+					image,
+					isSignedIn: true,
+				},
+			});
+		} else {
+			await prisma.user.update({
+				where: {
+					employeeId: parseInt(employeeId),
+				},
+				data: {
+					isSignedIn: true,
 				},
 			});
 		}
@@ -50,6 +72,15 @@ export const authLogout: RequestHandler = async (
 ) => {
 	try {
 		const { employeeId } = req.body;
+
+		await prisma.user.update({
+			where: {
+				employeeId: parseInt(employeeId),
+			},
+			data: {
+				isSignedIn: false,
+			},
+		});
 
 		await prisma.session.deleteMany({
 			where: {
