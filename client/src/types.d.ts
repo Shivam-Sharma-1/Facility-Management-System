@@ -346,6 +346,11 @@ interface NavigationProps {
   cancellationCount: number;
 }
 
+interface RouteError {
+  status: number;
+  message: string;
+}
+
 // ----------TYPES-----------
 
 type FacilityData = {
