@@ -51,7 +51,8 @@ export const addFacility: RequestHandler = async (
 	next: NextFunction
 ) => {
 	try {
-		const { name, description, icon, slug, facilityManagerId } = req.body;
+		const { name, description, icon, slug, facilityManagerId, building } =
+			req.body;
 
 		const facilityManager = await prisma.user.findUnique({
 			where: {
@@ -69,6 +70,11 @@ export const addFacility: RequestHandler = async (
 					description,
 					icon,
 					slug,
+					building: {
+						connect: {
+							name: building,
+						},
+					},
 					facilityManager: {
 						create: {
 							userId: facilityManager?.id!,
@@ -121,9 +127,7 @@ export const deleteFacility: RequestHandler = async (
 		const time = new Date().toISOString();
 		const facilityManager = await prisma.facilityManager.findFirst({
 			where: {
-				facility: {
-					slug,
-				},
+				facility: {},
 			},
 			select: {
 				userId: true,
