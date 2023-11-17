@@ -136,7 +136,7 @@ model GroupDirector {
 
 model Group {
   id            String         @id @default(cuid())
-  name          String
+  name          String         @unique
   groupDirector GroupDirector?
   users         User[]
   bookings      Booking[]
