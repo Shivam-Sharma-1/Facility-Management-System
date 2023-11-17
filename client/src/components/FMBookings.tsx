@@ -125,8 +125,8 @@ const FMBookings: FC = (): JSX.Element => {
           Facility bookings
         </Typography>
       </div>
-      <div className="w-full flex justify-center items-center">
-        <div className="w-full flex gap-4">
+      <div className="w-full flex justify-center">
+        <div className="w-full flex gap-4 flex-wrap">
           <Chip
             label="All"
             clickable={true}
