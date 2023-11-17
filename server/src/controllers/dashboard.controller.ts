@@ -21,31 +21,55 @@ export const getFacilities: RequestHandler = async (
 	next: NextFunction
 ) => {
 	try {
-		const facilities = await prisma.facility.findMany({
-			where: {
-				isActive: true,
-			},
-			include: {
-				facilityManager: {
-					select: {
-						user: {
+		// const facilities = await prisma.facility.findMany({
+		// 	where: {
+		// 		isActive: true,
+		// 	},
+		// 	include: {
+		// 		facilityManager: {
+		// 			select: {
+		// 				user: {
+		// 					select: {
+		// 						name: true,
+		// 						employeeId: true,
+		// 					},
+		// 				},
+		// 			},
+		// 		},
+		// 	},
+		// });
+
+		const buildings = await prisma.building.findMany({
+			select: {
+				name: true,
+				facility: {
+					where: {
+						isActive: true,
+					},
+					include: {
+						facilityManager: {
 							select: {
-								name: true,
-								employeeId: true,
+								user: {
+									select: {
+										name: true,
+										employeeId: true,
+									},
+								},
 							},
 						},
 					},
 				},
 			},
 		});
-		if (!facilities) {
+
+		if (!buildings) {
 			return next(
 				createHttpError.NotFound(
 					"Something went wrong. Please try again."
 				)
 			);
 		}
-		res.status(200).json({ facilities });
+		res.status(200).json(buildings);
 	} catch (error) {
 		console.error(error);
 		return next(

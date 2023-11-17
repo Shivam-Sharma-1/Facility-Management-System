@@ -3,7 +3,7 @@ import createHttpError from "http-errors";
 import prisma from "../db/prisma";
 
 /**
- * @description Get facilities for filtering
+ * @description Get facilities for filtering in bookings
  * @method GET
  * @access private
  * @returns {Facility}
@@ -14,6 +14,11 @@ export const getFacilities: RequestHandler = async (
 	next: NextFunction
 ) => {
 	try {
+		const buildings = await prisma.building.findMany({
+			select: {
+				name: true,
+			},
+		});
 		const facilities = await prisma.facility.findMany({
 			include: {
 				facilityManager: {
@@ -26,9 +31,14 @@ export const getFacilities: RequestHandler = async (
 						},
 					},
 				},
+				building: {
+					select: {
+						name: true,
+					},
+				},
 			},
 		});
-		res.status(200).json(facilities);
+		res.status(200).json({ buildings, facilities });
 	} catch (error) {
 		console.error(error);
 		return next(
@@ -196,6 +206,7 @@ export const updateFacility: RequestHandler = async (
 			newFacilityManagerId,
 			prevFacilityManagerId,
 			icon,
+			building,
 		} = req.body;
 		const prevFacilityManager = await prisma.facilityManager.findFirst({
 			where: {
@@ -216,6 +227,7 @@ export const updateFacility: RequestHandler = async (
 					name,
 					description,
 					icon,
+					building,
 				},
 			}),
 			prisma.facilityManager.delete({

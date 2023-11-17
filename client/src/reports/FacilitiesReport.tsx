@@ -11,7 +11,7 @@ import isoToDate from "../utils/isoToDate";
 import { Typography } from "@mui/material";
 
 const columns: readonly AdminFacilitiesColumnData[] = [
-  { id: "name", label: "Name", minWidth: 140 },
+  { id: "name", label: "Name/Building", minWidth: 145 },
   { id: "description", label: "Description", minWidth: 140 },
   { id: "status", label: "Status", minWidth: 100 },
   { id: "createdAt", label: "Created At", minWidth: 150 },
@@ -20,14 +20,19 @@ const columns: readonly AdminFacilitiesColumnData[] = [
   { id: "fm", label: "Facility Manager", minWidth: 170 },
 ];
 const FacilitiesReport: FC<AdminFacilitiesTableProps> = ({
-  facilitiesData,
+  facilities,
   forwardedRef,
 }) => {
   const rows: AdminFacilitiesRowData[] =
-    facilitiesData &&
-    facilitiesData &&
-    facilitiesData.map((facility) => ({
-      name: facility.name,
+    facilities &&
+    facilities.map((facility) => ({
+      name: (
+        <>
+          {facility.name} /
+          <br />
+          {facility.building!.name}
+        </>
+      ),
       description: facility.description,
       status: facility.isActive ? "Active" : "Inactive",
       createdAt: (
