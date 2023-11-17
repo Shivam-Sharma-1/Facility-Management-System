@@ -67,7 +67,7 @@ body {
 
 .fc-daygrid-day-events {
   overflow-y: auto !important;
-  height: 100px !important;
+  height: 90px !important;
 }
 
 .fc-col-header-cell-cushion {
