@@ -26,7 +26,7 @@ const columns: readonly AdminBookingsColumnData[] = [
   { id: "cancellationstatus", label: "Cancellation Status", minWidth: 170 },
 ];
 
-const BookingsTable: FC<AdminBookingsTableProps> = (
+const GDBookingsTable: FC<AdminBookingsTableProps> = (
   bookingsData
 ): JSX.Element => {
   const [page, setPage] = useState<number>(0);
@@ -215,4 +215,4 @@ const BookingsTable: FC<AdminBookingsTableProps> = (
   );
 };
 
-export default BookingsTable;
+export default GDBookingsTable;
