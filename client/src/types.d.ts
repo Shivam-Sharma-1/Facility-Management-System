@@ -232,6 +232,11 @@ interface AdminBookingsTableProps {
   forwardedRef?: React.RefObject<HTMLDivElement>;
 }
 
+interface FMBookingsTableProps {
+  bookingsData: [{ bookings: ApprovalData[] }];
+  forwardedRef?: React.RefObject<HTMLDivElement>;
+}
+
 interface AdminFacilitiesTableProps {
   facilitiesData?: FacilityData[];
   facilities: FacilityData[];
@@ -420,6 +425,11 @@ type ApprovalData = {
   statusUpdateByGD: string | null;
 };
 
+type FMApprovalData = {
+  count: number | null;
+  facilities: [{ bookings: ApprovalData[] }];
+};
+
 type BookingCardProps = {
   bookingData: ApprovalData;
 };
@@ -439,6 +449,11 @@ type BookingCardData = {
 type AdminBookingsData = {
   facilities: FacilityData[];
   bookings: ApprovalData[];
+};
+
+type FMBookingsData = {
+  facilities: FacilityData[];
+  bookings: [{ bookings: ApprovalData[] }];
 };
 
 type AdminFacilitiesSubmitData = {
