@@ -21,24 +21,6 @@ export const getFacilities: RequestHandler = async (
 	next: NextFunction
 ) => {
 	try {
-		// const facilities = await prisma.facility.findMany({
-		// 	where: {
-		// 		isActive: true,
-		// 	},
-		// 	include: {
-		// 		facilityManager: {
-		// 			select: {
-		// 				user: {
-		// 					select: {
-		// 						name: true,
-		// 						employeeId: true,
-		// 					},
-		// 				},
-		// 			},
-		// 		},
-		// 	},
-		// });
-
 		const buildings = await prisma.building.findMany({
 			select: {
 				name: true,
@@ -138,15 +120,6 @@ export const getCount: RequestHandler = async (
 		}
 
 		if (user?.role === "FACILITY_MANAGER") {
-			// const facility = await prisma.facilityManager.findUnique({
-			// 	where: {
-			// 		userId: user.id,
-			// 	},
-			// 	select: {
-			// 		facilityId: true,
-			// 	},
-			// });
-
 			const approvalCount = await prisma.booking.count({
 				where: {
 					AND: [
@@ -231,6 +204,7 @@ export const getEmployeeDetails: RequestHandler = async (
 				employeeId: true,
 				role: true,
 				image: true,
+				isSignedIn: true,
 			},
 		});
 
@@ -238,7 +212,11 @@ export const getEmployeeDetails: RequestHandler = async (
 			return next(createHttpError.NotFound("User does not exist."));
 		}
 
-		req.session.userId = user.employeeId;
+		if (user.isSignedIn === false) {
+			return next(createHttpError.Unauthorized("User is not signed in."));
+		} else {
+			req.session.userId = user.employeeId;
+		}
 		res.status(200).json(user);
 	} catch (error) {
 		console.error(error);
