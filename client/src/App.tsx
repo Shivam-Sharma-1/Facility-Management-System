@@ -10,18 +10,21 @@ import LoginPage from "./pages/LoginPage";
 import FacilityPage from "./pages/FacilityPage";
 import { AuthProvider } from "./utils/auth";
 import { RequireAuth } from "./components/RequireAuth";
-import ApprovalsPage from "./pages/ApprovalsPage";
 import "@tanstack/react-query";
 import { AxiosError } from "axios";
 import MyBookingsPage from "./pages/MyBookingsPage";
-import BookingsPage from "./pages/BookingsPage";
 import AdminBookingsPage from "./pages/AdminBookingsPage";
 import AdminFacilitiesPage from "./pages/AdminFacilitiesPage";
 import Layout from "./components/Layout";
-import CancellationsPage from "./pages/CancellationsPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import PageNotFound from "./components/PageNotFound";
 import SetUser from "./pages/SetUser";
+import FMApprovalsPage from "./pages/FMApprovalsPage";
+import GDApprovalsPage from "./pages/GDApprovalsPage";
+import FMCancellationsPage from "./pages/FMCancellationPage";
+import GDCancellationsPage from "./pages/GDCancellationsPage";
+import FMBookingsPage from "./pages/FMBookingsPage";
+import GDBookingsPage from "./pages/GDBookingsPage";
 
 declare module "@tanstack/react-query" {
   interface Register {
@@ -78,7 +81,7 @@ const router = createBrowserRouter(
             path="gd"
             element={
               <RequireAuth GD={true} FM={false} noAdmin={true}>
-                <BookingsPage GD={true} FM={false} />
+                <GDBookingsPage />
               </RequireAuth>
             }
           />
@@ -86,7 +89,7 @@ const router = createBrowserRouter(
             path="fm"
             element={
               <RequireAuth GD={false} FM={true} noAdmin={true}>
-                <BookingsPage GD={false} FM={true} />
+                <FMBookingsPage />
               </RequireAuth>
             }
           />
@@ -98,7 +101,7 @@ const router = createBrowserRouter(
               path="gd"
               element={
                 <RequireAuth GD={true} FM={false} noAdmin={true}>
-                  <ApprovalsPage GD={true} FM={false} />
+                  <GDApprovalsPage />
                 </RequireAuth>
               }
             />
@@ -106,7 +109,7 @@ const router = createBrowserRouter(
               path="fm"
               element={
                 <RequireAuth GD={false} FM={true} noAdmin={true}>
-                  <ApprovalsPage GD={false} FM={true} />
+                  <FMApprovalsPage />
                 </RequireAuth>
               }
             />
@@ -117,7 +120,7 @@ const router = createBrowserRouter(
               path="gd"
               element={
                 <RequireAuth GD={true} FM={false} noAdmin={true}>
-                  <CancellationsPage GD={true} FM={false} />
+                  <GDCancellationsPage />
                 </RequireAuth>
               }
             />
@@ -125,7 +128,7 @@ const router = createBrowserRouter(
               path="fm"
               element={
                 <RequireAuth GD={false} FM={true} noAdmin={true}>
-                  <CancellationsPage GD={false} FM={true} />
+                  <FMCancellationsPage />
                 </RequireAuth>
               }
             />
