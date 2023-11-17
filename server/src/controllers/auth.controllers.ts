@@ -53,6 +53,7 @@ export const authLogin: RequestHandler = async (
 				},
 			});
 		}
+		res.status(200).send("Login successful.");
 	} catch (error) {
 		console.error(error);
 		return next(createHttpError.BadRequest("Please try again."));
