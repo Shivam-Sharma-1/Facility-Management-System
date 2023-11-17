@@ -315,22 +315,45 @@ export const getAllBookings: RequestHandler = async (
 	next: NextFunction
 ) => {
 	try {
-		const { month, facility } = req.query;
+		const { month, facility, year, user } = req.query;
 		let filterConditions = {};
 
-		if (month) {
-			// Parse the month parameter as a Date object
+		if (month && year) {
+			const startDate = new Date(`${year}-${month}-01`);
+			const endDate = new Date(`${year}-${month}-31`);
+			startDate.setFullYear(parseInt(year as string));
+			endDate.setFullYear(parseInt(year as string));
+
+			filterConditions = {
+				...filterConditions,
+				time: {
+					date: {
+						gte: startDate,
+						lt: endDate,
+					},
+				},
+			};
+		} else if (month) {
 			const startDate = new Date(`${month}-01`);
 			const endDate = new Date(`${month}-31`);
 			startDate.setFullYear(new Date().getFullYear());
 			endDate.setFullYear(new Date().getFullYear());
 
 			filterConditions = {
-				...filterConditions,
+				time: {
+					date: {
+						gte: startDate,
+						lt: endDate,
+					},
+				},
+			};
+		}
 
-				createdAt: {
-					gte: startDate,
-					lt: endDate,
+		if (user && !isNaN(Number(user))) {
+			filterConditions = {
+				...filterConditions,
+				requestedBy: {
+					employeeId: parseInt(user as string),
 				},
 			};
 		}
