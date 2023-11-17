@@ -473,6 +473,24 @@ export const getBookingsForGroup: RequestHandler = async (
 			};
 		}
 
+		const group = await prisma.group.findFirst({
+			where: {
+				groupDirector: {
+					user: {
+						employeeId,
+					},
+				},
+			},
+			select: {
+				users: {
+					select: {
+						employeeId: true,
+						name: true,
+					},
+				},
+			},
+		});
+
 		const bookings = await prisma.groupDirector.findFirst({
 			where: {
 				AND: [
@@ -575,7 +593,11 @@ export const getBookingsForGroup: RequestHandler = async (
 				name: true,
 			},
 		});
-		res.status(200).json({ facilities, bookings: bookings.group.bookings });
+		res.status(200).json({
+			users: group!.users,
+			facilities,
+			bookings: bookings.group.bookings,
+		});
 	} catch (error) {
 		console.error(error);
 		return next(

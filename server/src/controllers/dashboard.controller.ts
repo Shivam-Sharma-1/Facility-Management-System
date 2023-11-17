@@ -214,7 +214,7 @@ export const getEmployeeDetails: RequestHandler = async (
 
 		if (user.isSignedIn === false) {
 			return next(createHttpError.Unauthorized("User is not signed in."));
-		} else {
+		} else if (user.isSignedIn === true) {
 			req.session.userId = user.employeeId;
 		}
 		res.status(200).json(user);
