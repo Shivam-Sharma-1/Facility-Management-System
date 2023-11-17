@@ -144,7 +144,7 @@ const GDBookings: FC = (): JSX.Element => {
   };
 
   return (
-    <div className="w-full flex flex-col px-12 pt-8 gap-6">
+    <div className="w-full flex flex-col px-6 pt-8 gap-6">
       <div className="w-full flex justify-between items-center">
         <Typography variant="h3" component="h1">
           Employee bookings
