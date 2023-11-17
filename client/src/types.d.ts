@@ -222,7 +222,8 @@ interface AdminBookingsColumnData {
     | "admin"
     | "cancellationremark"
     | "cancellationstatus"
-    | "remark";
+    | "remark"
+    | "actions";
   label: string;
   minWidth?: number;
 }
@@ -436,8 +437,9 @@ type BookingCardProps = {
 
 type ApprovalType = {
   slug: string;
-  approved: boolean;
+  approved?: boolean;
   remark?: string;
+  employeeId?: number;
 };
 
 type BookingCardData = {
