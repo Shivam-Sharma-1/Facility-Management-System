@@ -356,7 +356,7 @@ const Navigation: FC = (): JSX.Element => {
             <Divider color="#0c0051" />
           </>
         )}
-
+        {/* 
         {role === "ADMIN" && (
           <>
             <NavLink to="/auth/reset-password">
@@ -452,7 +452,7 @@ const Navigation: FC = (): JSX.Element => {
             primary="Logout"
           />
         </ListItemButton>
-        <Divider color="#0c0051" />
+        <Divider color="#0c0051" /> */}
       </List>
     </div>
   );
