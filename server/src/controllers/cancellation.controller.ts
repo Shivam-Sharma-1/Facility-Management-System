@@ -57,21 +57,21 @@ export const requestCancellation: RequestHandler = async (
 			);
 		}
 
-		let candelData = {};
+		let cancelData = {};
 
 		if (
 			user?.role === Role.GROUP_DIRECTOR &&
 			booking?.status !== ApprovalStatus.APPROVED_BY_FM &&
 			booking?.status !== ApprovalStatus.APPROVED_BY_ADMIN
 		) {
-			candelData = {
+			cancelData = {
 				status: ApprovalStatus.CANCELLED,
 				cancelledAt: new Date().toISOString(),
 				cancellationStatus: CancellationStatus.APPROVED_BY_GD,
 				cancellationUpdateAtGD: new Date().toISOString(),
 			};
 		} else if (user?.role === Role.GROUP_DIRECTOR) {
-			candelData = {
+			cancelData = {
 				cancellationStatus: CancellationStatus.APPROVED_BY_GD,
 				cancellationUpdateAtGD: new Date().toISOString(),
 			};
@@ -81,19 +81,19 @@ export const requestCancellation: RequestHandler = async (
 				(f) => f.slug === booking.facility.slug
 			)
 		) {
-			candelData = {
+			cancelData = {
 				status: ApprovalStatus.CANCELLED,
 				cancelledAt: new Date().toISOString(),
 				cancellationStatus: CancellationStatus.APPROVED_BY_FM,
 				cancellationUpdateAtFM: new Date().toISOString(),
 			};
 		} else if (booking?.status === ApprovalStatus.PENDING) {
-			candelData = {
+			cancelData = {
 				status: ApprovalStatus.CANCELLED,
 				cancellationStatus: CancellationStatus.CANCELLED_BY_USER,
 			};
 		} else {
-			candelData = {
+			cancelData = {
 				cancellationStatus: CancellationStatus.PENDING,
 			};
 		}
@@ -103,7 +103,7 @@ export const requestCancellation: RequestHandler = async (
 				slug,
 			},
 			data: {
-				...candelData,
+				...cancelData,
 				cancellationRequestedAt: new Date().toISOString(),
 				cancellationRemark: remark,
 			},
