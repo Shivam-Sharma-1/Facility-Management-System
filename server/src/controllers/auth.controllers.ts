@@ -90,6 +90,7 @@ export const authLogout: RequestHandler = async (
 				},
 			},
 		});
+		res.status(200).send("Logout successful.");
 	} catch (error) {
 		console.error(error);
 		return next(
