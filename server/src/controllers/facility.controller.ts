@@ -279,13 +279,28 @@ export const getBookingsForFacility: RequestHandler = async (
 					},
 				},
 			};
-		} else if (month) {
+		} else if (month && !year) {
 			const startDate = new Date(`${month}-01`);
 			const endDate = new Date(`${month}-31`);
 			startDate.setFullYear(new Date().getFullYear());
 			endDate.setFullYear(new Date().getFullYear());
 
 			filterConditions = {
+				time: {
+					date: {
+						gte: startDate,
+						lt: endDate,
+					},
+				},
+			};
+		} else if (year && !month) {
+			const startDate = new Date(`01-01-${year}`);
+			const endDate = new Date(`12-31-${year}`);
+			startDate.setFullYear(parseInt(year as string));
+			endDate.setFullYear(parseInt(year as string));
+
+			filterConditions = {
+				...filterConditions,
 				time: {
 					date: {
 						gte: startDate,
@@ -436,7 +451,7 @@ export const getBookingsForGroup: RequestHandler = async (
 					},
 				},
 			};
-		} else if (month) {
+		} else if (month && !year) {
 			const startDate = new Date(`${month}-01`);
 			const endDate = new Date(`${month}-31`);
 			startDate.setFullYear(new Date().getFullYear());
@@ -445,6 +460,21 @@ export const getBookingsForGroup: RequestHandler = async (
 			filterConditions = {
 				...filterConditions,
 
+				time: {
+					date: {
+						gte: startDate,
+						lt: endDate,
+					},
+				},
+			};
+		} else if (year && !month) {
+			const startDate = new Date(`01-01-${year}`);
+			const endDate = new Date(`12-31-${year}`);
+			startDate.setFullYear(parseInt(year as string));
+			endDate.setFullYear(parseInt(year as string));
+
+			filterConditions = {
+				...filterConditions,
 				time: {
 					date: {
 						gte: startDate,
