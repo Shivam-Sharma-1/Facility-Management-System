@@ -421,24 +421,6 @@ export const getBookingsForGroup: RequestHandler = async (
 
 		let filterConditions = {};
 
-		if (month) {
-			const startDate = new Date(`${month}-01`);
-			const endDate = new Date(`${month}-31`);
-			startDate.setFullYear(new Date().getFullYear());
-			endDate.setFullYear(new Date().getFullYear());
-
-			filterConditions = {
-				...filterConditions,
-
-				time: {
-					date: {
-						gte: startDate,
-						lt: endDate,
-					},
-				},
-			};
-		}
-
 		if (month && year) {
 			const startDate = new Date(`${year}-${month}-01`);
 			const endDate = new Date(`${year}-${month}-31`);
@@ -447,6 +429,22 @@ export const getBookingsForGroup: RequestHandler = async (
 
 			filterConditions = {
 				...filterConditions,
+				time: {
+					date: {
+						gte: startDate,
+						lt: endDate,
+					},
+				},
+			};
+		} else if (month) {
+			const startDate = new Date(`${month}-01`);
+			const endDate = new Date(`${month}-31`);
+			startDate.setFullYear(new Date().getFullYear());
+			endDate.setFullYear(new Date().getFullYear());
+
+			filterConditions = {
+				...filterConditions,
+
 				time: {
 					date: {
 						gte: startDate,
