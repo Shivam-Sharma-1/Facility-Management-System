@@ -6,19 +6,14 @@ import axios from "axios";
 import CancellationCard from "./cards/CancellationCard";
 import ErrorComponent from "./Error";
 
-const CancellationStatus: FC<ApprovalStatusProps> = ({
-  GD,
-  FM,
-}): JSX.Element => {
+const GDCancellationStatus: FC = (): JSX.Element => {
   const [cancellationData, setCancellationData] = useState<ApprovalData[]>([]);
 
   const { data, isPending, isError, error } = useQuery<ApprovalData[]>({
-    queryKey: ["cancellations"],
+    queryKey: ["gdcancellations"],
     queryFn: async () => {
       const response = await axios.get<ApprovalData[]>(
-        `${import.meta.env.VITE_APP_SERVER_URL}/bookings/cancel/${
-          GD && !FM ? "gd" : "fm"
-        }`,
+        `${import.meta.env.VITE_APP_SERVER_URL}/bookings/cancel/gd`,
         {
           withCredentials: true,
         }
@@ -103,4 +98,4 @@ const CancellationStatus: FC<ApprovalStatusProps> = ({
   );
 };
 
-export default CancellationStatus;
+export default GDCancellationStatus;
