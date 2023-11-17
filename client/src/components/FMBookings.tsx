@@ -13,36 +13,25 @@ import { FC, useEffect, useRef, useState } from "react";
 
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import BookingsTable from "./tables/BookingsTable";
 import generatePDF, { Margin, Options } from "react-to-pdf";
 import DownloadIcon from "@mui/icons-material/Download";
-import BookingsReport from "../reports/BookingsReport";
 import ErrorComponent from "./Error";
+import { months } from "./constants/months";
+import FMBookingsTable from "./tables/FMBookingsTable";
+import FMBookingsReport from "../reports/FMBookingsReport";
 
-const months: string[] = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
-
-const Bookings: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
-  const [bookingsData, setBookingsData] = useState<AdminBookingsData>({
-    bookings: [],
+const FMBookings: FC = (): JSX.Element => {
+  const [bookingsData, setBookingsData] = useState<FMBookingsData>({
+    bookings: [
+      {
+        bookings: [],
+      },
+    ],
     facilities: [],
   });
   const [timeFilter, setTimeFilter] = useState<boolean>(false);
   const [selectValue, setSelectValue] = useState<string>("");
   const [enabled, setEnabled] = useState<boolean>(true);
-  const [slug, setSlug] = useState<string>("");
   const [selectedMonth, setSelectedMonth] = useState<string>("");
   const targetRef = useRef<HTMLDivElement>(null);
   const [isPrint, setIsPrint] = useState<boolean>(false);
@@ -50,15 +39,9 @@ const Bookings: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
   const d = new Date();
 
   const { data, isPending, refetch, isError, error } = useQuery({
-    queryKey: ["gd&fmbookings"],
+    queryKey: ["fmbookings"],
     queryFn: async () => {
-      let url = `${import.meta.env.VITE_APP_SERVER_URL}/facility/bookings/${
-        GD && !FM ? "gd" : "fm"
-      }`;
-
-      if (selectValue) {
-        url += `?facility=${slug}`;
-      }
+      let url = `${import.meta.env.VITE_APP_SERVER_URL}/facility/bookings/fm`;
 
       if (timeFilter) {
         if (selectValue) {
@@ -139,7 +122,7 @@ const Bookings: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
     <div className="w-full flex flex-col px-12 pt-8 gap-6">
       <div className="w-full flex justify-between">
         <Typography variant="h3" component="h1">
-          {GD && !FM ? "Employee" : "Facility"} bookings
+          Facility bookings
         </Typography>
       </div>
       <div className="w-full flex justify-center items-center">
@@ -188,30 +171,7 @@ const Bookings: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
               ))}
             </Select>
           </FormControl>
-          {GD && (
-            <FormControl size="small" className="w-[200px]">
-              <InputLabel>Select facility</InputLabel>
-              <Select
-                label="Select a facility"
-                size="small"
-                value={selectValue}
-                onChange={(e: SelectChangeEvent<string | null>) => {
-                  setSelectValue(e.target.value!);
-                  setSlug(
-                    bookingsData.facilities.find(
-                      (facility) => facility.name === e.target.value
-                    )!.slug
-                  );
-                }}
-              >
-                {bookingsData.facilities.map((facility) => (
-                  <MenuItem key={facility.name} value={facility.name}>
-                    {facility.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          )}
+
           <Button
             variant="contained"
             onClick={() => {
@@ -250,10 +210,10 @@ const Bookings: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
           Export
         </Button>
       </div>
-      {!isPending && <BookingsTable bookingsData={bookingsData.bookings} />}
+      {!isPending && <FMBookingsTable bookingsData={bookingsData.bookings} />}
       {isPrint && (
         <div className="mt-[100dvh]">
-          <BookingsReport
+          <FMBookingsReport
             bookingsData={bookingsData.bookings}
             forwardedRef={targetRef}
           />
@@ -263,4 +223,4 @@ const Bookings: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
   );
 };
 
-export default Bookings;
+export default FMBookings;
