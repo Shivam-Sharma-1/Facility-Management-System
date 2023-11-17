@@ -27,7 +27,7 @@ const FacilityCard: FC<FacilityCardProps> = ({
 }): JSX.Element => {
   return (
     <HtmlTooltip
-      placement="top"
+      placement="right"
       arrow
       TransitionComponent={Zoom}
       title={
