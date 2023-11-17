@@ -6,16 +6,15 @@ import axios from "axios";
 import ApprovalCard from "./cards/ApprovalCard";
 import ErrorComponent from "./Error";
 
-const ApprovalStatus: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
+const GDApprovalStatus: FC = (): JSX.Element => {
   const [approvalData, setApprovalData] = useState<ApprovalData[]>([]);
 
   const { data, isPending, isError, error } = useQuery<ApprovalData[]>({
-    queryKey: ["booking"],
+    queryKey: ["gdapprovals"],
     queryFn: async () => {
       const response = await axios.get<ApprovalData[]>(
-        `${import.meta.env.VITE_APP_SERVER_URL}/employee/approvals/${
-          GD && !FM ? "gd" : "fm"
-        }`,
+        `${import.meta.env.VITE_APP_SERVER_URL}/employee/approvals/gd
+        `,
         {
           withCredentials: true,
         }
@@ -92,4 +91,4 @@ const ApprovalStatus: FC<ApprovalStatusProps> = ({ GD, FM }): JSX.Element => {
   );
 };
 
-export default ApprovalStatus;
+export default GDApprovalStatus;
