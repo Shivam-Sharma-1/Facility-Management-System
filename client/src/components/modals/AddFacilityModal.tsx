@@ -1,7 +1,6 @@
 import { ChangeEvent, FC, FormEvent, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-
 import {
   Button,
   Fade,
@@ -16,6 +15,7 @@ import {
 } from "@mui/material";
 
 import "dayjs/locale/en-gb";
+
 import ErrorComponent from "../Error";
 
 const AddFacilityModal: FC<AddFacilityModalProps> = ({

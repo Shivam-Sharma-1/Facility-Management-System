@@ -6,9 +6,10 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import isoToTime from "../utils/isoToTime";
-import isoToDate from "../utils/isoToDate";
 import { Typography } from "@mui/material";
+
+import isoToDate from "../utils/isoToDate";
+import isoToTime from "../utils/isoToTime";
 import { useAuth } from "../hooks/useAuth";
 
 const columns: readonly AdminBookingsColumnData[] = [
@@ -29,7 +30,7 @@ const columns: readonly AdminBookingsColumnData[] = [
 const FMBookingsReport: FC<FMBookingsTableProps> = ({
   bookingsData,
   forwardedRef,
-}) => {
+}): JSX.Element => {
   const auth = useAuth();
 
   const rows: AdminBookingsRowData[] =

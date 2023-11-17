@@ -6,9 +6,10 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import { Typography } from "@mui/material";
+
 import isoToTime from "../utils/isoToTime";
 import isoToDate from "../utils/isoToDate";
-import { Typography } from "@mui/material";
 
 const columns: readonly AdminFacilitiesColumnData[] = [
   { id: "name", label: "Name/Building", minWidth: 145 },
@@ -22,7 +23,7 @@ const columns: readonly AdminFacilitiesColumnData[] = [
 const FacilitiesReport: FC<AdminFacilitiesTableProps> = ({
   facilities,
   forwardedRef,
-}) => {
+}): JSX.Element => {
   const rows: AdminFacilitiesRowData[] =
     facilities &&
     facilities.map((facility) => ({

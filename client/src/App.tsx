@@ -1,17 +1,18 @@
+import "@tanstack/react-query";
 import {
   createRoutesFromElements,
   createBrowserRouter,
   Route,
   RouterProvider,
 } from "react-router-dom";
+import { AxiosError } from "axios";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
 import DashboardPage from "./pages/DashboardPage";
 import LoginPage from "./pages/LoginPage";
 import FacilityPage from "./pages/FacilityPage";
 import { AuthProvider } from "./utils/auth";
 import { RequireAuth } from "./components/RequireAuth";
-import "@tanstack/react-query";
-import { AxiosError } from "axios";
 import MyBookingsPage from "./pages/MyBookingsPage";
 import AdminBookingsPage from "./pages/AdminBookingsPage";
 import AdminFacilitiesPage from "./pages/AdminFacilitiesPage";

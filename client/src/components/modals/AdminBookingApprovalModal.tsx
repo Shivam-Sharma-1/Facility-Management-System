@@ -1,8 +1,9 @@
-import { Button, Fade, Modal, Typography } from "@mui/material";
 import { FC, useState } from "react";
+import { Button, Fade, Modal, Typography } from "@mui/material";
 import ReportProblemOutlinedIcon from "@mui/icons-material/ReportProblemOutlined";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
+
 import ErrorComponent from "../Error";
 
 const AdminBookingApprovalModal: FC<AdminBookingsModalProps> = ({

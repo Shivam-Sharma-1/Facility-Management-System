@@ -31,7 +31,6 @@ const Calendar: FC = (): JSX.Element => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
   const [defaultDate, setDefaultDate] = useState<string | null>(null);
-
   const [bookingsData, setBookingsData] = useState<BookingNewDataProps[]>([]);
   const [eventInfo, setEventInfo] = useState<EventInfoProps>({
     title: "",
@@ -45,6 +44,7 @@ const Calendar: FC = (): JSX.Element => {
     statusUpdateByFM: null,
     statusUpdateByAdmin: null,
   });
+
   const location = useLocation();
   const slug = location.pathname.split("/")[2];
 
@@ -53,7 +53,7 @@ const Calendar: FC = (): JSX.Element => {
   };
 
   const { data, isPending, isError, error } = useQuery<BookingDataProps>({
-    queryKey: ["bookings"],
+    queryKey: ["calender"],
     queryFn: async () => {
       const response = await axios.get<BookingDataProps>(
         `${import.meta.env.VITE_APP_SERVER_URL}/facility/${slug}`,

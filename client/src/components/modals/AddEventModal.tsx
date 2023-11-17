@@ -3,7 +3,6 @@ import { useMutation } from "@tanstack/react-query";
 import { useLocation } from "react-router-dom";
 import dayjs, { Dayjs } from "dayjs";
 import axios from "axios";
-
 import {
   Button,
   Fade,
@@ -21,9 +20,10 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { useAuth } from "../../hooks/useAuth";
 
 import "dayjs/locale/en-gb";
+
+import { useAuth } from "../../hooks/useAuth";
 import isoToDate from "../../utils/isoToDate";
 import ErrorComponent from "../Error";
 
@@ -41,7 +41,6 @@ const AddEventModal: FC<AddEventModalProps> = ({
       message: "",
     },
   });
-  const auth = useAuth();
   const [formData, setFormData] = useState<AddEventDataProps>({
     title: "",
     purpose: "",
@@ -51,12 +50,14 @@ const AddEventModal: FC<AddEventModalProps> = ({
     slug: "",
     employeeId: null,
   });
-  const location = useLocation();
   const [validationError, setValidationError] = useState<string>("");
   const [availableEndTimes, setAvailableEndTimes] = useState<string[]>([]);
   const [selectedDate, setSelectedDate] = useState<Dayjs | null | undefined>(
     defaultDate ? dayjs(defaultDate) : null
   );
+
+  const auth = useAuth();
+  const location = useLocation();
   const slug = location.pathname.split("/")[2];
 
   const possibleTimeSlots: string[] = [];

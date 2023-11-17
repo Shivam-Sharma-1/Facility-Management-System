@@ -1,5 +1,6 @@
 import { FC } from "react";
 import { useRouteError } from "react-router-dom";
+
 import ErrorComponent from "./Error";
 
 const RouteError: FC = (): JSX.Element => {

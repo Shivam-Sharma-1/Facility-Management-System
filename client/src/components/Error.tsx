@@ -1,6 +1,7 @@
 import { FC } from "react";
 import ReportProblemOutlinedIcon from "@mui/icons-material/ReportProblemOutlined";
 import { Typography } from "@mui/material";
+
 import { useAuth } from "../hooks/useAuth";
 
 const ErrorComponent: FC<ErrorProps> = ({ status, message }): JSX.Element => {

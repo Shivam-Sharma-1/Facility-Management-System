@@ -1,8 +1,9 @@
+import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useNavigate, useSearchParams } from "react-router-dom";
+
 import { useAuth } from "../hooks/useAuth";
-import { useEffect } from "react";
 import ErrorComponent from "../components/Error";
 
 const SetUser = () => {
