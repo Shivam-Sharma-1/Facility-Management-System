@@ -25,6 +25,7 @@ import FMCancellationsPage from "./pages/FMCancellationPage";
 import GDCancellationsPage from "./pages/GDCancellationsPage";
 import FMBookingsPage from "./pages/FMBookingsPage";
 import GDBookingsPage from "./pages/GDBookingsPage";
+import RouteError from "./components/RouteError";
 
 declare module "@tanstack/react-query" {
   interface Register {
@@ -36,8 +37,12 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route path="/auth">
-        <Route index element={<SetUser />} />
-        <Route path="login" element={<LoginPage />} />
+        <Route index element={<SetUser />} errorElement={<RouteError />} />
+        <Route
+          path="login"
+          element={<LoginPage />}
+          errorElement={<RouteError />}
+        />
         <Route
           path="reset-password"
           element={
@@ -45,6 +50,7 @@ const router = createBrowserRouter(
               <ResetPasswordPage />
             </RequireAuth>
           }
+          errorElement={<RouteError />}
         />
       </Route>
 
@@ -55,6 +61,7 @@ const router = createBrowserRouter(
             <Layout />
           </RequireAuth>
         }
+        errorElement={<RouteError />}
       >
         <Route
           index
@@ -63,6 +70,7 @@ const router = createBrowserRouter(
               <DashboardPage />
             </RequireAuth>
           }
+          errorElement={<RouteError />}
         />
 
         <Route path="facility">
@@ -73,6 +81,7 @@ const router = createBrowserRouter(
                 <FacilityPage />
               </RequireAuth>
             }
+            errorElement={<RouteError />}
           />
         </Route>
 
@@ -84,6 +93,7 @@ const router = createBrowserRouter(
                 <GDBookingsPage />
               </RequireAuth>
             }
+            errorElement={<RouteError />}
           />
           <Route
             path="fm"
@@ -92,6 +102,7 @@ const router = createBrowserRouter(
                 <FMBookingsPage />
               </RequireAuth>
             }
+            errorElement={<RouteError />}
           />
         </Route>
 
@@ -104,6 +115,7 @@ const router = createBrowserRouter(
                   <GDApprovalsPage />
                 </RequireAuth>
               }
+              errorElement={<RouteError />}
             />
             <Route
               path="fm"
@@ -112,6 +124,7 @@ const router = createBrowserRouter(
                   <FMApprovalsPage />
                 </RequireAuth>
               }
+              errorElement={<RouteError />}
             />
           </Route>
 
@@ -123,6 +136,7 @@ const router = createBrowserRouter(
                   <GDCancellationsPage />
                 </RequireAuth>
               }
+              errorElement={<RouteError />}
             />
             <Route
               path="fm"
@@ -131,6 +145,7 @@ const router = createBrowserRouter(
                   <FMCancellationsPage />
                 </RequireAuth>
               }
+              errorElement={<RouteError />}
             />
           </Route>
 
@@ -141,6 +156,7 @@ const router = createBrowserRouter(
                 <MyBookingsPage />
               </RequireAuth>
             }
+            errorElement={<RouteError />}
           />
         </Route>
 
@@ -152,6 +168,7 @@ const router = createBrowserRouter(
                 <AdminBookingsPage />
               </RequireAuth>
             }
+            errorElement={<RouteError />}
           />
           <Route
             path="facilities"
@@ -160,6 +177,7 @@ const router = createBrowserRouter(
                 <AdminFacilitiesPage />
               </RequireAuth>
             }
+            errorElement={<RouteError />}
           />
         </Route>
       </Route>
