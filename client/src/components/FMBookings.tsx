@@ -7,9 +7,10 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
+  TextField,
   Typography,
 } from "@mui/material";
-import { FC, useEffect, useRef, useState } from "react";
+import { ChangeEvent, FC, useEffect, useRef, useState } from "react";
 
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -33,6 +34,8 @@ const FMBookings: FC = (): JSX.Element => {
   const [selectValue, setSelectValue] = useState<string>("");
   const [enabled, setEnabled] = useState<boolean>(true);
   const [selectedMonth, setSelectedMonth] = useState<string>("");
+  const [selectedYear, setSelectedYear] = useState<string>("");
+
   const targetRef = useRef<HTMLDivElement>(null);
   const [isPrint, setIsPrint] = useState<boolean>(false);
 
@@ -56,6 +59,14 @@ const FMBookings: FC = (): JSX.Element => {
           url += `&month=${months.indexOf(selectedMonth) + 1}`;
         } else {
           url += `?month=${months.indexOf(selectedMonth) + 1}`;
+        }
+      }
+
+      if (selectedYear) {
+        if (selectValue || timeFilter || selectedMonth) {
+          url += `&year=${selectedYear}`;
+        } else {
+          url += `?year=${selectedYear}`;
         }
       }
 
@@ -154,10 +165,11 @@ const FMBookings: FC = (): JSX.Element => {
               setTimeFilter(true);
             }}
           />
-          <FormControl size="small" className="w-[200px]">
+
+          <FormControl size="small" className="w-[150px]">
             <InputLabel>Select month</InputLabel>
             <Select
-              label="Select a month"
+              label="Select month"
               size="small"
               value={selectedMonth}
               onChange={(e: SelectChangeEvent<string | null>) => {
@@ -172,12 +184,27 @@ const FMBookings: FC = (): JSX.Element => {
             </Select>
           </FormControl>
 
+          <FormControl size="small" className="w-[150px]">
+            <TextField
+              id="year"
+              label="Enter year"
+              variant="outlined"
+              className="w-full transition-all duration-200 ease-in"
+              value={selectedYear}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                setSelectedYear(e.target.value);
+              }}
+              size="small"
+            />
+          </FormControl>
+
           <Button
             variant="contained"
             onClick={() => {
               setSelectValue("");
               setSelectedMonth("");
               setTimeFilter(false);
+              setSelectedYear("");
               enabled && setEnabled(false);
               refetch();
             }}

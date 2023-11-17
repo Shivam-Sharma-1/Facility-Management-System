@@ -7,9 +7,10 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
+  TextField,
   Typography,
 } from "@mui/material";
-import { FC, useEffect, useRef, useState } from "react";
+import { ChangeEvent, FC, useEffect, useRef, useState } from "react";
 import generatePDF, { Margin, Options } from "react-to-pdf";
 
 import AdminBookingsTable from "./tables/AdminBookingsTable";
@@ -30,8 +31,10 @@ const AdminBookings: FC = (): JSX.Element => {
   const [enabled, setEnabled] = useState<boolean>(true);
   const [slug, setSlug] = useState<string>("");
   const [selectedMonth, setSelectedMonth] = useState<string>("");
-  const targetRef = useRef<HTMLDivElement>(null);
+  const [selectedYear, setSelectedYear] = useState<string>("");
   const [isPrint, setIsPrint] = useState<boolean>(false);
+
+  const targetRef = useRef<HTMLDivElement>(null);
 
   const d = new Date();
 
@@ -57,6 +60,14 @@ const AdminBookings: FC = (): JSX.Element => {
           url += `&month=${months.indexOf(selectedMonth) + 1}`;
         } else {
           url += `?month=${months.indexOf(selectedMonth) + 1}`;
+        }
+      }
+
+      if (selectedYear) {
+        if (selectValue || timeFilter || selectedMonth) {
+          url += `&year=${selectedYear}`;
+        } else {
+          url += `?year=${selectedYear}`;
         }
       }
 
@@ -155,10 +166,10 @@ const AdminBookings: FC = (): JSX.Element => {
               setTimeFilter(true);
             }}
           />
-          <FormControl size="small" className="w-[200px]">
+          <FormControl size="small" className="w-[150px]">
             <InputLabel>Select month</InputLabel>
             <Select
-              label="Select a month"
+              label="Select month"
               size="small"
               value={selectedMonth}
               onChange={(e: SelectChangeEvent<string | null>) => {
@@ -172,10 +183,25 @@ const AdminBookings: FC = (): JSX.Element => {
               ))}
             </Select>
           </FormControl>
-          <FormControl size="small" className="w-[200px]">
+
+          <FormControl size="small" className="w-[150px]">
+            <TextField
+              id="year"
+              label="Enter year"
+              variant="outlined"
+              className="w-full transition-all duration-200 ease-in"
+              value={selectedYear}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                setSelectedYear(e.target.value);
+              }}
+              size="small"
+            />
+          </FormControl>
+
+          <FormControl size="small" className="w-[150px]">
             <InputLabel>Select facility</InputLabel>
             <Select
-              label="Select a facility"
+              label="Select facility"
               size="small"
               value={selectValue}
               onChange={(e: SelectChangeEvent<string | null>) => {
@@ -200,6 +226,7 @@ const AdminBookings: FC = (): JSX.Element => {
               setSelectValue("");
               setSelectedMonth("");
               setTimeFilter(false);
+              setSelectedYear("");
               enabled && setEnabled(false);
               refetch();
             }}

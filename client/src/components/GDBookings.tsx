@@ -7,9 +7,10 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
+  TextField,
   Typography,
 } from "@mui/material";
-import { FC, useEffect, useRef, useState } from "react";
+import { ChangeEvent, FC, useEffect, useRef, useState } from "react";
 
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -24,14 +25,18 @@ const GDBookings: FC = (): JSX.Element => {
   const [bookingsData, setBookingsData] = useState<AdminBookingsData>({
     bookings: [],
     facilities: [],
+    users: [],
   });
   const [timeFilter, setTimeFilter] = useState<boolean>(false);
   const [selectValue, setSelectValue] = useState<string>("");
   const [enabled, setEnabled] = useState<boolean>(true);
   const [slug, setSlug] = useState<string>("");
   const [selectedMonth, setSelectedMonth] = useState<string>("");
-  const targetRef = useRef<HTMLDivElement>(null);
+  const [selectedYear, setSelectedYear] = useState<string>("");
+  const [selectedUser, setSelectedUser] = useState<string>("");
   const [isPrint, setIsPrint] = useState<boolean>(false);
+
+  const targetRef = useRef<HTMLDivElement>(null);
 
   const d = new Date();
 
@@ -60,6 +65,23 @@ const GDBookings: FC = (): JSX.Element => {
         }
       }
 
+      if (selectedYear) {
+        if (selectValue || timeFilter || selectedMonth) {
+          url += `&year=${selectedYear}`;
+        } else {
+          url += `?year=${selectedYear}`;
+        }
+      }
+
+      if (selectedUser) {
+        if (selectValue || timeFilter || selectedMonth || selectedYear) {
+          url += `&user=${selectedUser}`;
+        } else {
+          url += `?user=${selectedUser}`;
+        }
+      }
+
+      console.log(url);
       const response = await axios.get(url, {
         withCredentials: true,
       });
@@ -78,6 +100,7 @@ const GDBookings: FC = (): JSX.Element => {
     if (!isPending) {
       setBookingsData(data);
     }
+    console.log(data);
   }, [data, isPending]);
 
   useEffect(() => {
@@ -121,10 +144,25 @@ const GDBookings: FC = (): JSX.Element => {
 
   return (
     <div className="w-full flex flex-col px-12 pt-8 gap-6">
-      <div className="w-full flex justify-between">
+      <div className="w-full flex justify-between items-center">
         <Typography variant="h3" component="h1">
           Employee bookings
         </Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          endIcon={<DownloadIcon sx={{ height: "20px", width: "20px" }} />}
+          sx={{ paddingX: "2em", height: "45px" }}
+          size="large"
+          onClick={() => {
+            setIsPrint(true);
+            setTimeout(() => {
+              generatePDF(targetRef, options);
+            }, 1000);
+          }}
+        >
+          Export
+        </Button>
       </div>
       <div className="w-full flex justify-center">
         <div className="w-full flex gap-4 flex-wrap">
@@ -155,10 +193,10 @@ const GDBookings: FC = (): JSX.Element => {
               setTimeFilter(true);
             }}
           />
-          <FormControl size="small" className="w-[200px]">
+          <FormControl size="small" className="w-[150px]">
             <InputLabel>Select month</InputLabel>
             <Select
-              label="Select a month"
+              label="Select month"
               size="small"
               value={selectedMonth}
               onChange={(e: SelectChangeEvent<string | null>) => {
@@ -173,10 +211,24 @@ const GDBookings: FC = (): JSX.Element => {
             </Select>
           </FormControl>
 
-          <FormControl size="small" className="w-[200px]">
+          <FormControl size="small" className="w-[150px]">
+            <TextField
+              id="year"
+              label="Enter year"
+              variant="outlined"
+              className="w-full transition-all duration-200 ease-in"
+              value={selectedYear}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                setSelectedYear(e.target.value);
+              }}
+              size="small"
+            />
+          </FormControl>
+
+          <FormControl size="small" className="w-[150px]">
             <InputLabel>Select facility</InputLabel>
             <Select
-              label="Select a facility"
+              label="Select facility"
               size="small"
               value={selectValue}
               onChange={(e: SelectChangeEvent<string | null>) => {
@@ -196,12 +248,32 @@ const GDBookings: FC = (): JSX.Element => {
             </Select>
           </FormControl>
 
+          <FormControl size="small" className="w-[150px]">
+            <InputLabel>Select user</InputLabel>
+            <Select
+              label="Select user"
+              size="small"
+              value={selectedUser}
+              onChange={(e: SelectChangeEvent<string | null>) => {
+                setSelectedUser(e.target.value!);
+              }}
+            >
+              {bookingsData.users?.map((user) => (
+                <MenuItem key={user.employeeId} value={user.employeeId}>
+                  {user.employeeId}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
           <Button
             variant="contained"
             onClick={() => {
               setSelectValue("");
               setSelectedMonth("");
               setTimeFilter(false);
+              setSelectedYear("");
+              setSelectedUser("");
               enabled && setEnabled(false);
               refetch();
             }}
@@ -218,21 +290,6 @@ const GDBookings: FC = (): JSX.Element => {
             Filter
           </Button>
         </div>
-        <Button
-          variant="contained"
-          color="primary"
-          endIcon={<DownloadIcon sx={{ height: "20px", width: "20px" }} />}
-          sx={{ paddingX: "2em", height: "45px" }}
-          size="large"
-          onClick={() => {
-            setIsPrint(true);
-            setTimeout(() => {
-              generatePDF(targetRef, options);
-            }, 1000);
-          }}
-        >
-          Export
-        </Button>
       </div>
       {!isPending && <BookingsTable bookingsData={bookingsData.bookings} />}
       {isPrint && (

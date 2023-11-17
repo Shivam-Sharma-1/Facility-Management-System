@@ -456,6 +456,7 @@ type BookingCardData = {
 type AdminBookingsData = {
   facilities: FacilityData[];
   bookings: ApprovalData[];
+  users?: User[];
 };
 
 type FMBookingsData = {
