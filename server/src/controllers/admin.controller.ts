@@ -135,12 +135,28 @@ export const deleteFacility: RequestHandler = async (
 	try {
 		const { slug } = req.body;
 		const time = new Date().toISOString();
-		const facilityManager = await prisma.facilityManager.findFirst({
+		const facility = await prisma.facility.findFirst({
 			where: {
-				facility: {},
+				slug,
 			},
 			select: {
-				userId: true,
+				building: {
+					select: {
+						name: true,
+					},
+				},
+				facilityManager: {
+					select: {
+						userId: true,
+					},
+				},
+			},
+		});
+		const userFMCount = await prisma.user.count({
+			where: {
+				facilityManager: {
+					userId: facility?.facilityManager?.userId,
+				},
 			},
 		});
 		const deletedFacility = await prisma.$transaction([
@@ -155,18 +171,32 @@ export const deleteFacility: RequestHandler = async (
 			}),
 			prisma.facilityManager.delete({
 				where: {
-					userId: facilityManager?.userId,
+					userId: facility?.facilityManager?.userId,
 				},
 			}),
-			prisma.user.update({
+			prisma.building.update({
 				where: {
-					id: facilityManager?.userId,
+					name: facility?.building?.name,
+				},
+				data: {
+					facility: {
+						disconnect: {
+							slug,
+						},
+					},
+				},
+			}),
+		]);
+		if (userFMCount < 1) {
+			await prisma.user.update({
+				where: {
+					id: facility?.facilityManager?.userId,
 				},
 				data: {
 					role: "USER",
 				},
-			}),
-		]);
+			});
+		}
 
 		if (!deletedFacility) {
 			return next(
