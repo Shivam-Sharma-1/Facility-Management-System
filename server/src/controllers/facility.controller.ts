@@ -209,6 +209,9 @@ export const addBookings: RequestHandler = async (
 				)
 			);
 		}
+		if (error.code === "P2025") {
+			return next(createHttpError.BadRequest(error.meta.cause));
+		}
 		return next(
 			createHttpError.InternalServerError(
 				"Something went wrong. Please try again."
@@ -232,7 +235,7 @@ export const getBookingsForFacility: RequestHandler = async (
 	try {
 		const employeeId = req.session.userId;
 
-		const { month } = req.query;
+		const { month, year, user } = req.query;
 
 		const facilityManager = await prisma.user.findFirst({
 			where: {
@@ -261,16 +264,42 @@ export const getBookingsForFacility: RequestHandler = async (
 
 		let filterConditions = {};
 
-		if (month) {
+		if (month && year) {
+			const startDate = new Date(`${year}-${month}-01`);
+			const endDate = new Date(`${year}-${month}-31`);
+			startDate.setFullYear(parseInt(year as string));
+			endDate.setFullYear(parseInt(year as string));
+
+			filterConditions = {
+				...filterConditions,
+				time: {
+					date: {
+						gte: startDate,
+						lt: endDate,
+					},
+				},
+			};
+		} else if (month) {
 			const startDate = new Date(`${month}-01`);
 			const endDate = new Date(`${month}-31`);
 			startDate.setFullYear(new Date().getFullYear());
 			endDate.setFullYear(new Date().getFullYear());
 
 			filterConditions = {
-				createdAt: {
-					gte: startDate,
-					lt: endDate,
+				time: {
+					date: {
+						gte: startDate,
+						lt: endDate,
+					},
+				},
+			};
+		}
+
+		if (user && !isNaN(Number(user))) {
+			filterConditions = {
+				...filterConditions,
+				requestedBy: {
+					employeeId: parseInt(user as string),
 				},
 			};
 		}
@@ -388,12 +417,11 @@ export const getBookingsForGroup: RequestHandler = async (
 ) => {
 	try {
 		const employeeId = req.session.userId;
-		const { month, facility } = req.query;
+		const { month, facility, user, year } = req.query;
 
 		let filterConditions = {};
 
 		if (month) {
-			// Parse the month parameter as a Date object
 			const startDate = new Date(`${month}-01`);
 			const endDate = new Date(`${month}-31`);
 			startDate.setFullYear(new Date().getFullYear());
@@ -402,23 +430,46 @@ export const getBookingsForGroup: RequestHandler = async (
 			filterConditions = {
 				...filterConditions,
 
-				createdAt: {
-					gte: startDate,
-					lt: endDate,
+				time: {
+					date: {
+						gte: startDate,
+						lt: endDate,
+					},
 				},
 			};
 		}
 
+		if (month && year) {
+			const startDate = new Date(`${year}-${month}-01`);
+			const endDate = new Date(`${year}-${month}-31`);
+			startDate.setFullYear(parseInt(year as string));
+			endDate.setFullYear(parseInt(year as string));
+
+			filterConditions = {
+				...filterConditions,
+				time: {
+					date: {
+						gte: startDate,
+						lt: endDate,
+					},
+				},
+			};
+		}
 		if (facility) {
 			filterConditions = {
-				AND: [
-					{ ...filterConditions },
-					{
-						facility: {
-							slug: facility,
-						},
-					},
-				],
+				...filterConditions,
+				facility: {
+					slug: facility as string,
+				},
+			};
+		}
+
+		if (user && !isNaN(Number(user))) {
+			filterConditions = {
+				...filterConditions,
+				requestedBy: {
+					employeeId: parseInt(user as string),
+				},
 			};
 		}
 
