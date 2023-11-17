@@ -6,8 +6,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgres"
-  url      = env("DATABASE_URL_DEV")
+  provider = "mysql"
+  url      = env("DATABASE_URL_MYSQL")
 }
 
 enum Role {
@@ -51,8 +51,8 @@ model User {
   id              String           @id @default(cuid())
   image           String?
   name            String
-  password        String?
   employeeId      Int              @unique
+  password        String?
   role            Role             @default(USER)
   bookings        Booking[]
   groupDirector   GroupDirector?
@@ -102,17 +102,26 @@ model BookingTime {
 }
 
 model Facility {
-  id              String           @id @default(cuid())
-  name            String
-  description     String           @db.Text
-  icon            String
-  slug            String           @unique
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  deletedAt       DateTime?
-  isActive        Boolean          @default(true)
-  facilityManager FacilityManager?
-  bookings        Booking[]
+  id                String           @id @default(cuid())
+  name              String
+  description       String           @db.Text
+  icon              String
+  slug              String           @unique
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  deletedAt         DateTime?
+  isActive          Boolean          @default(true)
+  facilityManager   FacilityManager? @relation(fields: [facilityManagerId], references: [id])
+  bookings          Booking[]
+  facilityManagerId String?
+  building          Building         @relation(fields: [buildingId], references: [id])
+  buildingId        String
+}
+
+model Building {
+  id       String     @id @default(cuid())
+  name     String     @unique
+  facility Facility[]
 }
 
 model GroupDirector {
@@ -133,10 +142,9 @@ model Group {
 }
 
 model FacilityManager {
-  id         String    @id @default(cuid())
-  user       User      @relation(fields: [userId], references: [id])
-  userId     String    @unique
-  facility   Facility  @relation(fields: [facilityId], references: [id])
-  facilityId String    @unique
-  bookings   Booking[]
+  id       String     @id @default(cuid())
+  user     User       @relation(fields: [userId], references: [id])
+  userId   String     @unique
+  facility Facility[]
+  bookings Booking[]
 }

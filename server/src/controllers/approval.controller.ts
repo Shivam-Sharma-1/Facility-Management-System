@@ -240,7 +240,7 @@ export const getAllFMApprovals: RequestHandler = async (
 				)
 			);
 		}
-		res.status(200).json(bookings.facility.bookings);
+		res.status(200).json(bookings.facility);
 	} catch (error) {
 		console.error(error);
 		return next(createHttpError.InternalServerError(error.message));
