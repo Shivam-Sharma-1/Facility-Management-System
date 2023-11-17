@@ -271,6 +271,44 @@ export const getAllCancellationRequestsFM: RequestHandler = async (
 ) => {
 	try {
 		const employeeId = req.session.userId;
+
+		let count = null;
+		const user = await prisma.user.findUnique({
+			where: {
+				employeeId,
+			},
+		});
+
+		if (!user) {
+			return next(createHttpError.NotFound("User does not exist."));
+		}
+		count = await prisma.booking.count({
+			where: {
+				AND: [
+					{
+						facility: {
+							facilityManager: {
+								userId: user.id,
+							},
+						},
+					},
+					{
+						AND: [
+							{
+								cancellationStatus:
+									CancellationStatus.APPROVED_BY_GD,
+							},
+							{
+								status:
+									ApprovalStatus.APPROVED_BY_ADMIN ||
+									ApprovalStatus.APPROVED_BY_FM,
+							},
+						],
+					},
+				],
+			},
+		});
+
 		const cancellationRequests = await prisma.facilityManager.findFirst({
 			where: {
 				user: {
@@ -348,7 +386,10 @@ export const getAllCancellationRequestsFM: RequestHandler = async (
 				)
 			);
 		}
-		res.status(200).json(cancellationRequests.facility);
+		res.status(200).json({
+			count,
+			facilities: cancellationRequests.facility,
+		});
 	} catch (error) {
 		console.error(error);
 		return next(
