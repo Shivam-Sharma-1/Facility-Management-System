@@ -78,7 +78,7 @@ const Navigation: FC = (): JSX.Element => {
       <div className="w-full flex justify-left px-4 pl-8 pt-4 pb-8 gap-8 flex-wrap">
         <Avatar
           sx={{ width: "80px", height: "80px" }}
-          src={auth?.user?.image}
+          src={"/" + auth?.user?.image}
           alt="avatar-image"
         />
         <div className="w-fit flex flex-col justify-center">
