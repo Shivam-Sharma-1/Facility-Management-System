@@ -36,10 +36,6 @@ export const requestCancellation: RequestHandler = async (
 			},
 		});
 
-		if (!user) {
-			return next(createHttpError.NotFound("User not found"));
-		}
-
 		const booking = await prisma.booking.findFirst({
 			where: {
 				slug,
@@ -471,6 +467,74 @@ export const approveCancellationRequestFM: RequestHandler = async (
 		return next(
 			createHttpError.InternalServerError(
 				"Unable to approve cancellation request"
+			)
+		);
+	}
+};
+
+/**
+ * @description Direct cancellation by Facility Manager
+ * @method POST
+ * @access private
+ * @returns {Booking}
+ */
+
+export const directCancellation: RequestHandler = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		const { slug, remark, employeeId } = req.body;
+
+		const user = await prisma.user.findUnique({
+			where: {
+				employeeId,
+			},
+			select: {
+				role: true,
+			},
+		});
+
+		const booking = await prisma.booking.findFirst({
+			where: {
+				slug,
+			},
+			include: {
+				facility: {
+					select: {
+						slug: true,
+					},
+				},
+			},
+		});
+
+		if (!user || !booking) {
+			return next(
+				createHttpError.InternalServerError(
+					"Unable to request cancellation"
+				)
+			);
+		}
+
+		const cancelledBooking = await prisma.booking.update({
+			where: {
+				slug,
+			},
+			data: {
+				status: ApprovalStatus.CANCELLED,
+				cancelledAt: new Date().toISOString(),
+				cancellationStatus: CancellationStatus.CANCELLED_BY_FM,
+				cancellationUpdateAtFM: new Date().toISOString(),
+				cancellationRemark: remark,
+			},
+		});
+		res.status(200).json(cancelledBooking);
+	} catch (error) {
+		console.error(error);
+		return next(
+			createHttpError.InternalServerError(
+				"Unable to request cancellation"
 			)
 		);
 	}

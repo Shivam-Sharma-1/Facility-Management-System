@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
 	approveCancellationRequestFM,
 	approveCancellationRequestGD,
+	directCancellation,
 	getAllCancellationRequestsFM,
 	getAllCancellationRequestsGD,
 	requestCancellation,
@@ -20,5 +21,8 @@ cancelRouter
 	.route("/cancel/fm")
 	.get(validateSession, getAllCancellationRequestsFM)
 	.post(validateSession, approveCancellationRequestFM);
+cancelRouter
+	.route("/cancel/facility")
+	.post(validateSession, directCancellation);
 
 export default cancelRouter;
