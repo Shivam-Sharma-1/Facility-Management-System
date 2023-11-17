@@ -9,6 +9,9 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import isoToDate from "../../utils/isoToDate";
 import isoToTime from "../../utils/isoToTime";
+import { Alert, IconButton, Snackbar } from "@mui/material";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import FMBookingCancelModal from "../modals/FMBookingCancelModal";
 
 const columns: readonly AdminBookingsColumnData[] = [
   { id: "title", label: "Title/Facility", minWidth: 140 },
@@ -24,6 +27,7 @@ const columns: readonly AdminBookingsColumnData[] = [
   { id: "cancellationremark", label: "Cancellation Remark", minWidth: 170 },
   { id: "status", label: "Approval Status", minWidth: 170 },
   { id: "cancellationstatus", label: "Cancellation Status", minWidth: 170 },
+  { id: "actions", label: "Actions", minWidth: 170 },
 ];
 
 const FMBookingsTable: FC<FMBookingsTableProps> = (
@@ -31,6 +35,9 @@ const FMBookingsTable: FC<FMBookingsTableProps> = (
 ): JSX.Element => {
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState<boolean>(false);
+  const [selectedSlug, setSelectedSlug] = useState<string>("");
 
   const rows: AdminBookingsRowData[] =
     bookingsData.bookingsData.length > 0
@@ -154,6 +161,21 @@ const FMBookingsTable: FC<FMBookingsTableProps> = (
                   {booking.cancellationStatus!.toLowerCase().replace(/_/g, " ")}
                 </p>
               ),
+              actions:
+                booking.status === "APPROVED_BY_FM" ||
+                booking.status === "APPROVED_BY_ADMIN" ? (
+                  <IconButton
+                    color="error"
+                    onClick={() => {
+                      setSelectedSlug(booking.slug);
+                      setIsOpen(true);
+                    }}
+                  >
+                    <HighlightOffIcon />
+                  </IconButton>
+                ) : (
+                  "No actions"
+                ),
             }));
             return [...accumulator, ...bookingsMapped];
           },
@@ -165,6 +187,10 @@ const FMBookingsTable: FC<FMBookingsTableProps> = (
     setPage(newPage);
   };
 
+  const handleCloseSnackbar = (): void => {
+    setIsSnackbarOpen(false);
+  };
+
   const handleChangeRowsPerPage = (event: ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
@@ -172,6 +198,14 @@ const FMBookingsTable: FC<FMBookingsTableProps> = (
 
   return (
     <Paper sx={{ width: "75vw", height: "75dvh", overflow: "hidden" }}>
+      {isOpen && (
+        <FMBookingCancelModal
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          slug={selectedSlug}
+          setOpenSnackbar={setIsSnackbarOpen}
+        />
+      )}
       <TableContainer sx={{ height: "90%", overflow: "auto" }}>
         <Table stickyHeader>
           <TableHead>
@@ -221,6 +255,19 @@ const FMBookingsTable: FC<FMBookingsTableProps> = (
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
+      <Snackbar
+        open={isSnackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          Booking cancelled successfully!
+        </Alert>
+      </Snackbar>
     </Paper>
   );
 };
