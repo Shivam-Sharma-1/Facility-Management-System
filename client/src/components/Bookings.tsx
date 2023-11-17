@@ -29,7 +29,7 @@ const months: string[] = [
   "July",
   "August",
   "September",
-  "Octomber",
+  "October",
   "November",
   "December",
 ];
