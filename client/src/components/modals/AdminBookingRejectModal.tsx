@@ -1,3 +1,4 @@
+import { ChangeEvent, FC, FormEvent, useState } from "react";
 import {
   Button,
   Fade,
@@ -7,10 +8,10 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { ChangeEvent, FC, FormEvent, useState } from "react";
 import ReportProblemOutlinedIcon from "@mui/icons-material/ReportProblemOutlined";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
+
 import ErrorComponent from "../Error";
 
 const AdminBookingRejectModal: FC<AdminBookingsModalProps> = ({

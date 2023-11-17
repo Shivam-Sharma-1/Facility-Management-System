@@ -1,3 +1,4 @@
+import { ChangeEvent, FC, useEffect, useRef, useState } from "react";
 import {
   Button,
   Chip,
@@ -10,12 +11,11 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { ChangeEvent, FC, useEffect, useRef, useState } from "react";
-
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import generatePDF, { Margin, Options } from "react-to-pdf";
 import DownloadIcon from "@mui/icons-material/Download";
+
 import ErrorComponent from "./Error";
 import { months } from "./constants/months";
 import FMBookingsTable from "./tables/FMBookingsTable";
@@ -35,9 +35,9 @@ const FMBookings: FC = (): JSX.Element => {
   const [enabled, setEnabled] = useState<boolean>(true);
   const [selectedMonth, setSelectedMonth] = useState<string>("");
   const [selectedYear, setSelectedYear] = useState<string>("");
+  const [isPrint, setIsPrint] = useState<boolean>(false);
 
   const targetRef = useRef<HTMLDivElement>(null);
-  const [isPrint, setIsPrint] = useState<boolean>(false);
 
   const d = new Date();
 
@@ -76,8 +76,9 @@ const FMBookings: FC = (): JSX.Element => {
       return response.data;
     },
     enabled: enabled,
-    refetchInterval: 20 * 1000,
+    refetchInterval: 5 * 1000,
     retry: 1,
+    gcTime: 0,
   });
 
   useEffect(() => {

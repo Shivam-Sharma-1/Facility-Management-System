@@ -2,7 +2,6 @@ import { FC, FormEvent, MouseEvent, useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
 import {
   Button,
   FormControl,
@@ -14,9 +13,10 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useAuth } from "../hooks/useAuth";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+
+import { useAuth } from "../hooks/useAuth";
 
 const LoginPage: FC = (): JSX.Element => {
   const [id, setId] = useState<string>("");

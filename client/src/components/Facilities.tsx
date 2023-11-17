@@ -1,10 +1,10 @@
+import { FC } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-import { FC } from "react";
 import axios from "axios";
+import { CircularProgress, Divider, Typography } from "@mui/material";
 
 import FacilityCard from "./cards/FacilityCard";
-import { CircularProgress, Divider, Typography } from "@mui/material";
 import ErrorComponent from "./Error";
 
 const Facilities: FC = (): JSX.Element => {
@@ -20,6 +20,7 @@ const Facilities: FC = (): JSX.Element => {
       return response.data;
     },
     retry: 1,
+    gcTime: 0,
   });
 
   if (isError) {

@@ -1,3 +1,4 @@
+import { ChangeEvent, FC, useEffect, useRef, useState } from "react";
 import {
   Button,
   Chip,
@@ -10,13 +11,12 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { ChangeEvent, FC, useEffect, useRef, useState } from "react";
-
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import BookingsTable from "./tables/GDBookingsTable";
 import generatePDF, { Margin, Options } from "react-to-pdf";
 import DownloadIcon from "@mui/icons-material/Download";
+
+import BookingsTable from "./tables/GDBookingsTable";
 import ErrorComponent from "./Error";
 import { months } from "./constants/months";
 import GDBookingsReport from "../reports/GDBookingsReport";
@@ -88,8 +88,9 @@ const GDBookings: FC = (): JSX.Element => {
       return response.data;
     },
     enabled: enabled,
-    refetchInterval: 20 * 1000,
+    refetchInterval: 5 * 1000,
     retry: 1,
+    gcTime: 0,
   });
 
   useEffect(() => {

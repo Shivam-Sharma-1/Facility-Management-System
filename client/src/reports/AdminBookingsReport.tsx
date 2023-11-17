@@ -6,9 +6,10 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import { Typography } from "@mui/material";
+
 import isoToTime from "../utils/isoToTime";
 import isoToDate from "../utils/isoToDate";
-import { Typography } from "@mui/material";
 
 const columns: readonly AdminBookingsColumnData[] = [
   { id: "title", label: "Title/Facility", minWidth: 140 },
@@ -28,7 +29,7 @@ const columns: readonly AdminBookingsColumnData[] = [
 const AdminBookingsReport: FC<AdminBookingsTableProps> = ({
   bookingsData,
   forwardedRef,
-}) => {
+}): JSX.Element => {
   const rows: AdminBookingsRowData[] =
     bookingsData &&
     bookingsData.map((booking) => ({

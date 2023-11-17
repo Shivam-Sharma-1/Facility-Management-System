@@ -1,5 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
 import { FC, useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { CircularProgress, Typography } from "@mui/material";
 import axios from "axios";
 

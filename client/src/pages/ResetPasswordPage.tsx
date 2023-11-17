@@ -1,3 +1,4 @@
+import { FC, FormEvent, MouseEvent, useEffect, useState } from "react";
 import {
   Button,
   FormControl,
@@ -8,11 +9,11 @@ import {
   OutlinedInput,
   Typography,
 } from "@mui/material";
-import { FC, FormEvent, MouseEvent, useEffect, useState } from "react";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
+
 import { useAuth } from "../hooks/useAuth";
 
 const ResetPasswordPage: FC = (): JSX.Element => {

@@ -1,6 +1,7 @@
+import { FC, useEffect, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { NavLink } from "react-router-dom";
 import axios from "axios";
-
 import {
   Avatar,
   Badge,
@@ -8,7 +9,6 @@ import {
   ListItemIcon,
   Typography,
 } from "@mui/material";
-import { useAuth } from "../hooks/useAuth";
 import BookmarksIcon from "@mui/icons-material/Bookmarks";
 import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
 import SummarizeIcon from "@mui/icons-material/Summarize";
@@ -18,11 +18,11 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import ApprovalIcon from "@mui/icons-material/Approval";
 import EventBusyIcon from "@mui/icons-material/EventBusy";
-import { NavLink } from "react-router-dom";
 import PasswordIcon from "@mui/icons-material/Password";
-import { FC, useEffect, useState } from "react";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+
 import ErrorComponent from "./Error";
+import { useAuth } from "../hooks/useAuth";
 
 const Navigation: FC = (): JSX.Element => {
   const auth = useAuth();
@@ -53,7 +53,8 @@ const Navigation: FC = (): JSX.Element => {
       );
       return response.data;
     },
-    refetchInterval: 20 * 1000,
+    refetchInterval: 5 * 1000,
+    gcTime: 0,
   });
 
   useEffect(() => {
