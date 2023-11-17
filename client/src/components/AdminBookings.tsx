@@ -18,21 +18,7 @@ import axios from "axios";
 import DownloadIcon from "@mui/icons-material/Download";
 import AdminBookingsReport from "../reports/AdminBookingsReport";
 import ErrorComponent from "./Error";
-
-const months: string[] = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
+import { months } from "./constants/months";
 
 const AdminBookings: FC = (): JSX.Element => {
   const [bookingsData, setBookingsData] = useState<AdminBookingsData>({
