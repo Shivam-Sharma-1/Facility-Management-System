@@ -377,11 +377,24 @@ export const approveCancellationRequestGD: RequestHandler = async (
 			? CancellationStatus.APPROVED_BY_GD
 			: CancellationStatus.REJECTED_BY_GD;
 
+		const bookingStatus = await prisma.booking.findUnique({
+			where: {
+				slug,
+			},
+			select: {
+				status: true,
+			},
+		});
+
 		const cancellationRequest = await prisma.booking.update({
 			where: {
 				slug,
 			},
 			data: {
+				status:
+					bookingStatus?.status === ApprovalStatus.APPROVED_BY_GD
+						? ApprovalStatus.CANCELLED
+						: bookingStatus?.status,
 				cancellationStatus: status,
 				cancellationUpdateAtGD: new Date().toISOString(),
 			},
