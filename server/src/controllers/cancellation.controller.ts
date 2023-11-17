@@ -96,21 +96,6 @@ export const requestCancellation: RequestHandler = async (
 				status: ApprovalStatus.CANCELLED,
 				cancellationStatus: CancellationStatus.CANCELLED_BY_USER,
 			};
-		} else if (
-			user?.role === Role.FACILITY_MANAGER &&
-			user.facilityManager?.facility.some(
-				(f) => f.slug === booking.facility.slug
-			) &&
-			(booking?.status === ApprovalStatus.APPROVED_BY_FM ||
-				booking?.status === ApprovalStatus.APPROVED_BY_ADMIN)
-		) {
-			cancelData = {
-				status: ApprovalStatus.CANCELLED,
-				remark,
-				cancelledAt: new Date().toISOString(),
-				cancellationStatus: CancellationStatus.CANCELLED_BY_FM,
-				cancellationUpdateAtFM: new Date().toISOString(),
-			};
 		} else {
 			cancelData = {
 				cancellationStatus: CancellationStatus.PENDING,
