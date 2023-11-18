@@ -36,6 +36,8 @@ export const getAllUserBookings: RequestHandler = async (
 				cancellationUpdateAtGD: true,
 				cancellationUpdateAtFM: true,
 				cancellationUpdateAtAdmin: true,
+				groupDirectorName: true,
+				facilityManagerName: true,
 				time: {
 					select: {
 						start: true,
@@ -224,6 +226,7 @@ export const getAllFMApprovals: RequestHandler = async (
 								purpose: true,
 								status: true,
 								createdAt: true,
+								groupDirectorName: true,
 								time: {
 									select: {
 										start: true,

@@ -127,6 +127,8 @@ export const requestCancellation: RequestHandler = async (
 				},
 				statusUpdateAtGD: true,
 				statusUpdateAtFM: true,
+				groupDirectorName: true,
+				facilityManagerName: true,
 				statusUpdateAtAdmin: true,
 				requestedBy: {
 					select: {
@@ -344,6 +346,7 @@ export const getAllCancellationRequestsFM: RequestHandler = async (
 								cancellationStatus: true,
 								cancellationUpdateAtGD: true,
 								cancellationUpdateAtFM: true,
+								groupDirectorName: true,
 								time: {
 									select: {
 										start: true,
