@@ -153,9 +153,14 @@ export const getCount: RequestHandler = async (
 										CancellationStatus.APPROVED_BY_GD,
 								},
 								{
-									status:
-										ApprovalStatus.APPROVED_BY_ADMIN ||
-										ApprovalStatus.APPROVED_BY_FM,
+									OR: [
+										{
+											status: ApprovalStatus.APPROVED_BY_FM,
+										},
+										{
+											status: ApprovalStatus.APPROVED_BY_ADMIN,
+										},
+									],
 								},
 							],
 						},
