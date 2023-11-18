@@ -128,6 +128,7 @@ export const addBookings: RequestHandler = async (
 				id: true,
 				groupId: true,
 				role: true,
+				name: true,
 				facilityManager: {
 					select: {
 						facility: {
@@ -145,6 +146,7 @@ export const addBookings: RequestHandler = async (
 		if (user?.role === Role.GROUP_DIRECTOR) {
 			updateData = {
 				status: "APPROVED_BY_GD",
+				groupDirectorName: user?.name,
 				statusUpdateAtGD: new Date().toISOString(),
 				statusUpdateByGD: {
 					connect: {
@@ -164,6 +166,7 @@ export const addBookings: RequestHandler = async (
 						userId: user.id,
 					},
 				},
+				facilityManagerName: user?.name,
 			};
 		}
 
