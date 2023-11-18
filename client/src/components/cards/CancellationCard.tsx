@@ -78,7 +78,7 @@ const CancellationCard: FC<ApprovalProps> = ({
 
   return (
     <Slide direction="up" in={true} mountOnEnter unmountOnExit>
-      <div className="justify-between items-center px-10 py-8 xl:w-[60%] lg:w-[80%] w-full h-full flex mt-6 rounded-md bg-bgPrimary shadow-cardHover border-0 border-l-[10px] border-primary border-solid">
+      <div className="justify-between items-center px-10 py-8 xl:w-[60%] lg:w-[80%] w-full h-full flex mt-6 rounded-md bg-white shadow-cardHover border-0 border-l-[10px] border-primary border-solid">
         <div className="flex flex-col justify-center w-full">
           <Typography
             variant="h6"
