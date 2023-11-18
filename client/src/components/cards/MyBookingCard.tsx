@@ -348,7 +348,7 @@ const MyBookingCard: FC<MyBookingCardProps> = ({
             severity="success"
             sx={{ width: "100%" }}
           >
-            Cancel requested successfully!
+            Cancellation requested successfully!
           </Alert>
         </Snackbar>
       </div>
