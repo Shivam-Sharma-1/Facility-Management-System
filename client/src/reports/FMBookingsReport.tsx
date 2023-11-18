@@ -58,7 +58,7 @@ const FMBookingsReport: FC<FMBookingsTableProps> = ({
                 {isoToDate(booking.createdAt).toString()}
               </>
             ),
-            gd: booking.statusUpdateByGD ? (
+            gd: booking.groupDirectorName ? (
               <p
                 className={
                   booking.status === "REJECTED_BY_GD"
@@ -71,7 +71,7 @@ const FMBookingsReport: FC<FMBookingsTableProps> = ({
                     : ""
                 }
               >
-                {booking.statusUpdateByGD?.user.name || null}
+                {booking.groupDirectorName || null}
                 <br />
                 {booking.statusUpdateAtGD
                   ? isoToTime(booking.statusUpdateAtGD!)
@@ -82,7 +82,7 @@ const FMBookingsReport: FC<FMBookingsTableProps> = ({
                   : null}
               </p>
             ) : null,
-            fm: booking.statusUpdateByFM ? (
+            fm: booking.facilityManagerName ? (
               <p
                 className={
                   booking.status === "REJECTED_BY_FM"
@@ -93,7 +93,7 @@ const FMBookingsReport: FC<FMBookingsTableProps> = ({
                     : ""
                 }
               >
-                {booking.statusUpdateByFM?.user.name || null}
+                {booking.facilityManagerName || null}
                 <br />
                 {booking.statusUpdateAtFM
                   ? isoToTime(booking.statusUpdateAtFM!)

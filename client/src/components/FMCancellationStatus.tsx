@@ -85,8 +85,8 @@ const FMCancellationStatus: FC = (): JSX.Element => {
                       : null
                   }
                   approvedByGD={
-                    cancellation.statusUpdateByGD
-                      ? cancellation.statusUpdateByGD!.user.name!
+                    cancellation.groupDirectorName
+                      ? cancellation.groupDirectorName!
                       : null
                   }
                   approvedAtGD={

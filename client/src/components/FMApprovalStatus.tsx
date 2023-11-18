@@ -81,8 +81,8 @@ const FMApprovalStatus: FC = (): JSX.Element => {
                       : null
                   }
                   approvedByGD={
-                    approval.statusUpdateByGD
-                      ? approval.statusUpdateByGD!.user.name!
+                    approval.groupDirectorName
+                      ? approval.groupDirectorName!
                       : null
                   }
                   approvedAtGD={

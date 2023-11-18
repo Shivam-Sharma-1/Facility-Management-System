@@ -98,16 +98,14 @@ const MyBookings = (): JSX.Element => {
                   booking.requestedBy.name ? booking.requestedBy.name! : null
                 }
                 approvedByGD={
-                  booking.statusUpdateByGD
-                    ? booking.statusUpdateByGD!.user.name!
-                    : null
+                  booking.groupDirectorName ? booking.groupDirectorName! : null
                 }
                 approvedAtGD={
                   booking.statusUpdateAtGD ? booking.statusUpdateAtGD! : null
                 }
                 approvedByFM={
-                  booking.statusUpdateByFM
-                    ? booking.statusUpdateByFM!.user.name!
+                  booking.facilityManagerName
+                    ? booking.facilityManagerName!
                     : null
                 }
                 approvedAtFM={

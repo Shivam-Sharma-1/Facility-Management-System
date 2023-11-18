@@ -394,6 +394,8 @@ type ApprovalData = {
   createdAt: string;
   remark: string;
   status: string;
+  facilityManagerName: string | null;
+  groupDirectorName: string | null;
   cancellationStatus?: string;
   cancellationRequestedAt?: string | null;
   cancellationRemark?: string;
