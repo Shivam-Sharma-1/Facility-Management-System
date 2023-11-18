@@ -400,6 +400,9 @@ export const getBookingsForFacility: RequestHandler = async (
 									},
 								},
 							},
+							orderBy: {
+								createdAt: "desc", //latest first
+							},
 						},
 					},
 				},
@@ -602,6 +605,9 @@ export const getBookingsForGroup: RequestHandler = async (
 										slug: true,
 									},
 								},
+							},
+							orderBy: {
+								createdAt: "desc", //latest first
 							},
 						},
 					},

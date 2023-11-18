@@ -6,8 +6,8 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL_MYSQL")
+  provider = "postgres"
+  url      = env("DATABASE_URL_DEV")
 }
 
 enum Role {
@@ -53,7 +53,6 @@ model User {
   image           String?
   name            String
   employeeId      Int              @unique
-  password        String?
   role            Role             @default(USER)
   isSignedIn      Boolean          @default(false)
   bookings        Booking[]
