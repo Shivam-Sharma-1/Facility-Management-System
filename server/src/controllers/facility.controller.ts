@@ -358,6 +358,8 @@ export const getBookingsForFacility: RequestHandler = async (
 								cancellationUpdateAtGD: true,
 								cancellationUpdateAtFM: true,
 								cancellationUpdateAtAdmin: true,
+								groupDirectorName: true,
+								facilityManagerName: true,
 								statusUpdateByGD: {
 									select: {
 										user: {
@@ -559,6 +561,8 @@ export const getBookingsForGroup: RequestHandler = async (
 								cancellationUpdateAtGD: true,
 								cancellationUpdateAtFM: true,
 								cancellationUpdateAtAdmin: true,
+								groupDirectorName: true,
+								facilityManagerName: true,
 								statusUpdateByGD: {
 									select: {
 										user: {
