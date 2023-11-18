@@ -11,20 +11,21 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import generatePDF, { Margin, Options } from "react-to-pdf";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import generatePDF, { Margin, Options } from "react-to-pdf";
 import DownloadIcon from "@mui/icons-material/Download";
 
-import AdminBookingsTable from "./tables/AdminBookingsTable";
-import AdminBookingsReport from "../reports/AdminBookingsReport";
+import BookingsTable from "./tables/GDBookingsTable";
 import ErrorComponent from "./Error";
 import { months } from "./constants/months";
+import GDBookingsReport from "../reports/GDBookingsReport";
 
-const AdminBookings: FC = (): JSX.Element => {
+const GDBookings: FC = (): JSX.Element => {
   const [bookingsData, setBookingsData] = useState<AdminBookingsData>({
     bookings: [],
     facilities: [],
+    users: [],
   });
   const [timeFilter, setTimeFilter] = useState<boolean>(false);
   const [selectValue, setSelectValue] = useState<string>("");
@@ -32,6 +33,7 @@ const AdminBookings: FC = (): JSX.Element => {
   const [slug, setSlug] = useState<string>("");
   const [selectedMonth, setSelectedMonth] = useState<string>("");
   const [selectedYear, setSelectedYear] = useState<string>("");
+  const [selectedUser, setSelectedUser] = useState<string>("");
   const [isPrint, setIsPrint] = useState<boolean>(false);
 
   const targetRef = useRef<HTMLDivElement>(null);
@@ -39,9 +41,9 @@ const AdminBookings: FC = (): JSX.Element => {
   const d = new Date();
 
   const { data, isPending, refetch, isError, error } = useQuery({
-    queryKey: ["adminbookings"],
+    queryKey: ["gdbookings"],
     queryFn: async () => {
-      let url = `${import.meta.env.VITE_APP_SERVER_URL}/admin/bookings`;
+      let url = `${import.meta.env.VITE_APP_SERVER_URL}/facility/bookings/gd`;
 
       if (selectValue) {
         url += `?facility=${slug}`;
@@ -71,6 +73,15 @@ const AdminBookings: FC = (): JSX.Element => {
         }
       }
 
+      if (selectedUser) {
+        if (selectValue || timeFilter || selectedMonth || selectedYear) {
+          url += `&user=${selectedUser}`;
+        } else {
+          url += `?user=${selectedUser}`;
+        }
+      }
+
+      console.log(url);
       const response = await axios.get(url, {
         withCredentials: true,
       });
@@ -90,6 +101,7 @@ const AdminBookings: FC = (): JSX.Element => {
     if (!isPending) {
       setBookingsData(data);
     }
+    console.log(data);
   }, [data, isPending]);
 
   useEffect(() => {
@@ -124,7 +136,7 @@ const AdminBookings: FC = (): JSX.Element => {
     );
 
   const options: Options = {
-    filename: "admin-bookings-report.pdf",
+    filename: "bookings-report.pdf",
     page: {
       orientation: "landscape",
       margin: Margin.SMALL,
@@ -132,11 +144,26 @@ const AdminBookings: FC = (): JSX.Element => {
   };
 
   return (
-    <div className="w-full flex flex-col px-6 pt-8 gap-6 overflow-hidden">
-      <div className="w-full flex justify-between">
+    <div className="w-full flex flex-col px-6 pt-8 gap-6">
+      <div className="w-full flex justify-between items-center">
         <Typography variant="h3" component="h1">
-          Manage bookings
+          Employee bookings
         </Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          endIcon={<DownloadIcon sx={{ height: "20px", width: "20px" }} />}
+          sx={{ paddingX: "2em", height: "45px" }}
+          size="large"
+          onClick={() => {
+            setIsPrint(true);
+            setTimeout(() => {
+              generatePDF(targetRef, options);
+            }, 1000);
+          }}
+        >
+          Export
+        </Button>
       </div>
       <div className="w-full flex justify-center">
         <div className="w-full flex gap-4 flex-wrap">
@@ -221,6 +248,25 @@ const AdminBookings: FC = (): JSX.Element => {
               ))}
             </Select>
           </FormControl>
+
+          <FormControl size="small" className="w-[150px]">
+            <InputLabel>Select user</InputLabel>
+            <Select
+              label="Select user"
+              size="small"
+              value={selectedUser}
+              onChange={(e: SelectChangeEvent<string | null>) => {
+                setSelectedUser(e.target.value!);
+              }}
+            >
+              {bookingsData.users?.map((user) => (
+                <MenuItem key={user.employeeId} value={user.employeeId}>
+                  {user.employeeId}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
           <Button
             variant="contained"
             onClick={() => {
@@ -228,6 +274,7 @@ const AdminBookings: FC = (): JSX.Element => {
               setSelectedMonth("");
               setTimeFilter(false);
               setSelectedYear("");
+              setSelectedUser("");
               enabled && setEnabled(false);
               refetch();
             }}
@@ -244,29 +291,11 @@ const AdminBookings: FC = (): JSX.Element => {
             Filter
           </Button>
         </div>
-
-        <Button
-          variant="contained"
-          color="primary"
-          endIcon={<DownloadIcon sx={{ height: "20px", width: "20px" }} />}
-          sx={{ paddingX: "2em", height: "45px" }}
-          size="large"
-          onClick={() => {
-            setIsPrint(true);
-            setTimeout(() => {
-              generatePDF(targetRef, options);
-            }, 1000);
-          }}
-        >
-          Export
-        </Button>
       </div>
-      {!isPending && (
-        <AdminBookingsTable bookingsData={bookingsData.bookings} />
-      )}
+      {!isPending && <BookingsTable bookingsData={bookingsData.bookings} />}
       {isPrint && (
         <div className="mt-[100dvh]">
-          <AdminBookingsReport
+          <GDBookingsReport
             bookingsData={bookingsData.bookings}
             forwardedRef={targetRef}
           />
@@ -276,4 +305,4 @@ const AdminBookings: FC = (): JSX.Element => {
   );
 };
 
-export default AdminBookings;
+export default GDBookings;

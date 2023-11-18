@@ -6,9 +6,10 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import { Typography } from "@mui/material";
+
 import isoToTime from "../utils/isoToTime";
 import isoToDate from "../utils/isoToDate";
-import { Typography } from "@mui/material";
 import { useAuth } from "../hooks/useAuth";
 
 const columns: readonly AdminBookingsColumnData[] = [
@@ -26,10 +27,10 @@ const columns: readonly AdminBookingsColumnData[] = [
   { id: "status", label: "Approval Status", minWidth: 170 },
   { id: "cancellationstatus", label: "Cancellation Status", minWidth: 170 },
 ];
-const BookingsReport: FC<AdminBookingsTableProps> = ({
+const GDBookingsReport: FC<AdminBookingsTableProps> = ({
   bookingsData,
   forwardedRef,
-}) => {
+}): JSX.Element => {
   const auth = useAuth();
 
   const rows: AdminBookingsRowData[] =
@@ -213,4 +214,4 @@ const BookingsReport: FC<AdminBookingsTableProps> = ({
   );
 };
 
-export default BookingsReport;
+export default GDBookingsReport;

@@ -7,6 +7,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
+
 import isoToDate from "../../utils/isoToDate";
 import isoToTime from "../../utils/isoToTime";
 
@@ -26,7 +27,7 @@ const columns: readonly AdminBookingsColumnData[] = [
   { id: "cancellationstatus", label: "Cancellation Status", minWidth: 170 },
 ];
 
-const BookingsTable: FC<AdminBookingsTableProps> = (
+const GDBookingsTable: FC<AdminBookingsTableProps> = (
   bookingsData
 ): JSX.Element => {
   const [page, setPage] = useState<number>(0);
@@ -215,4 +216,4 @@ const BookingsTable: FC<AdminBookingsTableProps> = (
   );
 };
 
-export default BookingsTable;
+export default GDBookingsTable;

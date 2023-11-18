@@ -222,13 +222,19 @@ interface AdminBookingsColumnData {
     | "admin"
     | "cancellationremark"
     | "cancellationstatus"
-    | "remark";
+    | "remark"
+    | "actions";
   label: string;
   minWidth?: number;
 }
 
 interface AdminBookingsTableProps {
   bookingsData: ApprovalData[];
+  forwardedRef?: React.RefObject<HTMLDivElement>;
+}
+
+interface FMBookingsTableProps {
+  bookingsData: [{ bookings: ApprovalData[] }];
   forwardedRef?: React.RefObject<HTMLDivElement>;
 }
 
@@ -340,6 +346,11 @@ interface NavigationProps {
   cancellationCount: number;
 }
 
+interface RouteError {
+  status: number;
+  message: string;
+}
+
 // ----------TYPES-----------
 
 type FacilityData = {
@@ -420,14 +431,20 @@ type ApprovalData = {
   statusUpdateByGD: string | null;
 };
 
+type FMApprovalData = {
+  count: number | null;
+  facilities: [{ bookings: ApprovalData[] }];
+};
+
 type BookingCardProps = {
   bookingData: ApprovalData;
 };
 
 type ApprovalType = {
   slug: string;
-  approved: boolean;
+  approved?: boolean;
   remark?: string;
+  employeeId?: number;
 };
 
 type BookingCardData = {
@@ -439,6 +456,12 @@ type BookingCardData = {
 type AdminBookingsData = {
   facilities: FacilityData[];
   bookings: ApprovalData[];
+  users?: User[];
+};
+
+type FMBookingsData = {
+  facilities: FacilityData[];
+  bookings: [{ bookings: ApprovalData[] }];
 };
 
 type AdminFacilitiesSubmitData = {

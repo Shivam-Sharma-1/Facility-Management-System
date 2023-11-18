@@ -1,27 +1,32 @@
+import "@tanstack/react-query";
 import {
   createRoutesFromElements,
   createBrowserRouter,
   Route,
   RouterProvider,
 } from "react-router-dom";
+import { AxiosError } from "axios";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
 import DashboardPage from "./pages/DashboardPage";
 import LoginPage from "./pages/LoginPage";
 import FacilityPage from "./pages/FacilityPage";
 import { AuthProvider } from "./utils/auth";
 import { RequireAuth } from "./components/RequireAuth";
-import ApprovalsPage from "./pages/ApprovalsPage";
-import "@tanstack/react-query";
-import { AxiosError } from "axios";
 import MyBookingsPage from "./pages/MyBookingsPage";
-import BookingsPage from "./pages/BookingsPage";
 import AdminBookingsPage from "./pages/AdminBookingsPage";
 import AdminFacilitiesPage from "./pages/AdminFacilitiesPage";
 import Layout from "./components/Layout";
-import CancellationsPage from "./pages/CancellationsPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import PageNotFound from "./components/PageNotFound";
 import SetUser from "./pages/SetUser";
+import FMApprovalsPage from "./pages/FMApprovalsPage";
+import GDApprovalsPage from "./pages/GDApprovalsPage";
+import FMCancellationsPage from "./pages/FMCancellationPage";
+import GDCancellationsPage from "./pages/GDCancellationsPage";
+import FMBookingsPage from "./pages/FMBookingsPage";
+import GDBookingsPage from "./pages/GDBookingsPage";
+import RouteError from "./components/RouteError";
 
 declare module "@tanstack/react-query" {
   interface Register {
@@ -33,8 +38,12 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route path="/auth">
-        <Route index element={<SetUser />} />
-        <Route path="login" element={<LoginPage />} />
+        <Route index element={<SetUser />} errorElement={<RouteError />} />
+        <Route
+          path="login"
+          element={<LoginPage />}
+          errorElement={<RouteError />}
+        />
         <Route
           path="reset-password"
           element={
@@ -42,6 +51,7 @@ const router = createBrowserRouter(
               <ResetPasswordPage />
             </RequireAuth>
           }
+          errorElement={<RouteError />}
         />
       </Route>
 
@@ -52,6 +62,7 @@ const router = createBrowserRouter(
             <Layout />
           </RequireAuth>
         }
+        errorElement={<RouteError />}
       >
         <Route
           index
@@ -60,6 +71,7 @@ const router = createBrowserRouter(
               <DashboardPage />
             </RequireAuth>
           }
+          errorElement={<RouteError />}
         />
 
         <Route path="facility">
@@ -70,6 +82,7 @@ const router = createBrowserRouter(
                 <FacilityPage />
               </RequireAuth>
             }
+            errorElement={<RouteError />}
           />
         </Route>
 
@@ -78,17 +91,19 @@ const router = createBrowserRouter(
             path="gd"
             element={
               <RequireAuth GD={true} FM={false} noAdmin={true}>
-                <BookingsPage GD={true} FM={false} />
+                <GDBookingsPage />
               </RequireAuth>
             }
+            errorElement={<RouteError />}
           />
           <Route
             path="fm"
             element={
               <RequireAuth GD={false} FM={true} noAdmin={true}>
-                <BookingsPage GD={false} FM={true} />
+                <FMBookingsPage />
               </RequireAuth>
             }
+            errorElement={<RouteError />}
           />
         </Route>
 
@@ -98,17 +113,19 @@ const router = createBrowserRouter(
               path="gd"
               element={
                 <RequireAuth GD={true} FM={false} noAdmin={true}>
-                  <ApprovalsPage GD={true} FM={false} />
+                  <GDApprovalsPage />
                 </RequireAuth>
               }
+              errorElement={<RouteError />}
             />
             <Route
               path="fm"
               element={
                 <RequireAuth GD={false} FM={true} noAdmin={true}>
-                  <ApprovalsPage GD={false} FM={true} />
+                  <FMApprovalsPage />
                 </RequireAuth>
               }
+              errorElement={<RouteError />}
             />
           </Route>
 
@@ -117,17 +134,19 @@ const router = createBrowserRouter(
               path="gd"
               element={
                 <RequireAuth GD={true} FM={false} noAdmin={true}>
-                  <CancellationsPage GD={true} FM={false} />
+                  <GDCancellationsPage />
                 </RequireAuth>
               }
+              errorElement={<RouteError />}
             />
             <Route
               path="fm"
               element={
                 <RequireAuth GD={false} FM={true} noAdmin={true}>
-                  <CancellationsPage GD={false} FM={true} />
+                  <FMCancellationsPage />
                 </RequireAuth>
               }
+              errorElement={<RouteError />}
             />
           </Route>
 
@@ -138,6 +157,7 @@ const router = createBrowserRouter(
                 <MyBookingsPage />
               </RequireAuth>
             }
+            errorElement={<RouteError />}
           />
         </Route>
 
@@ -149,6 +169,7 @@ const router = createBrowserRouter(
                 <AdminBookingsPage />
               </RequireAuth>
             }
+            errorElement={<RouteError />}
           />
           <Route
             path="facilities"
@@ -157,6 +178,7 @@ const router = createBrowserRouter(
                 <AdminFacilitiesPage />
               </RequireAuth>
             }
+            errorElement={<RouteError />}
           />
         </Route>
       </Route>

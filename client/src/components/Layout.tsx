@@ -1,6 +1,7 @@
-import { Outlet } from "react-router-dom";
-import Navigation from "./Navigation";
 import { FC } from "react";
+import { Outlet } from "react-router-dom";
+
+import Navigation from "./Navigation";
 
 const Layout: FC = (): JSX.Element => {
   return (

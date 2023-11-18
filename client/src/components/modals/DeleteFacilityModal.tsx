@@ -3,6 +3,7 @@ import { FC, useState } from "react";
 import ReportProblemOutlinedIcon from "@mui/icons-material/ReportProblemOutlined";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
+
 import ErrorComponent from "../Error";
 
 const DeleteFacilityModal: FC<EditFacilityModalProps> = ({

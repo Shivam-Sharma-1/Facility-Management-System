@@ -1,3 +1,4 @@
+import { FC, useEffect, useRef, useState } from "react";
 import {
   Alert,
   Button,
@@ -5,15 +6,14 @@ import {
   Snackbar,
   Typography,
 } from "@mui/material";
-import { FC, useEffect, useRef, useState } from "react";
 import InsertInvitationIcon from "@mui/icons-material/InsertInvitation";
-
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import AdminFacilitiesTable from "./tables/AdminFacilitiesTable";
-import AddFacilityModal from "./modals/AddFacilityModal";
 import generatePDF, { Margin, Options } from "react-to-pdf";
 import DownloadIcon from "@mui/icons-material/Download";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+
+import AdminFacilitiesTable from "./tables/AdminFacilitiesTable";
+import AddFacilityModal from "./modals/AddFacilityModal";
 import FacilitiesReport from "../reports/FacilitiesReport";
 import ErrorComponent from "./Error";
 
@@ -29,10 +29,10 @@ const AdminFacilities: FC = (): JSX.Element => {
     });
   const [isAddFacilityModalOpen, setIsAddFacilityModalOpen] =
     useState<boolean>(false);
-  const targetRef = useRef<HTMLDivElement>(null);
   const [isPrint, setIsPrint] = useState<boolean>(false);
-
   const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
+
+  const targetRef = useRef<HTMLDivElement>(null);
 
   const { data, isPending, isError, error } = useQuery({
     queryKey: ["adminfacilities"],
@@ -47,6 +47,7 @@ const AdminFacilities: FC = (): JSX.Element => {
     },
     refetchInterval: 5 * 1000,
     retry: 1,
+    gcTime: 0,
   });
 
   const handleCloseSnackbar = (): void => {
@@ -99,7 +100,7 @@ const AdminFacilities: FC = (): JSX.Element => {
   };
 
   return (
-    <div className="w-full flex flex-col px-12 pt-8 gap-6">
+    <div className="w-full flex flex-col px-6 pt-8 gap-6">
       {isAddFacilityModalOpen && (
         <AddFacilityModal
           isOpen={isAddFacilityModalOpen}

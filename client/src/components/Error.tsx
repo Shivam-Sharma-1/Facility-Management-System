@@ -1,6 +1,7 @@
 import { FC } from "react";
 import ReportProblemOutlinedIcon from "@mui/icons-material/ReportProblemOutlined";
 import { Typography } from "@mui/material";
+
 import { useAuth } from "../hooks/useAuth";
 
 const ErrorComponent: FC<ErrorProps> = ({ status, message }): JSX.Element => {
@@ -11,8 +12,8 @@ const ErrorComponent: FC<ErrorProps> = ({ status, message }): JSX.Element => {
   }
 
   return (
-    <div className="w-full">
-      <div className="w-full h-full min-h-screen flex-col flex items-center gap-6 mt-20">
+    <div className="w-full h-[100dvh] overflow-hidden">
+      <div className="w-full h-[100dvh] flex-col flex items-center gap-6 pt-20">
         <ReportProblemOutlinedIcon
           color="error"
           sx={{ width: "200px", height: "200px" }}

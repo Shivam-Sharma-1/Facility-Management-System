@@ -13,8 +13,9 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 
 import ErrorComponent from "../Error";
+import { useAuth } from "../../hooks/useAuth";
 
-const AdminBookingRejectModal: FC<AdminBookingsModalProps> = ({
+const FMBookingCancelModal: FC<AdminBookingsModalProps> = ({
   isOpen,
   setIsOpen,
   setOpenSnackbar,
@@ -28,10 +29,12 @@ const AdminBookingRejectModal: FC<AdminBookingsModalProps> = ({
     },
   });
 
+  const auth = useAuth();
+
   const mutation = useMutation({
     mutationFn: (data: ApprovalType) =>
       axios.post(
-        `${import.meta.env.VITE_APP_SERVER_URL}/admin/approval`,
+        `${import.meta.env.VITE_APP_SERVER_URL}/bookings/cancel/facility`,
         data,
         {
           withCredentials: true,
@@ -49,7 +52,11 @@ const AdminBookingRejectModal: FC<AdminBookingsModalProps> = ({
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    mutation.mutate({ slug: slug, approved: false, remark: remarkValue });
+    mutation.mutate({
+      slug: slug,
+      employeeId: auth?.user?.employeeId,
+      remark: remarkValue,
+    });
   };
 
   const handleCancel = (): void => {
@@ -83,7 +90,7 @@ const AdminBookingRejectModal: FC<AdminBookingsModalProps> = ({
           </Typography>
           <div className="w-full flex flex-col items-center justify-center">
             <Typography variant="h6" component="h2">
-              Do you really want to reject this booking?
+              Do you really want to cancel this booking?
             </Typography>
             <Typography variant="h6" component="h2">
               This process cannot be undone!
@@ -140,4 +147,4 @@ const AdminBookingRejectModal: FC<AdminBookingsModalProps> = ({
   );
 };
 
-export default AdminBookingRejectModal;
+export default FMBookingCancelModal;
