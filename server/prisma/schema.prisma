@@ -81,8 +81,10 @@ model Booking {
   cancellationRemark        String              @default("")
   statusUpdateByGD          GroupDirector?      @relation(references: [id], fields: [groupDirectorId])
   groupDirectorId           String?
+  groupDirectorName         String?
   statusUpdateByFM          FacilityManager?    @relation(references: [id], fields: [facilityManagerId])
   facilityManagerId         String?
+  facilityManagerName       String?
   statusUpdateAtGD          DateTime?
   statusUpdateAtFM          DateTime?
   statusUpdateAtAdmin       DateTime?

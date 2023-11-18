@@ -301,6 +301,7 @@ export const approveByGD: RequestHandler = async (
 			},
 			select: {
 				id: true,
+				name: true,
 			},
 		});
 		if (!user) {
@@ -318,6 +319,7 @@ export const approveByGD: RequestHandler = async (
 				status,
 				remark,
 				statusUpdateAtGD: time,
+				groupDirectorName: user?.name,
 				statusUpdateByGD: {
 					connect: {
 						userId: user?.id,
@@ -367,6 +369,7 @@ export const approveByFM: RequestHandler = async (
 			},
 			select: {
 				id: true,
+				name: true,
 			},
 		});
 		if (!user) {
@@ -384,6 +387,7 @@ export const approveByFM: RequestHandler = async (
 				status,
 				remark,
 				statusUpdateAtFM: time,
+				facilityManagerName: user?.name,
 				statusUpdateByFM: {
 					connect: {
 						userId: user?.id,
