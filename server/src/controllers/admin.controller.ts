@@ -398,6 +398,8 @@ export const getAllBookings: RequestHandler = async (
 				cancellationStatus: true,
 				cancellationRemark: true,
 				cancelledAt: true,
+				groupDirectorName: true,
+				facilityManagerName: true,
 				time: {
 					select: {
 						start: true,
