@@ -164,7 +164,9 @@ const MyBookingCard: FC<MyBookingCardProps> = ({
       <div
         className={`justify-between items-center px-10 py-8 xl:w-[70%] w-full h-full flex mt-6 rounded-md shadow-cardHover border-0 border-l-[10px] border-solid ${
           status === "PENDING" ||
-          (status === "APPROVED_BY_GD" && cancelStatus?.startsWith("REJECTED"))
+          (status === "APPROVED_BY_GD" &&
+            (cancelStatus?.startsWith("REJECTED") ||
+              cancelStatus === "NOT_REQUESTED"))
             ? "bg-blue-100 border-blue-600"
             : status.startsWith("APPROVED") &&
               !status.endsWith("GD") &&
