@@ -301,9 +301,14 @@ export const getAllCancellationRequestsFM: RequestHandler = async (
 									CancellationStatus.APPROVED_BY_GD,
 							},
 							{
-								status:
-									ApprovalStatus.APPROVED_BY_ADMIN ||
-									ApprovalStatus.APPROVED_BY_FM,
+								OR: [
+									{
+										status: ApprovalStatus.APPROVED_BY_ADMIN,
+									},
+									{
+										status: ApprovalStatus.APPROVED_BY_FM,
+									},
+								],
 							},
 						],
 					},
@@ -328,9 +333,14 @@ export const getAllCancellationRequestsFM: RequestHandler = async (
 											CancellationStatus.APPROVED_BY_GD,
 									},
 									{
-										status:
-											ApprovalStatus.APPROVED_BY_FM ||
-											ApprovalStatus.APPROVED_BY_ADMIN,
+										OR: [
+											{
+												status: ApprovalStatus.APPROVED_BY_ADMIN,
+											},
+											{
+												status: ApprovalStatus.APPROVED_BY_FM,
+											},
+										],
 									},
 								],
 							},
