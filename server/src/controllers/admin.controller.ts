@@ -85,16 +85,18 @@ export const addFacility: RequestHandler = async (
 							name: building,
 						},
 					},
-				},
-			}),
-			prisma.facilityManager.update({
-				where: {
-					userId: facilityManager?.id,
-				},
-				data: {
-					facility: {
-						connect: {
-							slug,
+					facilityManager: {
+						connectOrCreate: {
+							where: {
+								userId: facilityManager?.id,
+							},
+							create: {
+								user: {
+									connect: {
+										employeeId: facilityManagerId,
+									},
+								},
+							},
 						},
 					},
 				},
@@ -159,50 +161,65 @@ export const deleteFacility: RequestHandler = async (
 				},
 			},
 		});
-		const userFMCount = await prisma.user.count({
+		const userFMCount = await prisma.facility.count({
 			where: {
 				facilityManager: {
 					userId: facility?.facilityManager?.userId,
 				},
 			},
 		});
-		const deletedFacility = await prisma.$transaction([
-			prisma.facility.update({
-				where: {
-					slug,
-				},
-				data: {
-					isActive: false,
-					deletedAt: time,
-				},
-			}),
-			prisma.facilityManager.delete({
-				where: {
-					userId: facility?.facilityManager?.userId,
-				},
-			}),
-			prisma.building.update({
-				where: {
-					name: facility?.building?.name,
-				},
-				data: {
-					facility: {
-						disconnect: {
-							slug,
+
+		let deletedFacility;
+
+		if (userFMCount > 1) {
+			deletedFacility = await prisma.$transaction([
+				prisma.facility.update({
+					where: {
+						slug,
+					},
+					data: {
+						isActive: false,
+						deletedAt: time,
+					},
+				}),
+				prisma.facilityManager.update({
+					where: {
+						userId: facility?.facilityManager?.userId,
+					},
+					data: {
+						facility: {
+							disconnect: {
+								slug,
+							},
 						},
 					},
-				},
-			}),
-		]);
-		if (userFMCount < 1) {
-			await prisma.user.update({
-				where: {
-					id: facility?.facilityManager?.userId,
-				},
-				data: {
-					role: "USER",
-				},
-			});
+				}),
+			]);
+		} else {
+			deletedFacility = await prisma.$transaction([
+				prisma.facility.update({
+					where: {
+						slug,
+					},
+					data: {
+						isActive: false,
+						deletedAt: time,
+					},
+				}),
+				prisma.facilityManager.delete({
+					where: {
+						userId: facility?.facilityManager?.userId,
+					},
+				}),
+				prisma.user.update({
+					where: {
+						id: facility?.facilityManager?.userId,
+					},
+					data: {
+						role: "USER",
+					},
+				}),
+			]);
 		}
 
 		if (!deletedFacility) {
@@ -331,6 +348,15 @@ export const getAllBookings: RequestHandler = async (
 ) => {
 	try {
 		const { month, facility, year, user } = req.query;
+		const facilities = await prisma.facility.findMany({
+			where: {
+				isActive: true,
+			},
+			select: {
+				slug: true,
+				name: true,
+			},
+		});
 		let filterConditions = {};
 
 		if (month && year) {
@@ -392,6 +418,8 @@ export const getAllBookings: RequestHandler = async (
 						employeeId: parseInt(user as string),
 					},
 				};
+			} else if (!userExists) {
+				return res.status(200).json({ bookings: [], facilities });
 			}
 		}
 
@@ -468,15 +496,7 @@ export const getAllBookings: RequestHandler = async (
 				createdAt: "desc",
 			},
 		});
-		const facilities = await prisma.facility.findMany({
-			where: {
-				isActive: true,
-			},
-			select: {
-				slug: true,
-				name: true,
-			},
-		});
+
 		res.status(200).json({ facilities, bookings });
 	} catch (error) {
 		console.error(error.message);

@@ -337,24 +337,15 @@ export const getBookingsForFacility: RequestHandler = async (
 						employeeId: parseInt(user as string),
 					},
 				};
+			} else if (!userExists) {
+				return res
+					.status(200)
+					.json({
+						bookings: [],
+						facilities: facilityManager.facilityManager!.facility,
+					});
 			}
 		}
-
-		// const facilities = await prisma.facilityManager.findFirst({
-		// 	where: {
-		// 		id: facilityManager.facilityManager!.id,
-		// 	},
-		// 	select: {
-		// 		facility: {
-		// 			select: {
-		// 				name: true,
-		// 				slug: true,
-		// 			},
-		// 		},
-		// 	},
-		// });
-
-		// console.log(facilities);
 
 		const bookings = await prisma.facilityManager.findFirst({
 			where: {
