@@ -17,7 +17,7 @@ import generatePDF, { Options } from "react-to-pdf";
 import DownloadIcon from "@mui/icons-material/Download";
 
 import ErrorComponent from "./Error";
-import { months } from "./constants/months";
+import { months } from "../../constants/months";
 import FMBookingsTable from "./tables/FMBookingsTable";
 import FMBookingsReport from "../reports/FMBookingsReport";
 
