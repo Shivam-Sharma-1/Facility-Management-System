@@ -1,6 +1,5 @@
 import fs from "fs";
-import path from "path";
-import { createLogger, format, transports } from "winston";
+import { createLogger, format } from "winston";
 import DailyRotateFile from "winston-daily-rotate-file";
 
 const logDirectory = "logs"; // Define the logs directory
