@@ -18,7 +18,7 @@ import DownloadIcon from "@mui/icons-material/Download";
 
 import BookingsTable from "./tables/GDBookingsTable";
 import ErrorComponent from "./Error";
-import { months } from "./constants/months";
+import { months } from "../../constants/months";
 import GDBookingsReport from "../reports/GDBookingsReport";
 
 const GDBookings: FC = (): JSX.Element => {

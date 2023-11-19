@@ -19,7 +19,7 @@ import DownloadIcon from "@mui/icons-material/Download";
 import AdminBookingsTable from "./tables/AdminBookingsTable";
 import AdminBookingsReport from "../reports/AdminBookingsReport";
 import ErrorComponent from "./Error";
-import { months } from "./constants/months";
+import { months } from "../../constants/months";
 
 const AdminBookings: FC = (): JSX.Element => {
   const [bookingsData, setBookingsData] = useState<AdminBookingsData>({
