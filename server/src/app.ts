@@ -69,4 +69,15 @@ const startServer = () => {
 	});
 };
 
+process.on("unhandledRejection", (err: any) => {
+	console.error(err);
+	logger.error(err.message);
+	process.exit(1);
+});
+
+process.on("SIGINT", () => {
+	logger.info("SIGINT received, shutting down gracefully");
+	process.exit(0);
+});
+
 startServer();
