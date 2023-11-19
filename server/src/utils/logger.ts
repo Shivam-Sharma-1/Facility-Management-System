@@ -18,9 +18,9 @@ const logFormat = format.printf(({ level, message, timestamp }) => {
 const dailyRotateTransport = new DailyRotateFile({
 	dirname: logDirectory,
 	filename: "application-%DATE%.log",
-	datePattern: "YYYY-MM-DD-HH",
+	datePattern: "YYYY-MM-DD",
 	maxSize: "30k",
-	maxFiles: "7d",
+	maxFiles: "30d",
 });
 
 // Create a logger
