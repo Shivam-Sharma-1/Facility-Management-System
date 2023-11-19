@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import generatePDF, { Margin, Options } from "react-to-pdf";
+import generatePDF, { Options } from "react-to-pdf";
 import DownloadIcon from "@mui/icons-material/Download";
 
 import ErrorComponent from "./Error";
@@ -35,6 +35,8 @@ const FMBookings: FC = (): JSX.Element => {
   const [enabled, setEnabled] = useState<boolean>(true);
   const [selectedMonth, setSelectedMonth] = useState<string>("");
   const [selectedYear, setSelectedYear] = useState<string>("");
+  const [slug, setSlug] = useState<string>("");
+  const [selectedUser, setSelectedUser] = useState<string>("");
   const [isPrint, setIsPrint] = useState<boolean>(false);
 
   const targetRef = useRef<HTMLDivElement>(null);
@@ -45,6 +47,10 @@ const FMBookings: FC = (): JSX.Element => {
     queryKey: ["fmbookings"],
     queryFn: async () => {
       let url = `${import.meta.env.VITE_APP_SERVER_URL}/facility/bookings/fm`;
+
+      if (selectValue) {
+        url += `?facility=${slug}`;
+      }
 
       if (timeFilter) {
         if (selectValue) {
@@ -67,6 +73,14 @@ const FMBookings: FC = (): JSX.Element => {
           url += `&year=${selectedYear}`;
         } else {
           url += `?year=${selectedYear}`;
+        }
+      }
+
+      if (selectedUser) {
+        if (selectValue || timeFilter || selectedMonth || selectedYear) {
+          url += `&user=${selectedUser}`;
+        } else {
+          url += `?user=${selectedUser}`;
         }
       }
 
@@ -123,19 +137,33 @@ const FMBookings: FC = (): JSX.Element => {
     );
 
   const options: Options = {
-    filename: "bookings-report.pdf",
+    filename: "FM-bookings-report.pdf",
     page: {
       orientation: "landscape",
-      margin: Margin.SMALL,
     },
   };
 
   return (
     <div className="w-full flex flex-col px-6 pt-8 gap-6">
-      <div className="w-full flex justify-between">
+      <div className="w-full flex justify-between items-center">
         <Typography variant="h3" component="h1">
           Facility bookings
         </Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          endIcon={<DownloadIcon sx={{ height: "20px", width: "20px" }} />}
+          sx={{ paddingX: "2em", height: "45px" }}
+          size="large"
+          onClick={() => {
+            setIsPrint(true);
+            setTimeout(() => {
+              generatePDF(targetRef, options);
+            }, 1000);
+          }}
+        >
+          Export
+        </Button>
       </div>
       <div className="w-full flex justify-center">
         <div className="w-full flex gap-4 flex-wrap">
@@ -199,6 +227,43 @@ const FMBookings: FC = (): JSX.Element => {
             />
           </FormControl>
 
+          <FormControl size="small" className="w-[150px]">
+            <InputLabel>Select facility</InputLabel>
+            <Select
+              label="Select facility"
+              size="small"
+              value={selectValue}
+              onChange={(e: SelectChangeEvent<string | null>) => {
+                setSelectValue(e.target.value!);
+                setSlug(
+                  bookingsData.facilities.find(
+                    (facility) => facility.name === e.target.value
+                  )!.slug
+                );
+              }}
+            >
+              {bookingsData.facilities.map((facility) => (
+                <MenuItem key={facility.name} value={facility.name}>
+                  {facility.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <FormControl size="small" className="w-[170px]">
+            <TextField
+              id="user"
+              label="Enter employeeId"
+              variant="outlined"
+              className="w-full transition-all duration-200 ease-in"
+              value={selectedUser}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                setSelectedUser(e.target.value);
+              }}
+              size="small"
+            />
+          </FormControl>
+
           <Button
             variant="contained"
             onClick={() => {
@@ -206,6 +271,8 @@ const FMBookings: FC = (): JSX.Element => {
               setSelectedMonth("");
               setTimeFilter(false);
               setSelectedYear("");
+              setSlug("");
+              setSelectedUser("");
               enabled && setEnabled(false);
               refetch();
             }}
@@ -222,21 +289,6 @@ const FMBookings: FC = (): JSX.Element => {
             Filter
           </Button>
         </div>
-        <Button
-          variant="contained"
-          color="primary"
-          endIcon={<DownloadIcon sx={{ height: "20px", width: "20px" }} />}
-          sx={{ paddingX: "2em", height: "45px" }}
-          size="large"
-          onClick={() => {
-            setIsPrint(true);
-            setTimeout(() => {
-              generatePDF(targetRef, options);
-            }, 1000);
-          }}
-        >
-          Export
-        </Button>
       </div>
       {!isPending && <FMBookingsTable bookingsData={bookingsData.bookings} />}
       {isPrint && (

@@ -7,7 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import InsertInvitationIcon from "@mui/icons-material/InsertInvitation";
-import generatePDF, { Margin, Options } from "react-to-pdf";
+import generatePDF, { Options } from "react-to-pdf";
 import DownloadIcon from "@mui/icons-material/Download";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -95,7 +95,6 @@ const AdminFacilities: FC = (): JSX.Element => {
     filename: "admin-facilities-bookings-report.pdf",
     page: {
       orientation: "landscape",
-      margin: Margin.SMALL,
     },
   };
 

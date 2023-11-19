@@ -160,7 +160,7 @@ const FMBookingsReport: FC<FMBookingsTableProps> = ({
       : [];
 
   return (
-    <div className="w-full flex flex-col gap-4" ref={forwardedRef}>
+    <div className="w-full flex flex-col gap-4 px-1" ref={forwardedRef}>
       <div className="w-full flex justify-between items-center">
         <Typography variant="h6" component="h1">
           Bookings Report

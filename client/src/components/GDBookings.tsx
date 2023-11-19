@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import generatePDF, { Margin, Options } from "react-to-pdf";
+import generatePDF, { Options } from "react-to-pdf";
 import DownloadIcon from "@mui/icons-material/Download";
 
 import BookingsTable from "./tables/GDBookingsTable";
@@ -81,7 +81,6 @@ const GDBookings: FC = (): JSX.Element => {
         }
       }
 
-      console.log(url);
       const response = await axios.get(url, {
         withCredentials: true,
       });
@@ -101,7 +100,6 @@ const GDBookings: FC = (): JSX.Element => {
     if (!isPending) {
       setBookingsData(data);
     }
-    console.log(data);
   }, [data, isPending]);
 
   useEffect(() => {
@@ -139,7 +137,6 @@ const GDBookings: FC = (): JSX.Element => {
     filename: "bookings-report.pdf",
     page: {
       orientation: "landscape",
-      margin: Margin.SMALL,
     },
   };
 
