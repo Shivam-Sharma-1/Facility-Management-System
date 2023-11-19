@@ -143,6 +143,9 @@ const MyBookingCard: FC<MyBookingCardProps> = ({
       case "CANCELLED_BY_USER":
         setCancelStatusMessage("Cancelled by user");
         break;
+      case "CANCELLED_BY_FM":
+        setCancelStatusMessage("Cancelled by FM");
+        break;
       default:
         setCancelStatusMessage("Rejected");
         break;
