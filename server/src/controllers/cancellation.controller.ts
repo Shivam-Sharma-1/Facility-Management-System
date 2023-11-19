@@ -427,9 +427,16 @@ export const approveCancellationRequestGD: RequestHandler = async (
 ) => {
 	try {
 		const { slug, approved } = req.body;
+		const employeeId = req.session.userId;
 		const status = approved
 			? CancellationStatus.APPROVED_BY_GD
 			: CancellationStatus.REJECTED_BY_GD;
+
+		const user = await prisma.user.findUnique({
+			where: {
+				employeeId,
+			},
+		});
 
 		const bookingStatus = await prisma.booking.findUnique({
 			where: {
@@ -437,6 +444,11 @@ export const approveCancellationRequestGD: RequestHandler = async (
 			},
 			select: {
 				status: true,
+				requestedBy: {
+					select: {
+						role: true,
+					},
+				},
 			},
 		});
 
@@ -447,7 +459,11 @@ export const approveCancellationRequestGD: RequestHandler = async (
 			data: {
 				status:
 					approved === true
-						? ApprovalStatus.CANCELLED
+						? bookingStatus?.status ===
+						  (ApprovalStatus.APPROVED_BY_ADMIN ||
+								ApprovalStatus.APPROVED_BY_FM)
+							? bookingStatus?.status
+							: ApprovalStatus.CANCELLED
 						: bookingStatus?.status,
 				cancellationStatus: status,
 				cancellationUpdateAtGD: new Date().toISOString(),
