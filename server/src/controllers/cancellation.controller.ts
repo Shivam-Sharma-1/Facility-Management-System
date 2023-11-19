@@ -2,6 +2,7 @@ import { ApprovalStatus, CancellationStatus, Role } from "@prisma/client";
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import createHttpError from "http-errors";
 import prisma from "../db/prisma";
+import logger from "../utils/logger";
 
 /**
  * @description Request Cancellation
@@ -169,6 +170,7 @@ export const requestCancellation: RequestHandler = async (
 		res.status(200).json(cancellationBooking);
 	} catch (error) {
 		console.error(error);
+		logger.error(error.message);
 		return next(
 			createHttpError.InternalServerError(
 				"Unable to request cancellation"
@@ -251,6 +253,7 @@ export const getAllCancellationRequestsGD: RequestHandler = async (
 		res.status(200).json(cancellationRequests);
 	} catch (error) {
 		console.error(error);
+		logger.error(error.message);
 		return next(
 			createHttpError.InternalServerError(
 				"Unable to fetch cancellation requests"
@@ -405,6 +408,7 @@ export const getAllCancellationRequestsFM: RequestHandler = async (
 		});
 	} catch (error) {
 		console.error(error);
+		logger.error(error.message);
 		return next(
 			createHttpError.InternalServerError(
 				"Unable to fetch cancellation requests"
@@ -480,6 +484,7 @@ export const approveCancellationRequestGD: RequestHandler = async (
 		res.status(200).json(cancellationRequest);
 	} catch (error) {
 		console.error(error);
+		logger.error(error.message);
 		return next(
 			createHttpError.InternalServerError(
 				"Unable to approve cancellation request"
@@ -535,6 +540,7 @@ export const approveCancellationRequestFM: RequestHandler = async (
 		res.status(200).json(cancellationRequest);
 	} catch (error) {
 		console.error(error);
+		logger.error(error.message);
 		return next(
 			createHttpError.InternalServerError(
 				"Unable to approve cancellation request"
@@ -603,6 +609,7 @@ export const directCancellation: RequestHandler = async (
 		res.status(200).json(cancelledBooking);
 	} catch (error) {
 		console.error(error);
+		logger.error(error.message);
 		return next(
 			createHttpError.InternalServerError(
 				"Unable to request cancellation"

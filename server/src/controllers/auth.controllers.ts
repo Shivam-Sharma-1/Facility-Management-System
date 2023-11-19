@@ -4,6 +4,7 @@ import createHttpError from "http-errors";
 
 import prisma from "../db/prisma";
 import { AuthInput } from "../types/types";
+import logger from "../utils/logger";
 
 /**
  * @description Employee login
@@ -56,6 +57,7 @@ export const authLogin: RequestHandler = async (
 		res.status(200).send("Login successful.");
 	} catch (error) {
 		console.error(error);
+		logger.error(error.message);
 		return next(createHttpError.BadRequest("Please try again."));
 	}
 };
@@ -93,6 +95,7 @@ export const authLogout: RequestHandler = async (
 		res.status(200).send("Logout successful.");
 	} catch (error) {
 		console.error(error);
+		logger.error(error.message);
 		return next(
 			createHttpError.InternalServerError(
 				"Something went wrong. Please try again."
@@ -150,6 +153,7 @@ export const changePassword: RequestHandler = async (
 		});
 	} catch (error) {
 		console.error(error);
+		logger.error(error.message);
 		return next(
 			createHttpError.InternalServerError(
 				"Something went wrong. Please try again."

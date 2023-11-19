@@ -15,6 +15,7 @@ import authRouter from "./routes/auth.routes";
 import cancelRouter from "./routes/cancellation.routes";
 import dashboardRouter from "./routes/dashboard.routes";
 import facilityRouter from "./routes/facility.routes";
+import logger from "./utils/logger";
 
 const PORT = process.env.PORT || 3000;
 const corsOptions = {
@@ -62,6 +63,9 @@ app.use(errorHandler);
 const startServer = () => {
 	app.listen(PORT, () => {
 		console.log(`Server listening at http://localhost:${PORT}`);
+		logger.info(
+			`Starting Server on port ${PORT}, Server URL: http://localhost:${PORT}, database: ${process.env.DATABASE}, database URL: ${process.env.DATABASE_URL_MYSQL}`
+		);
 	});
 };
 

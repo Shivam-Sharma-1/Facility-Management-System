@@ -1,6 +1,7 @@
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import createHttpError from "http-errors";
 import prisma from "../db/prisma";
+import logger from "../utils/logger";
 
 /**
  * @description Get facilities for filtering in bookings
@@ -41,6 +42,7 @@ export const getFacilities: RequestHandler = async (
 		res.status(200).json({ buildings, facilities });
 	} catch (error) {
 		console.error(error);
+		logger.error(error.message);
 		return next(
 			createHttpError.InternalServerError(
 				"Something went wrong. Please try again."
@@ -122,6 +124,7 @@ export const addFacility: RequestHandler = async (
 		res.status(200).json(facility);
 	} catch (error) {
 		console.error(error);
+		logger.error(error.message);
 		return next(
 			createHttpError.InternalServerError(
 				"Something went wrong. Please try again."
@@ -232,6 +235,7 @@ export const deleteFacility: RequestHandler = async (
 		res.status(200).json(deletedFacility);
 	} catch (error) {
 		console.error(error);
+		logger.error(error.message);
 		return next(
 			createHttpError.InternalServerError(
 				"Something went wrong. Please try again."
@@ -460,6 +464,7 @@ export const updateFacility: RequestHandler = async (
 		res.status(201).json(updateFacility);
 	} catch (error) {
 		console.error(error);
+		logger.error(error.message);
 		return next(
 			createHttpError.InternalServerError(
 				"Something went wrong. Please try again."
@@ -634,6 +639,7 @@ export const getAllBookings: RequestHandler = async (
 		res.status(200).json({ facilities, bookings });
 	} catch (error) {
 		console.error(error.message);
+		logger.error(error.message);
 		return next(
 			createHttpError.InternalServerError(
 				"Something went wrong. Please try again."
@@ -678,6 +684,7 @@ export const approveBooking: RequestHandler = async (
 		res.status(200).json(booking);
 	} catch (error) {
 		console.error(error);
+		logger.error(error.message);
 		return next(
 			createHttpError.InternalServerError(
 				"Something went wrong. Please try again."

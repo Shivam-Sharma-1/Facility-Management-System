@@ -2,6 +2,7 @@ import { ApprovalStatus, CancellationStatus } from "@prisma/client";
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import createHttpError from "http-errors";
 import prisma from "../db/prisma";
+import logger from "../utils/logger";
 
 declare module "express-session" {
 	export interface SessionData {
@@ -54,6 +55,7 @@ export const getFacilities: RequestHandler = async (
 		res.status(200).json(buildings);
 	} catch (error) {
 		console.error(error);
+		logger.error(error.message);
 		return next(
 			createHttpError.InternalServerError(
 				"Something went wrong. Please try again."
@@ -177,6 +179,7 @@ export const getCount: RequestHandler = async (
 		res.status(200).json(count);
 	} catch (error) {
 		console.error(error);
+		logger.error(error.message);
 		return next(
 			createHttpError.InternalServerError(
 				"Something went wrong. Please try again."
@@ -225,6 +228,7 @@ export const getEmployeeDetails: RequestHandler = async (
 		res.status(200).json(user);
 	} catch (error) {
 		console.error(error);
+		logger.error(error.message);
 		return next(
 			createHttpError.InternalServerError(
 				"Something went wrong. Please try again."

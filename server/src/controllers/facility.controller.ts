@@ -2,8 +2,9 @@ import { Role } from "@prisma/client";
 import { PrismaClientValidationError } from "@prisma/client/runtime/library";
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import createHttpError from "http-errors";
-import { BookingInput } from "src/types/types";
 import prisma from "../db/prisma";
+import { BookingInput } from "../types/types";
+import logger from "../utils/logger";
 
 /**
  * @description Get all approved bookings
@@ -96,6 +97,7 @@ export const getBookings: RequestHandler = async (
 		});
 		res.status(200).json({ facility, bookings });
 	} catch (error) {
+		logger.error(error.message);
 		return next(
 			createHttpError.InternalServerError(
 				"Something went wrong. Please try again."
@@ -202,6 +204,7 @@ export const addBookings: RequestHandler = async (
 		res.status(201).json(event);
 	} catch (error) {
 		console.error(error);
+		logger.error(error.message);
 		if (error instanceof PrismaClientValidationError) {
 			return next(createHttpError.BadRequest("Missing data fields."));
 		}
@@ -338,12 +341,10 @@ export const getBookingsForFacility: RequestHandler = async (
 					},
 				};
 			} else if (!userExists) {
-				return res
-					.status(200)
-					.json({
-						bookings: [],
-						facilities: facilityManager.facilityManager!.facility,
-					});
+				return res.status(200).json({
+					bookings: [],
+					facilities: facilityManager.facilityManager!.facility,
+				});
 			}
 		}
 
@@ -433,6 +434,7 @@ export const getBookingsForFacility: RequestHandler = async (
 		});
 	} catch (error) {
 		console.error(error);
+		logger.error(error.message);
 		return next(
 			createHttpError.InternalServerError(
 				"Something went wrong. Please try again."
@@ -656,6 +658,7 @@ export const getBookingsForGroup: RequestHandler = async (
 		});
 	} catch (error) {
 		console.error(error);
+		logger.error(error.message);
 		return next(
 			createHttpError.InternalServerError(
 				"Something went wrong. Please try again."

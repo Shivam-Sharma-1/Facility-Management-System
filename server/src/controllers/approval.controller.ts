@@ -2,6 +2,7 @@ import { ApprovalStatus } from "@prisma/client";
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import createHttpError from "http-errors";
 import prisma from "../db/prisma";
+import logger from "../utils/logger";
 
 /**
  * @description Get all bookings done by user
@@ -86,6 +87,7 @@ export const getAllUserBookings: RequestHandler = async (
 		});
 		res.status(200).json(bookings);
 	} catch (error) {
+		logger.error(error.message);
 		return next(
 			createHttpError.InternalServerError(
 				"Something went wrong. Please try again."
@@ -162,6 +164,7 @@ export const getAllGDApprovals: RequestHandler = async (
 		res.status(200).json(bookings);
 	} catch (error) {
 		console.error(error);
+		logger.error(error.message);
 		return next(createHttpError.InternalServerError(error.message));
 	}
 };
@@ -273,6 +276,7 @@ export const getAllFMApprovals: RequestHandler = async (
 		res.status(200).json({ count, facilities: bookings.facility });
 	} catch (error) {
 		console.error(error);
+		logger.error(error.message);
 		return next(createHttpError.InternalServerError(error.message));
 	}
 };
@@ -341,6 +345,7 @@ export const approveByGD: RequestHandler = async (
 		res.status(200).json(booking);
 	} catch (error) {
 		console.error(error);
+		logger.error(error.message);
 		return next(createHttpError.InternalServerError(error.message));
 	}
 };
@@ -409,6 +414,7 @@ export const approveByFM: RequestHandler = async (
 		res.status(200).json(booking);
 	} catch (error) {
 		console.error(error);
+		logger.error(error.message);
 		return next(createHttpError.InternalServerError(error.message));
 	}
 };
