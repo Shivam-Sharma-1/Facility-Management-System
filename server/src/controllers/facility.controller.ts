@@ -238,7 +238,7 @@ export const getBookingsForFacility: RequestHandler = async (
 	try {
 		const employeeId = req.session.userId;
 
-		const { month, year, user } = req.query;
+		const { month, year, user, facility } = req.query;
 
 		const facilityManager = await prisma.user.findFirst({
 			where: {
@@ -247,6 +247,7 @@ export const getBookingsForFacility: RequestHandler = async (
 			include: {
 				facilityManager: {
 					select: {
+						id: true,
 						facility: {
 							select: {
 								slug: true,
@@ -313,13 +314,22 @@ export const getBookingsForFacility: RequestHandler = async (
 			};
 		}
 
+		if (facility) {
+			filterConditions = {
+				...filterConditions,
+				facility: {
+					slug: facility as string,
+				},
+			};
+		}
+
 		const userExists = await prisma.user.findUnique({
 			where: {
 				employeeId: parseInt(user as string),
 			},
 		});
 
-		if (user && !isNaN(Number(user))) {
+		if (user && userExists && !isNaN(Number(user))) {
 			filterConditions = {
 				...filterConditions,
 				requestedBy: {
@@ -328,15 +338,19 @@ export const getBookingsForFacility: RequestHandler = async (
 			};
 		}
 
-		const facilities = await prisma.facility.findMany({
-			where: {
-				isActive: true,
-			},
-			select: {
-				slug: true,
-				name: true,
-			},
-		});
+		// const facilities = await prisma.facilityManager.findFirst({
+		// 	where: {
+		// 		id: facilityManager.facilityManager!.id,
+		// 	},
+		// 	select:{
+		// 		facility:{
+		// 			select:{
+		// 				name:true,
+		// 				slug:true
+		// 			}
+		// 		}
+		// 	}
+		// });
 
 		const bookings = await prisma.facilityManager.findFirst({
 			where: {
@@ -419,7 +433,7 @@ export const getBookingsForFacility: RequestHandler = async (
 		});
 
 		res.status(200).json({
-			facilities,
+			facilities: facilityManager.facilityManager!.facility,
 			bookings: bookings?.facility,
 		});
 	} catch (error) {
