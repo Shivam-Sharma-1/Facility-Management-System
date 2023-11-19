@@ -323,19 +323,20 @@ export const getBookingsForFacility: RequestHandler = async (
 			};
 		}
 
-		const userExists = await prisma.user.findUnique({
-			where: {
-				employeeId: parseInt(user as string),
-			},
-		});
-
-		if (user && userExists && !isNaN(Number(user))) {
-			filterConditions = {
-				...filterConditions,
-				requestedBy: {
+		if (user && !isNaN(Number(user))) {
+			const userExists = await prisma.user.findUnique({
+				where: {
 					employeeId: parseInt(user as string),
 				},
-			};
+			});
+			if (userExists) {
+				filterConditions = {
+					...filterConditions,
+					requestedBy: {
+						employeeId: parseInt(user as string),
+					},
+				};
+			}
 		}
 
 		// const facilities = await prisma.facilityManager.findFirst({
