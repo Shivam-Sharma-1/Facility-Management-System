@@ -457,7 +457,7 @@ export const updateFacility: RequestHandler = async (
 			);
 		}
 
-		res.status(201).json({ message: "Facility updated successfully" });
+		res.status(201).json(updateFacility);
 	} catch (error) {
 		console.error(error);
 		return next(
