@@ -97,7 +97,7 @@ const EditFacilityModal: FC<EditFacilityModalProps> = ({
       <Fade in={isOpen}>
         <div className="bg-bgPrimary w-full max-w-[500px] px-10 py-10 absolute left-[50%] top-[50%] -translate-x-[50%] -translate-y-[50%] rounded-md flex flex-col gap-6 shadow-cardHover">
           <Typography id="modal-modal-title" variant="h4" component="h2">
-            Create new facility
+            Edit facility
           </Typography>
           <form
             autoComplete="off"
