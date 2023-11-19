@@ -262,6 +262,46 @@ export const updateFacility: RequestHandler = async (
 			icon,
 			building,
 		} = req.body;
+
+		console.log(req.body);
+
+		let newData = {};
+		let updatedFacility;
+
+		// set new data
+		if (name) {
+			newData = {
+				...newData,
+				name,
+			};
+		}
+
+		if (description) {
+			newData = {
+				...newData,
+				description,
+			};
+		}
+
+		if (icon) {
+			newData = {
+				...newData,
+				icon,
+			};
+		}
+
+		if (building) {
+			newData = {
+				...newData,
+				building: {
+					connect: {
+						name: building,
+					},
+				},
+			};
+		}
+
+		// get previous facility manager
 		const prevFacilityManager = await prisma.facilityManager.findFirst({
 			where: {
 				user: {
@@ -272,58 +312,152 @@ export const updateFacility: RequestHandler = async (
 				userId: true,
 			},
 		});
-		const removeFacility = await prisma.$transaction([
-			prisma.facility.update({
+
+		// get new facility manager
+		const newFacilityManager = await prisma.facilityManager.findFirst({
+			where: {
+				user: {
+					employeeId: newFacilityManagerId,
+				},
+			},
+			select: {
+				userId: true,
+			},
+		});
+
+		// check if facility manager is changed
+		if (
+			prevFacilityManagerId &&
+			newFacilityManagerId &&
+			prevFacilityManagerId !== newFacilityManagerId
+		) {
+			newData = {
+				...newData,
+				facilityManager: {
+					connectOrCreate: {
+						where: {
+							userId: newFacilityManager?.userId,
+						},
+						create: {
+							user: {
+								connect: {
+									employeeId: newFacilityManagerId,
+								},
+							},
+						},
+					},
+				},
+			};
+		}
+
+		// get count of facilities assigned to facility manager
+		const userFMCount = await prisma.facility.count({
+			where: {
+				facilityManager: {
+					userId: prevFacilityManager?.userId,
+				},
+			},
+		});
+
+		// check if facility manager is assigned to more than one facility
+		if (userFMCount > 1) {
+			// if facility manager is assigned to more than one facility, then only update facility manager
+			if (
+				prevFacilityManagerId &&
+				newFacilityManagerId &&
+				prevFacilityManagerId !== newFacilityManagerId
+			) {
+				await prisma.$transaction([
+					prisma.facilityManager.update({
+						where: {
+							userId: prevFacilityManager?.userId,
+						},
+						data: {
+							facility: {
+								disconnect: {
+									slug,
+								},
+							},
+						},
+					}),
+					prisma.user.update({
+						where: {
+							employeeId: newFacilityManagerId,
+						},
+						data: {
+							role: "FACILITY_MANAGER",
+						},
+					}),
+				]);
+			}
+
+			updatedFacility = await prisma.facility.update({
 				where: {
 					slug,
 				},
 				data: {
-					name,
-					description,
-					icon,
-					building,
+					...newData,
 				},
-			}),
-			prisma.facilityManager.delete({
-				where: {
-					userId: prevFacilityManager?.userId,
-				},
-			}),
-			prisma.user.update({
-				where: {
-					employeeId: prevFacilityManagerId,
-				},
-				data: {
-					role: "USER",
-				},
-			}),
-		]);
+			});
+		} else {
+			// if facility manager is assigned to only one facility, then delete facility manager
 
-		const updateFacility = await prisma.$transaction([
-			prisma.user.update({
-				where: {
-					employeeId: newFacilityManagerId,
-				},
-				data: {
-					role: "FACILITY_MANAGER",
-				},
-			}),
-			prisma.facilityManager.create({
-				data: {
-					user: {
-						connect: {
+			if (
+				prevFacilityManagerId &&
+				newFacilityManagerId &&
+				prevFacilityManagerId !== newFacilityManagerId
+			) {
+				await prisma.$transaction([
+					prisma.facilityManager.delete({
+						where: {
+							userId: prevFacilityManager?.userId,
+						},
+						// data: {
+						// 	facility: {
+						// 		disconnect: {
+						// 			slug,
+						// 		},
+						// 	},
+						// },
+					}),
+					prisma.user.update({
+						where: {
 							employeeId: newFacilityManagerId,
 						},
-					},
-					facility: {
-						connect: {
-							slug,
+						data: {
+							role: "FACILITY_MANAGER",
 						},
-					},
+					}),
+					prisma.user.update({
+						where: {
+							employeeId: prevFacilityManagerId,
+						},
+						data: {
+							role: "USER",
+						},
+					}),
+				]);
+			}
+
+			updatedFacility = await prisma.facility.update({
+				where: {
+					slug,
 				},
-			}),
-		]);
-		res.status(201).json(updateFacility);
+				data: {
+					...newData,
+				},
+			});
+		}
+
+		if (!updatedFacility) {
+			return next(
+				createHttpError.InternalServerError(
+					"Unable to delete facility. Please try again."
+				)
+			);
+		}
+
+		res.status(201).json({ message: "Facility updated successfully" });
 	} catch (error) {
 		console.error(error);
 		return next(
