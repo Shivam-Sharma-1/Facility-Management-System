@@ -460,8 +460,9 @@ export const approveCancellationRequestGD: RequestHandler = async (
 				status:
 					approved === true
 						? bookingStatus?.status ===
-						  (ApprovalStatus.APPROVED_BY_ADMIN ||
-								ApprovalStatus.APPROVED_BY_FM)
+								ApprovalStatus.APPROVED_BY_ADMIN ||
+						  bookingStatus?.status ===
+								ApprovalStatus.APPROVED_BY_FM
 							? bookingStatus?.status
 							: ApprovalStatus.CANCELLED
 						: bookingStatus?.status,
