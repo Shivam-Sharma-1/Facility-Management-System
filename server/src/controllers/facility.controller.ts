@@ -251,6 +251,7 @@ export const getBookingsForFacility: RequestHandler = async (
 						facility: {
 							select: {
 								slug: true,
+								name: true,
 							},
 						},
 					},
@@ -343,15 +344,17 @@ export const getBookingsForFacility: RequestHandler = async (
 		// 	where: {
 		// 		id: facilityManager.facilityManager!.id,
 		// 	},
-		// 	select:{
-		// 		facility:{
-		// 			select:{
-		// 				name:true,
-		// 				slug:true
-		// 			}
-		// 		}
-		// 	}
+		// 	select: {
+		// 		facility: {
+		// 			select: {
+		// 				name: true,
+		// 				slug: true,
+		// 			},
+		// 		},
+		// 	},
 		// });
+
+		// console.log(facilities);
 
 		const bookings = await prisma.facilityManager.findFirst({
 			where: {
