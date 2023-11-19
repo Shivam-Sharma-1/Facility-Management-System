@@ -19,7 +19,7 @@ const dailyRotateTransport = new DailyRotateFile({
 	dirname: logDirectory,
 	filename: "application-%DATE%.log",
 	datePattern: "YYYY-MM-DD-HH",
-	maxSize: "5k",
+	maxSize: "30k",
 	maxFiles: "7d",
 });
 
