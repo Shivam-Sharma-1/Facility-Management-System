@@ -76,7 +76,7 @@ const Navigation: FC = (): JSX.Element => {
 
   return (
     <div className="w-[400px] h-full min-h-[100dvh] bg-primary text-white pt-5 overflow-y-hidden sticky top-0">
-      <div className="w-full flex justify-left px-4 pl-8 pt-4 pb-8 gap-8 flex-wrap">
+      <div className="w-full flex flex-col justify-between items-center pt-4 pb-8 gap-8 flex-wrap">
         <Avatar
           sx={{ width: "80px", height: "80px" }}
           src={"/" + auth?.user?.image}
