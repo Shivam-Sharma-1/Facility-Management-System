@@ -313,6 +313,12 @@ export const getBookingsForFacility: RequestHandler = async (
 			};
 		}
 
+		const userExists = await prisma.user.findUnique({
+			where: {
+				employeeId: parseInt(user as string),
+			},
+		});
+
 		if (user && !isNaN(Number(user))) {
 			filterConditions = {
 				...filterConditions,

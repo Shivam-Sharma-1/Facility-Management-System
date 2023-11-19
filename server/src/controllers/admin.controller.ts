@@ -85,9 +85,16 @@ export const addFacility: RequestHandler = async (
 							name: building,
 						},
 					},
-					facilityManager: {
-						create: {
-							userId: facilityManager?.id!,
+				},
+			}),
+			prisma.facilityManager.update({
+				where: {
+					userId: facilityManager?.id,
+				},
+				data: {
+					facility: {
+						connect: {
+							slug,
 						},
 					},
 				},
@@ -248,7 +255,7 @@ export const updateFacility: RequestHandler = async (
 				userId: true,
 			},
 		});
-		const facility = await prisma.$transaction([
+		const removeFacility = await prisma.$transaction([
 			prisma.facility.update({
 				where: {
 					slug,
@@ -273,25 +280,33 @@ export const updateFacility: RequestHandler = async (
 					role: "USER",
 				},
 			}),
+		]);
+
+		const updateFacility = await prisma.$transaction([
 			prisma.user.update({
 				where: {
 					employeeId: newFacilityManagerId,
 				},
 				data: {
 					role: "FACILITY_MANAGER",
-					facilityManager: {
-						create: {
-							facility: {
-								connect: {
-									slug,
-								},
-							},
+				},
+			}),
+			prisma.facilityManager.create({
+				data: {
+					user: {
+						connect: {
+							employeeId: newFacilityManagerId,
+						},
+					},
+					facility: {
+						connect: {
+							slug,
 						},
 					},
 				},
 			}),
 		]);
-		res.status(201).json(facility);
+		res.status(201).json(updateFacility);
 	} catch (error) {
 		console.error(error);
 		return next(
@@ -364,7 +379,13 @@ export const getAllBookings: RequestHandler = async (
 			};
 		}
 
-		if (user && !isNaN(Number(user))) {
+		const userExists = await prisma.user.findUnique({
+			where: {
+				employeeId: parseInt(user as string),
+			},
+		});
+
+		if (user && userExists && !isNaN(Number(user))) {
 			filterConditions = {
 				...filterConditions,
 				requestedBy: {
