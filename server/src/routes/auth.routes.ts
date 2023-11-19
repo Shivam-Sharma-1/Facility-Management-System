@@ -1,19 +1,9 @@
 import express from "express";
-import {
-	authLogin,
-	authLogout,
-	changePassword,
-} from "../controllers/auth.controllers";
-
-import validateAdmin from "../middleware/validateAdmin";
-import validateSession from "../middleware/validateSession";
+import { authLogin, authLogout } from "../controllers/auth.controllers";
 
 const authRouter = express.Router();
 
 authRouter.post("/login", authLogin);
 authRouter.post("/logout", authLogout);
-authRouter
-	.route("/password")
-	.post(validateSession, validateAdmin, changePassword);
 
 export default authRouter;

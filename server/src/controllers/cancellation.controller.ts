@@ -209,6 +209,11 @@ export const getAllCancellationRequestsGD: RequestHandler = async (
 					{
 						cancellationStatus: "PENDING",
 					},
+					{
+						facility: {
+							isActive: true,
+						},
+					},
 				],
 			},
 			select: {

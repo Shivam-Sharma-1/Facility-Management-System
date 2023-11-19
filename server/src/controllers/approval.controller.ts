@@ -124,6 +124,11 @@ export const getAllGDApprovals: RequestHandler = async (
 					{
 						status: "PENDING",
 					},
+					{
+						facility: {
+							isActive: true,
+						},
+					},
 				],
 			},
 			select: {
