@@ -76,14 +76,14 @@ const Navigation: FC = (): JSX.Element => {
 
   return (
     <div className="w-[400px] h-full min-h-[100dvh] bg-primary text-white pt-5 overflow-y-hidden sticky top-0">
-      <div className="w-full flex flex-col justify-between items-center pt-4 pb-8 gap-8 flex-wrap">
+      <div className="w-full flex flex-col justify-between items-center pt-4 pb-8 gap-2 flex-wrap">
         <Avatar
           sx={{ width: "80px", height: "80px" }}
           src={"/" + auth?.user?.image}
           alt="avatar-image"
         />
         <div className="w-fit flex flex-col justify-center">
-          <Typography variant="h4">{auth?.user?.name}</Typography>
+          <Typography variant="h5">{auth?.user?.name}</Typography>
           <Typography variant="subtitle1" className="font-normal">
             ID: {auth?.user?.employeeId}
           </Typography>
