@@ -220,6 +220,7 @@ const GDBookings: FC = (): JSX.Element => {
                 setSelectedYear(e.target.value);
               }}
               size="small"
+              autoComplete="off"
             />
           </FormControl>
 

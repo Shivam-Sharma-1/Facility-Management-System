@@ -224,6 +224,7 @@ const FMBookings: FC = (): JSX.Element => {
                 setSelectedYear(e.target.value);
               }}
               size="small"
+              autoComplete="off"
             />
           </FormControl>
 
@@ -261,6 +262,7 @@ const FMBookings: FC = (): JSX.Element => {
                 setSelectedUser(e.target.value);
               }}
               size="small"
+              autoComplete="off"
             />
           </FormControl>
 
