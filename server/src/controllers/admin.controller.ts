@@ -75,6 +75,10 @@ export const addFacility: RequestHandler = async (
 			},
 		});
 
+		if (!facilityManager) {
+			return next(createHttpError.NotFound("User does not exist."));
+		}
+
 		const facility = await prisma.$transaction([
 			prisma.facility.create({
 				data: {
@@ -267,8 +271,6 @@ export const updateFacility: RequestHandler = async (
 			building,
 		} = req.body;
 
-		console.log(req.body);
-
 		let newData = {};
 		let updatedFacility;
 
@@ -318,16 +320,18 @@ export const updateFacility: RequestHandler = async (
 		});
 
 		// get new facility manager
-		const newFacilityManager = await prisma.facilityManager.findFirst({
+		const newFacilityManager = await prisma.user.findFirst({
 			where: {
-				user: {
-					employeeId: newFacilityManagerId,
-				},
+				employeeId: newFacilityManagerId,
 			},
 			select: {
-				userId: true,
+				id: true,
 			},
 		});
+
+		if (!newFacilityManager || !prevFacilityManager) {
+			return next(createHttpError.NotFound("Employee not found."));
+		}
 
 		// check if facility manager is changed
 		if (
@@ -340,7 +344,7 @@ export const updateFacility: RequestHandler = async (
 				facilityManager: {
 					connectOrCreate: {
 						where: {
-							userId: newFacilityManager?.userId,
+							userId: newFacilityManager?.id,
 						},
 						create: {
 							user: {
