@@ -230,6 +230,15 @@ const AddEventModal: FC<AddEventModalProps> = ({
       onClose={() => {
         setDefaultDate(null);
         setIsOpen(false);
+        setFormData({
+          title: "",
+          purpose: "",
+          date: null,
+          start: "",
+          end: "",
+          slug: "",
+          employeeId: null,
+        });
       }}
     >
       <Fade in={isOpen}>
