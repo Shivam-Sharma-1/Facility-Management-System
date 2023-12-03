@@ -55,7 +55,6 @@ model User {
   employeeId      Int              @unique
   role            Role             @default(USER)
   password        String
-  isSignedIn      Boolean          @default(false)
   bookings        Booking[]
   groupDirector   GroupDirector?
   facilityManager FacilityManager?
