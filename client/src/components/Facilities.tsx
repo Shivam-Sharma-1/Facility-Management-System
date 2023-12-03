@@ -47,26 +47,32 @@ const Facilities: FC = (): JSX.Element => {
       </Typography>
       <div className="w-full flex flex-col justify-center items-center flex-wrap pt-4 gap-2">
         {!isPending &&
-          data?.map((section) => (
-            <div className="w-full flex flex-col gap-2">
-              <Typography variant="h4" component="h2">
-                {section.name}
-              </Typography>
-              <Divider color="gray" />
-              <div className="w-full flex items-center justify-center flex-wrap">
-                {section.facility.map((facility: FacilityData) => (
-                  <Link to={`/facility/${facility.slug}`} key={facility.name}>
-                    <FacilityCard
-                      name={facility.name}
-                      description={facility.description}
-                      icon={facility.icon}
-                      manager={facility.facilityManager.user.name}
-                    />
-                  </Link>
-                ))}
-              </div>
-            </div>
-          ))}
+          data?.map(
+            (section) =>
+              section.facility.length > 0 && (
+                <div className="w-full flex flex-col gap-2">
+                  <Typography variant="h4" component="h2">
+                    {section.name}
+                  </Typography>
+                  <Divider color="gray" />
+                  <div className="w-full flex items-center justify-center flex-wrap">
+                    {section.facility.map((facility: FacilityData) => (
+                      <Link
+                        to={`/facility/${facility.slug}`}
+                        key={facility.name}
+                      >
+                        <FacilityCard
+                          name={facility.name}
+                          description={facility.description}
+                          icon={facility.icon}
+                          manager={facility.facilityManager.user.name}
+                        />
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )
+          )}
       </div>
     </div>
   );
