@@ -90,19 +90,19 @@ const MyBookingCard: FC<MyBookingCardProps> = ({
         setStatusMessage("Pending Approval");
         break;
       case "APPROVED_BY_GD":
-        setStatusMessage("Approved by GD");
+        setStatusMessage("Approved by Group Director");
         break;
       case "APPROVED_BY_FM":
-        setStatusMessage("Approved by FM");
+        setStatusMessage("Approved by Facility Manager");
         break;
       case "APPROVED_BY_ADMIN":
         setStatusMessage("Approved by Admin");
         break;
       case "REJECTED_BY_GD":
-        setStatusMessage("Rejected by GD");
+        setStatusMessage("Rejected by Group Director");
         break;
       case "REJECTED_BY_FM":
-        setStatusMessage("Rejected by FM");
+        setStatusMessage("Rejected by Facility Manager");
         break;
       case "REJECTED_BY_ADMIN":
         setStatusMessage("Rejected by Admin");
@@ -120,19 +120,19 @@ const MyBookingCard: FC<MyBookingCardProps> = ({
         setCancelStatusMessage("Pending Approval");
         break;
       case "APPROVED_BY_GD":
-        setCancelStatusMessage("Approved by GD");
+        setCancelStatusMessage("Approved by Group Director");
         break;
       case "APPROVED_BY_FM":
-        setCancelStatusMessage("Approved by FM");
+        setCancelStatusMessage("Approved by Facility Manager");
         break;
       case "APPROVED_BY_ADMIN":
         setCancelStatusMessage("Approved by Admin");
         break;
       case "REJECTED_BY_GD":
-        setCancelStatusMessage("Rejected by GD");
+        setCancelStatusMessage("Rejected by Group Director");
         break;
       case "REJECTED_BY_FM":
-        setCancelStatusMessage("Rejected by FM");
+        setCancelStatusMessage("Rejected by Facility Manager");
         break;
       case "REJECTED_BY_ADMIN":
         setCancelStatusMessage("Rejected by Admin");
@@ -144,7 +144,7 @@ const MyBookingCard: FC<MyBookingCardProps> = ({
         setCancelStatusMessage("Cancelled by user");
         break;
       case "CANCELLED_BY_FM":
-        setCancelStatusMessage("Cancelled by FM");
+        setCancelStatusMessage("Cancelled by Facility Manager");
         break;
       default:
         setCancelStatusMessage("Rejected");
