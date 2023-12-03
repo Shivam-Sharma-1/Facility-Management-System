@@ -53,9 +53,10 @@ const FacilityCard: FC<FacilityCardProps> = ({
           <Typography
             variant="body1"
             component="h2"
-            className="text-primary font-normal"
+            className="text-primary font-normal text-center"
           >
-            FM - {manager}
+            <span className="font-bold">Facility Manager</span>
+            <br /> {manager}
           </Typography>
         </div>
       </div>
