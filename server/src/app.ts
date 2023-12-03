@@ -9,14 +9,22 @@ import expressSession from "express-session";
 import prisma from "./db/prisma";
 import { errorHandler } from "./middleware/errorHandler";
 import { notFound } from "./middleware/notFound";
+import adminRouter from "./routes/admin.routes";
 import approvalRouter from "./routes/approval.routes";
 import authRouter from "./routes/auth.routes";
+import cancelRouter from "./routes/cancellation.routes";
 import dashboardRouter from "./routes/dashboard.routes";
 import facilityRouter from "./routes/facility.routes";
+import logger from "./utils/logger";
 
 const PORT = process.env.PORT || 3000;
 const corsOptions = {
-	origin: "http://localhost:5173",
+	origin: [
+		"http://localhost:5173",
+		`${process.env.CLIENT_URL}`,
+		"http://localhost:5000",
+		"http://localhost:8000",
+	],
 	methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
 	credentials: true,
 };
@@ -47,13 +55,29 @@ app.use("/auth", authRouter);
 app.use("/dashboard", dashboardRouter);
 app.use("/facility", facilityRouter);
 app.use("/employee", approvalRouter);
+app.use("/bookings", cancelRouter);
+app.use("/admin", adminRouter);
 app.use(notFound);
 app.use(errorHandler);
 
 const startServer = () => {
 	app.listen(PORT, () => {
 		console.log(`Server listening at http://localhost:${PORT}`);
+		logger.info(
+			`Starting Server on port ${PORT}, Server URL: http://localhost:${PORT}, database: ${process.env.DATABASE}, database URL: ${process.env.DATABASE_URL_MYSQL}`
+		);
 	});
 };
+
+process.on("unhandledRejection", (err: any) => {
+	console.error(err);
+	logger.error(err.message);
+	process.exit(1);
+});
+
+process.on("SIGINT", () => {
+	logger.info("SIGINT received, shutting down gracefully");
+	process.exit(0);
+});
 
 startServer();

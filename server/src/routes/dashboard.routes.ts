@@ -1,13 +1,15 @@
 import { Router } from "express";
 import {
-	addFacilities,
+	getCount,
+	getEmployeeDetails,
 	getFacilities,
 } from "../controllers/dashboard.controller";
 import validateSession from "../middleware/validateSession";
 
 const dashboardRouter = Router();
 
+dashboardRouter.route("/count/:employeeId").get(validateSession, getCount);
+dashboardRouter.route("/employee/:employeeId").get(getEmployeeDetails);
 dashboardRouter.route("/").get(validateSession, getFacilities);
-dashboardRouter.route("/facility/add").post(validateSession, addFacilities);
 
 export default dashboardRouter;

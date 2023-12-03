@@ -1,15 +1,10 @@
 import argon2 from "argon2";
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import createHttpError from "http-errors";
+
 import prisma from "../db/prisma";
 import { AuthInput } from "../types/types";
-import authSchema from "../utils/validation";
-
-declare module "express-session" {
-	export interface SessionData {
-		userId: string;
-	}
-}
+import logger from "../utils/logger";
 
 /**
  * @description Employee login
@@ -23,37 +18,47 @@ export const authLogin: RequestHandler = async (
 	next: NextFunction
 ) => {
 	try {
-		const { employeeId, password }: AuthInput =
-			await authSchema.validateAsync(req.body);
-		const user = await prisma.user.findUnique({
+		const { employeeId, fullName, image }: AuthInput = req.body;
+		let user = await prisma.user.findUnique({
 			where: {
-				employeeId,
+				employeeId: parseInt(employeeId),
 			},
 		});
 		if (!user) {
-			return next(createHttpError.Unauthorized("User does not exist."));
+			user = await prisma.user.create({
+				data: {
+					employeeId: parseInt(employeeId),
+					name: fullName,
+					image,
+					isSignedIn: true,
+				},
+			});
+		} else if (user.name !== fullName || user.image !== image) {
+			await prisma.user.update({
+				where: {
+					employeeId: parseInt(employeeId),
+				},
+				data: {
+					name: fullName,
+					image,
+					isSignedIn: true,
+				},
+			});
+		} else {
+			await prisma.user.update({
+				where: {
+					employeeId: parseInt(employeeId),
+				},
+				data: {
+					isSignedIn: true,
+				},
+			});
 		}
-		const validPassword = await argon2.verify(user.password, password);
-
-		if (!validPassword) {
-			return next(createHttpError.Unauthorized("Invalid credentials."));
-		}
-		req.session.userId = employeeId;
-		res.status(200).json({
-			name: user.name,
-			employeeId: user.employeeId,
-			image: user.image,
-			role: user.role,
-		});
+		res.status(200).send("Login successful.");
 	} catch (error) {
-		if (error.isJoi === true) {
-			return next(
-				createHttpError.BadRequest(`Invalid ${error.details[0].path}`)
-			);
-		}
-		return next(createHttpError.Unauthorized("Invalid credentials."));
-	} finally {
-		prisma.$disconnect();
+		console.error(error);
+		logger.error(error.message);
+		return next(createHttpError.BadRequest("Please try again."));
 	}
 };
 
@@ -68,101 +73,33 @@ export const authLogout: RequestHandler = async (
 	res: Response,
 	next: NextFunction
 ) => {
-	req.session.destroy((err: any) => {
-		if (err) {
-			return next(
-				createHttpError.InternalServerError(
-					"Something went wrong. Please try again."
-				)
-			);
-		} else {
-			res.clearCookie("sid");
-			res.status(200).json({ message: "Log out successful." });
-		}
-	});
-};
-
-/**
- * @description acess employee
- * @method GET
- * @access private
- * @returns {id, name, employeeId}
- */
-export const getUser: RequestHandler = async (
-	req: Request,
-	res: Response,
-	next: NextFunction
-) => {
 	try {
-		const userId = req.session.userId;
-		const user = await prisma.user.findUnique({
+		const { employeeId } = req.body;
+
+		await prisma.user.update({
 			where: {
-				employeeId: userId,
+				employeeId: parseInt(employeeId),
+			},
+			data: {
+				isSignedIn: false,
 			},
 		});
-		if (!user) {
-			return next(createHttpError.NotFound("User not found."));
-		}
-		const data = {
-			id: user.id,
-			name: user.name,
-			employeeId: user.employeeId,
-		};
-		res.status(200).json(data);
+
+		await prisma.session.deleteMany({
+			where: {
+				data: {
+					contains: `"userId":${employeeId}`,
+				},
+			},
+		});
+		res.status(200).send("Logout successful.");
 	} catch (error) {
 		console.error(error);
+		logger.error(error.message);
 		return next(
 			createHttpError.InternalServerError(
 				"Something went wrong. Please try again."
 			)
 		);
-	} finally {
-		prisma.$disconnect();
-	}
-};
-
-/**
- * @description Employee register
- * @method POST
- * @access public
- * @returns {id, image, name, employeeId, password}
- */
-export const authRegister: RequestHandler = async (
-	req: Request,
-	res: Response,
-	next: NextFunction
-) => {
-	try {
-		const { image, name, employeeId, password, role }: AuthInput =
-			await authSchema.validateAsync(req.body);
-		const userExists = await prisma.user.findUnique({
-			where: {
-				employeeId,
-			},
-		});
-		if (userExists) {
-			return next(createHttpError.Conflict("User already exists."));
-		}
-		const hashedPassword = await argon2.hash(password);
-
-		const user = await prisma.user.create({
-			data: {
-				image,
-				name: name,
-				employeeId: employeeId,
-				password: hashedPassword,
-				role: role,
-			},
-		});
-		return res.status(200).json(user);
-	} catch (error) {
-		console.error(error);
-		if (error.isJoi === true)
-			return next(
-				createHttpError.BadRequest("Invalid employee ID/password")
-			);
-		next(error);
-	} finally {
-		prisma.$disconnect();
 	}
 };

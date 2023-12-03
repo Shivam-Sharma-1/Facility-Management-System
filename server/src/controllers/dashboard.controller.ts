@@ -1,6 +1,14 @@
+import { ApprovalStatus, CancellationStatus } from "@prisma/client";
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import createHttpError from "http-errors";
 import prisma from "../db/prisma";
+import logger from "../utils/logger";
+
+declare module "express-session" {
+	export interface SessionData {
+		userId: number;
+	}
+}
 
 /**
  * @description Get all facilities
@@ -9,102 +17,222 @@ import prisma from "../db/prisma";
  * @returns [{name, employeeId, role}, [facilities]]
  */
 export const getFacilities: RequestHandler = async (
-	_req: Request,
+	req: Request,
 	res: Response,
 	next: NextFunction
 ) => {
 	try {
-		const facilities = await prisma.facility.findMany();
-		if (!facilities) {
+		const buildings = await prisma.building.findMany({
+			select: {
+				name: true,
+				facility: {
+					where: {
+						isActive: true,
+					},
+					include: {
+						facilityManager: {
+							select: {
+								user: {
+									select: {
+										name: true,
+										employeeId: true,
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		});
+
+		if (!buildings) {
 			return next(
 				createHttpError.NotFound(
 					"Something went wrong. Please try again."
 				)
 			);
 		}
-		res.status(200).json(facilities);
+		res.status(200).json(buildings);
 	} catch (error) {
 		console.error(error);
+		logger.error(error.message);
 		return next(
 			createHttpError.InternalServerError(
 				"Something went wrong. Please try again."
 			)
 		);
-	} finally {
-		prisma.$disconnect();
 	}
 };
 
 /**
- * @description Add facilities (temp route)
- * @method POST
+ * @description Get count of pending approvals and cancellations
+ * @method GET
  * @access private
- * @returns {Facility, transaction}
+ * @returns {approvalCount, cancellationCount}
  */
-export const addFacilities: RequestHandler = async (
+
+export const getCount: RequestHandler = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
 ) => {
 	try {
-		const {
-			name,
-			slug,
-			description,
-			icon,
-			groupDirectorId,
-			facilityManagerId,
-		} = req.body;
-
-		const facility = await prisma.facility.create({
-			data: {
-				slug,
-				name,
-				description,
-				icon,
+		let count = {};
+		const employeeId = parseInt(req.params.employeeId);
+		const user = await prisma.user.findUnique({
+			where: {
+				employeeId,
 			},
 		});
-		if (!facility) {
-			return next(
-				createHttpError.InternalServerError(
-					"Facility creation failed. Please try again."
-				)
-			);
+
+		if (!user) {
+			return next(createHttpError.NotFound("User does not exist."));
 		}
-		const transaction = await prisma.$transaction([
-			prisma.groupDirector.create({
-				data: {
-					user: { connect: { employeeId: groupDirectorId } },
-					facility: {
-						connect: { id: facility.id },
-					},
+
+		if (user?.role === "GROUP_DIRECTOR") {
+			const approvalCount = await prisma.booking.count({
+				where: {
+					AND: [
+						{
+							groupId: user.groupId!,
+						},
+						{
+							status: "PENDING",
+						},
+					],
 				},
-			}),
-			prisma.facilityManager.create({
-				data: {
-					user: { connect: { employeeId: facilityManagerId } },
-					facility: {
-						connect: { id: facility.id },
-					},
+			});
+			const cancellationCount = await prisma.booking.count({
+				where: {
+					AND: [
+						{
+							groupId: user.groupId!,
+						},
+						{
+							cancellationStatus: CancellationStatus.PENDING,
+						},
+					],
 				},
-			}),
-		]);
-		if (!transaction) {
-			return next(
-				createHttpError.InternalServerError(
-					"Group Director / Facility Manager could not be updated. Please try again."
-				)
-			);
+			});
+
+			count = {
+				approvalCount,
+				cancellationCount,
+			};
 		}
-		res.status(200).json({ facility, transaction });
+
+		if (user?.role === "FACILITY_MANAGER") {
+			const approvalCount = await prisma.booking.count({
+				where: {
+					AND: [
+						{
+							facility: {
+								facilityManager: {
+									userId: user.id,
+								},
+							},
+						},
+						{
+							status: "APPROVED_BY_GD",
+						},
+					],
+				},
+			});
+			const cancellationCount = await prisma.booking.count({
+				where: {
+					AND: [
+						{
+							facility: {
+								facilityManager: {
+									userId: user.id,
+								},
+							},
+						},
+						{
+							AND: [
+								{
+									cancellationStatus:
+										CancellationStatus.APPROVED_BY_GD,
+								},
+								{
+									OR: [
+										{
+											status: ApprovalStatus.APPROVED_BY_FM,
+										},
+										{
+											status: ApprovalStatus.APPROVED_BY_ADMIN,
+										},
+									],
+								},
+							],
+						},
+					],
+				},
+			});
+
+			count = {
+				approvalCount: approvalCount || 0,
+				cancellationCount,
+			};
+		}
+
+		res.status(200).json(count);
 	} catch (error) {
 		console.error(error);
+		logger.error(error.message);
 		return next(
 			createHttpError.InternalServerError(
 				"Something went wrong. Please try again."
 			)
 		);
-	} finally {
-		prisma.$disconnect();
+	}
+};
+
+/**
+ * @description Get employee details
+ * @method GET
+ * @access public
+ * @returns {name, employeeId, role}
+ */
+
+export const getEmployeeDetails: RequestHandler = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		const employeeId = parseInt(req.params.employeeId);
+
+		const user = await prisma.user.findUnique({
+			where: {
+				employeeId,
+			},
+			select: {
+				name: true,
+				employeeId: true,
+				role: true,
+				image: true,
+				isSignedIn: true,
+			},
+		});
+
+		if (!user) {
+			return next(createHttpError.NotFound("User does not exist."));
+		}
+
+		if (user.isSignedIn === false) {
+			return next(createHttpError.Unauthorized("User is not signed in."));
+		} else if (user.isSignedIn === true) {
+			req.session.userId = user.employeeId;
+		}
+		res.status(200).json(user);
+	} catch (error) {
+		console.error(error);
+		logger.error(error.message);
+		return next(
+			createHttpError.InternalServerError(
+				"Something went wrong. Please try again."
+			)
+		);
 	}
 };

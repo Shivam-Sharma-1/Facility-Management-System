@@ -2,6 +2,7 @@ import { ApprovalStatus } from "@prisma/client";
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import createHttpError from "http-errors";
 import prisma from "../db/prisma";
+import logger from "../utils/logger";
 
 /**
  * @description Get all bookings done by user
@@ -26,12 +27,28 @@ export const getAllUserBookings: RequestHandler = async (
 				title: true,
 				purpose: true,
 				status: true,
+				slug: true,
 				createdAt: true,
-				start: true,
-				end: true,
-				approvedAtGD: true,
-				approvedAtFM: true,
-				approvedAtAdmin: true,
+				remark: true,
+				cancellationStatus: true,
+				cancellationRequestedAt: true,
+				cancellationRemark: true,
+				cancelledAt: true,
+				cancellationUpdateAtGD: true,
+				cancellationUpdateAtFM: true,
+				cancellationUpdateAtAdmin: true,
+				groupDirectorName: true,
+				facilityManagerName: true,
+				time: {
+					select: {
+						start: true,
+						end: true,
+						date: true,
+					},
+				},
+				statusUpdateAtGD: true,
+				statusUpdateAtFM: true,
+				statusUpdateAtAdmin: true,
 				requestedBy: {
 					select: {
 						name: true,
@@ -43,17 +60,39 @@ export const getAllUserBookings: RequestHandler = async (
 						name: true,
 					},
 				},
+				statusUpdateByFM: {
+					select: {
+						user: {
+							select: {
+								name: true,
+								employeeId: true,
+							},
+						},
+					},
+				},
+				statusUpdateByGD: {
+					select: {
+						user: {
+							select: {
+								name: true,
+								employeeId: true,
+							},
+						},
+					},
+				},
+			},
+			orderBy: {
+				createdAt: "desc",
 			},
 		});
 		res.status(200).json(bookings);
 	} catch (error) {
+		logger.error(error.message);
 		return next(
 			createHttpError.InternalServerError(
 				"Something went wrong. Please try again."
 			)
 		);
-	} finally {
-		prisma.$disconnect();
 	}
 };
 
@@ -70,49 +109,68 @@ export const getAllGDApprovals: RequestHandler = async (
 ) => {
 	try {
 		const employeeId = req.session.userId;
-		const events = await prisma.groupDirector.findFirst({
+		const bookings = await prisma.booking.findMany({
 			where: {
-				user: {
-					employeeId: employeeId,
-				},
-			},
-			select: {
-				facility: {
-					select: {
-						bookings: {
-							where: {
-								status: "PENDING",
-							},
-							include: {
-								requestedBy: {
-									select: {
-										name: true,
-									},
-								},
-								facility: {
-									select: {
-										name: true,
-									},
+				AND: [
+					{
+						group: {
+							groupDirector: {
+								user: {
+									employeeId,
 								},
 							},
 						},
 					},
+					{
+						status: "PENDING",
+					},
+					{
+						facility: {
+							isActive: true,
+						},
+					},
+				],
+			},
+			select: {
+				id: true,
+				title: true,
+				slug: true,
+				purpose: true,
+				status: true,
+				createdAt: true,
+				time: {
+					select: {
+						start: true,
+						end: true,
+						date: true,
+					},
+				},
+				requestedBy: {
+					select: {
+						name: true,
+						employeeId: true,
+					},
+				},
+				facility: {
+					select: {
+						name: true,
+						slug: true,
+					},
 				},
 			},
 		});
-		if (!events) {
+		if (!bookings) {
 			return next(
 				createHttpError.Forbidden(
 					"You do not have permission to access this resource."
 				)
 			);
 		}
-		res.status(200).json(events.facility.bookings);
+		res.status(200).json(bookings);
 	} catch (error) {
 		console.error(error);
+		logger.error(error.message);
 		return next(createHttpError.InternalServerError(error.message));
-	} finally {
-		prisma.$disconnect();
 	}
 };
 
@@ -129,7 +187,34 @@ export const getAllFMApprovals: RequestHandler = async (
 ) => {
 	try {
 		const employeeId = req.session.userId;
-		const events = await prisma.facilityManager.findFirst({
+		let count = null;
+		const user = await prisma.user.findUnique({
+			where: {
+				employeeId,
+			},
+		});
+
+		if (!user) {
+			return next(createHttpError.NotFound("User does not exist."));
+		}
+		count = await prisma.booking.count({
+			where: {
+				AND: [
+					{
+						facility: {
+							facilityManager: {
+								userId: user.id,
+							},
+						},
+					},
+					{
+						status: "APPROVED_BY_GD",
+					},
+				],
+			},
+		});
+
+		const bookings = await prisma.facilityManager.findFirst({
 			where: {
 				user: {
 					employeeId,
@@ -137,41 +222,67 @@ export const getAllFMApprovals: RequestHandler = async (
 			},
 			select: {
 				facility: {
-					include: {
+					select: {
 						bookings: {
 							where: {
 								status: "APPROVED_BY_GD",
 							},
-							include: {
+							select: {
+								id: true,
+								slug: true,
+								title: true,
+								purpose: true,
+								status: true,
+								createdAt: true,
+								groupDirectorName: true,
+								time: {
+									select: {
+										start: true,
+										end: true,
+										date: true,
+									},
+								},
 								requestedBy: {
 									select: {
 										name: true,
+										employeeId: true,
 									},
 								},
 								facility: {
 									select: {
 										name: true,
+										slug: true,
 									},
 								},
+								statusUpdateByGD: {
+									select: {
+										user: {
+											select: {
+												name: true,
+												employeeId: true,
+											},
+										},
+									},
+								},
+								statusUpdateAtGD: true,
 							},
 						},
 					},
 				},
 			},
 		});
-		if (!events) {
+		if (!bookings) {
 			return next(
 				createHttpError.Forbidden(
 					"You do not have permission to access this resource."
 				)
 			);
 		}
-		res.status(200).json(events.facility.bookings);
+		res.status(200).json({ count, facilities: bookings.facility });
 	} catch (error) {
 		console.error(error);
+		logger.error(error.message);
 		return next(createHttpError.InternalServerError(error.message));
-	} finally {
-		prisma.$disconnect();
 	}
 };
 
@@ -187,13 +298,30 @@ export const approveByGD: RequestHandler = async (
 	next: NextFunction
 ) => {
 	try {
-		const { slug, approved } = req.body;
+		const { slug, approved, remark } = req.body;
+		const employeeId = req.session.userId;
 		const time = new Date().toISOString();
 		let status: ApprovalStatus = "PENDING";
 		if (approved === true) {
 			status = "APPROVED_BY_GD";
 		} else {
-			status = "REJECTED";
+			status = "REJECTED_BY_GD";
+		}
+		const user = await prisma.user.findUnique({
+			where: {
+				employeeId,
+			},
+			select: {
+				id: true,
+				name: true,
+			},
+		});
+		if (!user) {
+			return next(
+				createHttpError.InternalServerError(
+					"Something went wrong. Please try again."
+				)
+			);
 		}
 		const booking = await prisma.booking.update({
 			where: {
@@ -201,9 +329,17 @@ export const approveByGD: RequestHandler = async (
 			},
 			data: {
 				status,
-				approvedAtGD: time,
+				remark,
+				statusUpdateAtGD: time,
+				groupDirectorName: user?.name,
+				statusUpdateByGD: {
+					connect: {
+						userId: user?.id,
+					},
+				},
 			},
 		});
+
 		if (!booking) {
 			return next(
 				createHttpError.InternalServerError(
@@ -214,9 +350,8 @@ export const approveByGD: RequestHandler = async (
 		res.status(200).json(booking);
 	} catch (error) {
 		console.error(error);
+		logger.error(error.message);
 		return next(createHttpError.InternalServerError(error.message));
-	} finally {
-		prisma.$disconnect();
 	}
 };
 
@@ -232,23 +367,48 @@ export const approveByFM: RequestHandler = async (
 	next: NextFunction
 ) => {
 	try {
-		const { slug, approved } = req.body;
+		const { slug, approved, remark } = req.body;
+		const employeeId = req.session.userId;
 		const time = new Date().toISOString();
 		let status: ApprovalStatus = "PENDING";
 		if (approved === true) {
 			status = "APPROVED_BY_FM";
 		} else {
-			status = "REJECTED";
+			status = "REJECTED_BY_FM";
+		}
+		const user = await prisma.user.findUnique({
+			where: {
+				employeeId,
+			},
+			select: {
+				id: true,
+				name: true,
+			},
+		});
+		if (!user) {
+			return next(
+				createHttpError.InternalServerError(
+					"Something went wrong. Please try again."
+				)
+			);
 		}
 		const booking = await prisma.booking.update({
 			where: {
-				slug: slug,
+				slug,
 			},
 			data: {
 				status,
-				approvedAtFM: time,
+				remark,
+				statusUpdateAtFM: time,
+				facilityManagerName: user?.name,
+				statusUpdateByFM: {
+					connect: {
+						userId: user?.id,
+					},
+				},
 			},
 		});
+
 		if (!booking) {
 			return next(
 				createHttpError.InternalServerError(
@@ -259,8 +419,7 @@ export const approveByFM: RequestHandler = async (
 		res.status(200).json(booking);
 	} catch (error) {
 		console.error(error);
+		logger.error(error.message);
 		return next(createHttpError.InternalServerError(error.message));
-	} finally {
-		prisma.$disconnect();
 	}
 };

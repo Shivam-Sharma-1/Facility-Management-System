@@ -6,8 +6,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "mysql"
+  url      = env("DATABASE_URL_MYSQL")
 }
 
 enum Role {
@@ -22,7 +22,23 @@ enum ApprovalStatus {
   APPROVED_BY_GD
   APPROVED_BY_FM
   APPROVED_BY_ADMIN
-  REJECTED
+  REJECTED_BY_GD
+  REJECTED_BY_FM
+  REJECTED_BY_ADMIN
+  CANCELLED
+}
+
+enum CancellationStatus {
+  PENDING
+  NOT_REQUESTED
+  CANCELLED_BY_USER
+  CANCELLED_BY_FM
+  APPROVED_BY_GD
+  APPROVED_BY_FM
+  APPROVED_BY_ADMIN
+  REJECTED_BY_GD
+  REJECTED_BY_FM
+  REJECTED_BY_ADMIN
 }
 
 model Session {
@@ -33,60 +49,105 @@ model Session {
 }
 
 model User {
-  id              Int               @id @default(autoincrement())
+  id              String           @id @default(cuid())
   image           String?
   name            String
-  employeeId      String            @unique
-  password        String
-  role            Role              @default(USER)
-  booking         Booking[]
-  groupDirector   GroupDirector[]
-  facilityManager FacilityManager[]
+  employeeId      Int              @unique
+  role            Role             @default(USER)
+  isSignedIn      Boolean          @default(false)
+  bookings        Booking[]
+  groupDirector   GroupDirector?
+  facilityManager FacilityManager?
+  group           Group?           @relation(fields: [groupId], references: [id])
+  groupId         String?
 }
 
 model Booking {
-  id              Int            @id @default(autoincrement())
-  title           String
-  slug            String         @unique
-  purpose         String
-  color           String?
-  requestedBy     User           @relation(fields: [userId], references: [id])
-  userId          Int
-  status          ApprovalStatus @default(PENDING)
-  createdAt       DateTime       @default(now())
-  date            DateTime
-  start           DateTime
-  end             DateTime
-  facility        Facility       @relation(fields: [facilityId], references: [id])
-  facilityId      Int
-  approvedAtGD    DateTime?
-  approvedAtFM    DateTime?
-  approvedAtAdmin DateTime?
+  id                        String              @id @default(cuid())
+  title                     String
+  slug                      String              @unique
+  purpose                   String              @db.Text
+  requestedBy               User                @relation(fields: [userId], references: [id])
+  userId                    String
+  status                    ApprovalStatus      @default(PENDING)
+  cancellationStatus        CancellationStatus? @default(NOT_REQUESTED)
+  createdAt                 DateTime            @default(now())
+  cancelledAt               DateTime?
+  cancellationRequestedAt   DateTime?
+  facility                  Facility            @relation(fields: [facilityId], references: [id])
+  facilityId                String
+  remark                    String              @default("")
+  cancellationRemark        String              @default("")
+  statusUpdateByGD          GroupDirector?      @relation(references: [id], fields: [groupDirectorId])
+  groupDirectorId           String?
+  groupDirectorName         String?
+  statusUpdateByFM          FacilityManager?    @relation(references: [id], fields: [facilityManagerId])
+  facilityManagerId         String?
+  facilityManagerName       String?
+  statusUpdateAtGD          DateTime?
+  statusUpdateAtFM          DateTime?
+  statusUpdateAtAdmin       DateTime?
+  cancellationUpdateAtGD    DateTime?
+  cancellationUpdateAtFM    DateTime?
+  cancellationUpdateAtAdmin DateTime?
+  time                      BookingTime         @relation(references: [id], fields: [timeId])
+  timeId                    String              @unique
+  group                     Group?              @relation(references: [id], fields: [groupId])
+  groupId                   String?
+}
+
+model BookingTime {
+  id      String   @id @default(cuid())
+  date    DateTime
+  start   DateTime
+  end     DateTime
+  booking Booking?
 }
 
 model Facility {
-  id              Int               @id @default(autoincrement())
-  name            String
-  description     String
-  icon            String
-  slug            String            @unique
-  groupDirector   GroupDirector[]
-  facilityManager FacilityManager[]
-  bookings        Booking[]
+  id                String           @id @default(cuid())
+  name              String
+  description       String           @db.Text
+  icon              String
+  slug              String           @unique
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  deletedAt         DateTime?
+  isActive          Boolean          @default(true)
+  facilityManager   FacilityManager? @relation(fields: [facilityManagerId], references: [id])
+  bookings          Booking[]
+  facilityManagerId String?
+  building          Building         @relation(fields: [buildingId], references: [id])
+  buildingId        String
+}
+
+model Building {
+  id       String     @id @default(cuid())
+  name     String     @unique
+  facility Facility[]
 }
 
 model GroupDirector {
-  id         Int      @id @default(autoincrement())
-  user       User     @relation(fields: [userId], references: [id])
-  userId     Int
-  facility   Facility @relation(fields: [facilityId], references: [id])
-  facilityId Int      @unique
+  id       String    @id @default(cuid())
+  user     User      @relation(fields: [userId], references: [id])
+  userId   String    @unique
+  group    Group     @relation(fields: [groupId], references: [id])
+  groupId  String    @unique
+  bookings Booking[]
+}
+
+model Group {
+  id            String         @id @default(cuid())
+  name          String         @unique
+  groupDirector GroupDirector?
+  users         User[]
+  bookings      Booking[]
 }
 
 model FacilityManager {
-  id         Int      @id @default(autoincrement())
-  user       User     @relation(fields: [userId], references: [id])
-  userId     Int
-  facility   Facility @relation(fields: [facilityId], references: [id])
-  facilityId Int      @unique
+  id       String     @id @default(cuid())
+  user     User       @relation(fields: [userId], references: [id])
+  userId   String     @unique
+  facility Facility[]
+  bookings Booking[]
 }

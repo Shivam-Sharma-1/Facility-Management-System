@@ -22,10 +22,12 @@
 
 *::-webkit-scrollbar {
   width: 2px;
+  height: 2px;
 }
 
 body::-webkit-scrollbar {
-  width: 8px;
+  width: 4px;
+  height: 4px;
 }
 
 *::-webkit-scrollbar-track {
@@ -38,14 +40,24 @@ body::-webkit-scrollbar {
   border-radius: 14px;
 }
 
+.css-18k8hm6-MuiTableContainer-root::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.MuiTooltip-arrow {
+  color: #00275e !important;
+}
+
 a {
   font-weight: 500;
   text-decoration: inherit;
 }
 
 body {
-  background-color: white;
-  color: black;
+  background-color: #faf9f6;
+  color: #212427;
+  scrollbar-gutter: stable both-edges;
 }
 
 .fc-day {
@@ -55,7 +67,7 @@ body {
 
 .fc-daygrid-day-events {
   overflow-y: auto !important;
-  height: 89px !important;
+  height: 90px !important;
 }
 
 .fc-col-header-cell-cushion {
@@ -72,6 +84,7 @@ body {
 
 .fc-toolbar-title {
   font-weight: normal !important;
+  font-size: 2.5rem !important;
 }
 
 .fc-button-primary {
@@ -83,4 +96,8 @@ body {
 .fc-button-primary:hover {
   opacity: 0.9 !important;
   transition: all 0.2s ease-in-out !important;
+}
+
+.fc-timegrid-divider {
+  height: 0 !important;
 }

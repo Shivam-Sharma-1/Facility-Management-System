@@ -1,11 +1,11 @@
 import { ChangeEvent, FC, FormEvent, useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useLocation } from "react-router-dom";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import axios from "axios";
-
 import {
   Button,
+  Fade,
   FormControl,
   Grid,
   InputLabel,
@@ -20,65 +20,49 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { useAuth } from "../hooks/useAuth";
 
 import "dayjs/locale/en-gb";
 
-const colors = [
-  "#D50000",
-  "#F4511E",
-  "#F6BF26",
-  "#33B679",
-  "#039BE5",
-  "#7986CB",
-  "#8E24AA",
-];
+import { useAuth } from "../../hooks/useAuth";
+import isoToDate from "../../utils/isoToDate";
+import ErrorComponent from "../Error";
 
 const AddEventModal: FC<AddEventModalProps> = ({
   isOpen,
   setIsOpen,
   setOpenSnackbar,
+  setDefaultDate,
   bookingsData,
+  defaultDate,
 }): JSX.Element => {
-  const auth = useAuth();
+  const [error, setError] = useState<ErrorMessage>({
+    error: {
+      status: null,
+      message: "",
+    },
+  });
   const [formData, setFormData] = useState<AddEventDataProps>({
     title: "",
     purpose: "",
-    date: null,
+    date: defaultDate ? dayjs(defaultDate) : null,
     start: "",
     end: "",
-    color: "red",
     slug: "",
-    employeeId: "",
+    employeeId: null,
   });
-  const location = useLocation();
   const [validationError, setValidationError] = useState<string>("");
   const [availableEndTimes, setAvailableEndTimes] = useState<string[]>([]);
+  const [selectedDate, setSelectedDate] = useState<Dayjs | null | undefined>(
+    defaultDate ? dayjs(defaultDate) : null
+  );
+
+  const auth = useAuth();
+  const location = useLocation();
   const slug = location.pathname.split("/")[2];
 
-  const ColorPicker = (): JSX.Element => {
-    return (
-      <div
-        id="color-picker"
-        className="w-[60%] flex justify-center items-center gap-2"
-      >
-        {colors.map((color) => (
-          <div
-            key={color}
-            className={`${
-              formData.color === color && "scale-125"
-            } w-6 h-6 rounded-full cursor-pointer transition-all duration-700 ease-in-out`}
-            style={{ backgroundColor: color }}
-            onClick={() => setFormData({ ...formData, color: color })}
-          />
-        ))}
-      </div>
-    );
-  };
-
   const possibleTimeSlots: string[] = [];
-  const minTime = dayjs().set("hour", 8).set("minute", 0);
-  const maxTime = dayjs().set("hour", 17).set("minute", 0);
+  const minTime = dayjs().set("hour", 0).set("minute", 0);
+  const maxTime = dayjs().set("hour", 24).set("minute", 0);
   let currentTime = minTime;
 
   while (currentTime.isBefore(maxTime)) {
@@ -97,12 +81,31 @@ const AddEventModal: FC<AddEventModalProps> = ({
 
     for (const event of bookingsData) {
       if (
-        dayjs(event.date).format("YYYY-MM-DD") ===
-          dayjs(formData.date).format("YYYY-MM-DD") &&
-        ((dayjs(event.start).format("hh:mm A")! <= selectedStartTime &&
-          dayjs(event.end).format("hh:mm A") >= selectedStartTime) ||
-          (dayjs(event.start).format("hh:mm A") <= selectedEndTime &&
-            dayjs(event.end).format("hh:mm A") >= selectedEndTime))
+        isoToDate(event.date!) === isoToDate(formData.date) &&
+        ((dayjs(event.start!).isBefore(
+          dayjs(
+            `${selectedDate!.format("YYYY-MM-DD")} ${formData.start}`,
+            "YYYY-MM-DD hh:mm A"
+          )
+        ) &&
+          dayjs(event.end!).isAfter(
+            dayjs(
+              `${selectedDate!.format("YYYY-MM-DD")} ${formData.start}`,
+              "YYYY-MM-DD hh:mm A"
+            )
+          )) ||
+          (dayjs(event.start!).isBefore(
+            dayjs(
+              `${selectedDate!.format("YYYY-MM-DD")} ${formData.end}`,
+              "YYYY-MM-DD hh:mm A"
+            )
+          ) &&
+            dayjs(event.end!).isAfter(
+              dayjs(
+                `${selectedDate!.format("YYYY-MM-DD")} ${formData.end}`,
+                "YYYY-MM-DD hh:mm A"
+              )
+            )))
       ) {
         return true;
       }
@@ -128,27 +131,25 @@ const AddEventModal: FC<AddEventModalProps> = ({
 
   const mutation = useMutation({
     mutationFn: (data: AddEventDataProps) =>
-      axios.post(`http://localhost:3000/facility/${slug}`, data, {
-        withCredentials: true,
-      }),
-    onSuccess: (data) => {
-      console.log(data);
+      axios.post(
+        `${import.meta.env.VITE_APP_SERVER_URL}/facility/${slug}`,
+        data,
+        {
+          withCredentials: true,
+        }
+      ),
+    onSuccess: () => {
       setIsOpen(false);
     },
     onError: (error) => {
+      setError(error.response!.data as ErrorMessage);
       console.log(error);
     },
   });
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    if (
-      formData.start &&
-      formData.end &&
-      formData.title &&
-      formData.purpose &&
-      formData.color
-    ) {
+    if (formData.start && formData.end && formData.title && formData.purpose) {
       if (isTimeSlotOverlapping(formData.start, formData.end)) {
         setValidationError(
           "Selected time slot overlaps with an existing event."
@@ -170,9 +171,10 @@ const AddEventModal: FC<AddEventModalProps> = ({
           date: formData.date,
           start: isoStartTime,
           end: isoEndTime,
-          color: formData.color,
-          employeeId: auth?.user?.employeeId || "",
-          slug: `${formData.title.toLowerCase()}${formData.date}`,
+          employeeId: auth!.user!.employeeId!,
+          slug: `${formData.title
+            .toLowerCase()
+            .replace(/\s/g, "-")}${slug}${isoStartTime}`,
         };
         setValidationError("");
         setAvailableEndTimes([]);
@@ -184,24 +186,65 @@ const AddEventModal: FC<AddEventModalProps> = ({
     }
   };
 
+  const handleCancel = (): void => {
+    setIsOpen(false);
+    setFormData({
+      title: "",
+      purpose: "",
+      date: null,
+      start: "",
+      end: "",
+      slug: "",
+      employeeId: null,
+    });
+  };
+
   useEffect(() => {
     if (formData.start) {
       updateAvailableEndTimes();
+      setValidationError("");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formData.start]);
 
+  useEffect(() => {
+    if (validationError) {
+      updateAvailableEndTimes();
+      setFormData({ ...formData, start: "", end: "" });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [validationError]);
+
+  if (error.error.status) {
+    return (
+      <ErrorComponent
+        status={error.error.status!}
+        message={error.error.message}
+      />
+    );
+  }
+
   return (
-    <>
-      <Modal
-        open={isOpen}
-        onClose={() => setIsOpen(false)}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <div className="bg-bgPrimary w-full max-w-[500px] text-black px-10 py-14 absolute left-[50%] top-[50%] -translate-x-[50%] -translate-y-[50%] rounded-md flex flex-col gap-4 shadow-cardHover">
-          <Typography id="modal-modal-title" variant="h5" component="h2">
-            New event
+    <Modal
+      open={isOpen}
+      onClose={() => {
+        setDefaultDate(null);
+        setIsOpen(false);
+        setFormData({
+          title: "",
+          purpose: "",
+          date: null,
+          start: "",
+          end: "",
+          slug: "",
+          employeeId: null,
+        });
+      }}
+    >
+      <Fade in={isOpen}>
+        <div className="bg-bgPrimary w-full max-w-[500px] px-10 py-14 absolute left-[50%] top-[50%] -translate-x-[50%] -translate-y-[50%] rounded-md flex flex-col gap-6 shadow-cardHover">
+          <Typography id="modal-modal-title" variant="h4" component="h2">
+            Create new booking
           </Typography>
           <form
             autoComplete="off"
@@ -225,7 +268,7 @@ const AddEventModal: FC<AddEventModalProps> = ({
                 id="purpose"
                 label="Purpose"
                 variant="outlined"
-                className="w-full"
+                className="w-full transition-all duration-200 ease-in"
                 value={formData.purpose}
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
                   setFormData({ ...formData, purpose: e.target.value })
@@ -238,19 +281,20 @@ const AddEventModal: FC<AddEventModalProps> = ({
                 dateAdapter={AdapterDayjs}
                 adapterLocale="en-gb"
               >
-                <DemoContainer
-                  components={["DatePicker"]}
-                  sx={{ padding: "0" }}
-                >
+                <DemoContainer components={["DatePicker"]}>
                   <DatePicker
                     label="Enter the date"
-                    value={formData.date}
-                    onChange={(newValue) =>
+                    value={selectedDate && dayjs(selectedDate)}
+                    onChange={(newValue) => {
+                      setSelectedDate(newValue);
+                      setAvailableEndTimes([]);
                       setFormData({
                         ...formData,
                         date: newValue ? dayjs(newValue).toISOString() : null,
-                      })
-                    }
+                        start: "",
+                        end: "",
+                      });
+                    }}
                     disablePast={true}
                     className="w-full"
                     slotProps={{
@@ -259,7 +303,6 @@ const AddEventModal: FC<AddEventModalProps> = ({
                         size: "small",
                       },
                     }}
-                    defaultValue={dayjs().toISOString()}
                   />
                 </DemoContainer>
               </LocalizationProvider>
@@ -271,7 +314,7 @@ const AddEventModal: FC<AddEventModalProps> = ({
                     onChange={(e: SelectChangeEvent<string | null>) => {
                       setFormData({ ...formData, start: e.target.value });
                     }}
-                    label="Select a start time"
+                    label="Start time"
                     size="small"
                     required
                   >
@@ -293,7 +336,7 @@ const AddEventModal: FC<AddEventModalProps> = ({
                     onChange={(e: SelectChangeEvent<string | null>) =>
                       setFormData({ ...formData, end: e.target.value })
                     }
-                    label="Select an end time"
+                    label="End time"
                     size="small"
                     required
                   >
@@ -314,12 +357,6 @@ const AddEventModal: FC<AddEventModalProps> = ({
                 </FormControl>
               </div>
             </FormControl>
-            <div className="w-full flex items-center gap-6 pl-2 ">
-              <label htmlFor="color-picker" className="text-[#666666]">
-                Select a color:
-              </label>
-              <ColorPicker />
-            </div>
             <div className="w-full flex items-center justify-between mt-2">
               <Button
                 type="submit"
@@ -335,7 +372,7 @@ const AddEventModal: FC<AddEventModalProps> = ({
                 color="error"
                 sx={{ minWidth: "47%" }}
                 size="large"
-                onClick={() => setIsOpen(false)}
+                onClick={handleCancel}
               >
                 Cancel
               </Button>
@@ -349,8 +386,8 @@ const AddEventModal: FC<AddEventModalProps> = ({
             </Grid>
           )}
         </div>
-      </Modal>
-    </>
+      </Fade>
+    </Modal>
   );
 };
 
