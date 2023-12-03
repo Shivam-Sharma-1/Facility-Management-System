@@ -426,7 +426,7 @@ const Navigation: FC = (): JSX.Element => {
             </NavLink>
             <Divider color="#0c0051" />
           </>
-        )}
+        )} */}
 
         <ListItemButton
           className="flex gap-3"
@@ -453,7 +453,7 @@ const Navigation: FC = (): JSX.Element => {
             primary="Logout"
           />
         </ListItemButton>
-        <Divider color="#0c0051" /> */}
+        <Divider color="#0c0051" />
       </List>
     </div>
   );
