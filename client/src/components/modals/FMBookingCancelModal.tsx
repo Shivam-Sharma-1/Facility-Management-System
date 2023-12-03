@@ -95,6 +95,14 @@ const FMBookingCancelModal: FC<AdminBookingsModalProps> = ({
             <Typography variant="h6" component="h2">
               This process cannot be undone!
             </Typography>
+            <Typography
+              variant="h6"
+              component="h2"
+              className="text-red-700 text-center"
+            >
+              Please inform the user about cancellation/rejection of this
+              booking!
+            </Typography>
           </div>
           <form
             autoComplete="off"
