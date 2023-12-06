@@ -45,7 +45,7 @@ const router = createBrowserRouter(
         <Route
           path="reset-password"
           element={
-            <RequireAuth GD={false} FM={false} Admin={true}>
+            <RequireAuth GD={false} FM={false}>
               <ResetPasswordPage />
             </RequireAuth>
           }
