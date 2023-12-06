@@ -25,7 +25,6 @@ import GDCancellationsPage from "./pages/GDCancellationsPage";
 import LoginPage from "./pages/LoginPage";
 import MyBookingsPage from "./pages/MyBookingsPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
-import SetUser from "./pages/SetUser";
 import { AuthProvider } from "./utils/auth";
 
 declare module "@tanstack/react-query" {
@@ -38,7 +37,6 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route path="/auth">
-        <Route index element={<SetUser />} errorElement={<RouteError />} />
         <Route
           path="login"
           element={<LoginPage />}
