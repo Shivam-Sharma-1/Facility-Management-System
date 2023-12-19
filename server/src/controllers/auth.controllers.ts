@@ -2,10 +2,10 @@ import argon2 from "argon2";
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import createHttpError from "http-errors";
 
-import authSchema from "src/utils/validation";
 import prisma from "../db/prisma";
 import { AuthInput } from "../types/types";
 import logger from "../utils/logger";
+import authSchema from "../utils/validation";
 
 /**
  * @description Employee login
