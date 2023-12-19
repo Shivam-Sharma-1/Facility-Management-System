@@ -2,10 +2,10 @@ import argon2 from "argon2";
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import createHttpError from "http-errors";
 
+import authSchema from "src/utils/validation";
 import prisma from "../db/prisma";
 import { AuthInput } from "../types/types";
 import logger from "../utils/logger";
-import authSchema from "../utils/validation";
 
 /**
  * @description Employee login
@@ -94,24 +94,24 @@ export const changePassword: RequestHandler = async (
 ) => {
   try {
     const { oldPassword, newPassword } = req.body;
-    const adminId = req.session.userId;
+    const userId = req.session.userId;
 
-    const admin = await prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: {
-        employeeId: adminId,
+        employeeId: userId,
       },
     });
-    if (!admin) {
+    if (!user) {
       return next(createHttpError.Unauthorized("User does not exist."));
     }
-    const verifyOldPassword = await argon2.verify(admin.password!, oldPassword);
+    const verifyOldPassword = await argon2.verify(user.password!, oldPassword);
     if (!verifyOldPassword) {
       return next(createHttpError.BadRequest("Invalid old password."));
     }
     const hashedPassword = await argon2.hash(newPassword);
     await prisma.user.update({
       where: {
-        employeeId: adminId,
+        employeeId: userId,
       },
       data: {
         password: hashedPassword,
@@ -121,7 +121,7 @@ export const changePassword: RequestHandler = async (
     await prisma.session.deleteMany({
       where: {
         data: {
-          contains: '"userId":9999',
+          contains: `"userId":${userId}`,
         },
       },
     });
