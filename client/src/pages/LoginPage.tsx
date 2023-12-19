@@ -77,14 +77,36 @@ const LoginPage: FC = (): JSX.Element => {
 
   return (
     <div className="w-full h-full min-h-screen flex justify-center items-center">
-      <div className="w-[450px] bg-bgPrimary shadow-cardHover rounded-lg flex flex-col justify-center p-10 gap-6">
-        <Typography variant="h4" className="text-left">
-          Employee Login
+      <div
+        className="w-[50%] min-h-screen h-full flex flex-col justify-center items-center p-10 relative text-white"
+        style={{
+          backgroundImage: "url('/background.jpg')",
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center",
+        }}
+      >
+        <Typography variant="h5" className="absolute top-10 left-10">
+          Facility Management System
+        </Typography>
+        <Typography variant="h5" className="text-stone-400">
+          Nice to see you again
+        </Typography>
+        <Typography variant="h2" className="uppercase">
+          Welcome back
+        </Typography>
+      </div>
+      <div className="w-[50%] flex flex-col items-center justify-center p-10 gap-6">
+        <Typography
+          variant="h4"
+          sx={{ fontWeight: "500", marginBottom: ".5em" }}
+        >
+          Login Account
         </Typography>
         <form
           onSubmit={handleSubmit}
           autoComplete="off"
-          className="flex flex-col gap-4"
+          className="flex flex-col gap-4 max-w-[660px]"
         >
           <TextField
             id="id"
