@@ -26,6 +26,7 @@ import LoginPage from "./pages/LoginPage";
 import MyBookingsPage from "./pages/MyBookingsPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import { AuthProvider } from "./utils/auth";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 
 declare module "@tanstack/react-query" {
   interface Register {
@@ -42,15 +43,6 @@ const router = createBrowserRouter(
           element={<LoginPage />}
           errorElement={<RouteError />}
         />
-        <Route
-          path="reset-password"
-          element={
-            <RequireAuth GD={false} FM={false}>
-              <ResetPasswordPage />
-            </RequireAuth>
-          }
-          errorElement={<RouteError />}
-        />
       </Route>
 
       <Route
@@ -62,6 +54,16 @@ const router = createBrowserRouter(
         }
         errorElement={<RouteError />}
       >
+        <Route
+          path="auth/reset-password"
+          element={
+            <RequireAuth GD={false} FM={false}>
+              <ResetPasswordPage />
+            </RequireAuth>
+          }
+          errorElement={<RouteError />}
+        />
+
         <Route
           index
           element={
@@ -185,12 +187,20 @@ const router = createBrowserRouter(
   )
 );
 
+const theme = createTheme({
+  typography: {
+    fontFamily: "Poppins, sans-serif",
+  },
+});
+
 const queryClient = new QueryClient();
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <RouterProvider router={router} />
+        <ThemeProvider theme={theme}>
+          <RouterProvider router={router} />
+        </ThemeProvider>
       </AuthProvider>
     </QueryClientProvider>
   );
