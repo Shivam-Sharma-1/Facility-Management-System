@@ -76,9 +76,9 @@ const ResetPasswordPage: FC = (): JSX.Element => {
 
   return (
     <div className="w-full h-full min-h-screen flex justify-center items-center">
-      <div className="w-[500px] bg-bgPrimary shadow-cardHover rounded-lg flex flex-col justify-center p-10 gap-6">
-        <Typography variant="h4" className="text-left">
-          Admin password reset
+      <div className="w-[500px] flex flex-col justify-center p-10 gap-6">
+        <Typography variant="h4" className="text-left mb-6">
+          Reset your password
         </Typography>
         <form
           autoComplete="off"

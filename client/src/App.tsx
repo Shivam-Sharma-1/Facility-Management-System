@@ -25,8 +25,8 @@ import GDCancellationsPage from "./pages/GDCancellationsPage";
 import LoginPage from "./pages/LoginPage";
 import MyBookingsPage from "./pages/MyBookingsPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
-import SetUser from "./pages/SetUser";
 import { AuthProvider } from "./utils/auth";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 
 declare module "@tanstack/react-query" {
   interface Register {
@@ -38,19 +38,9 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route path="/auth">
-        <Route index element={<SetUser />} errorElement={<RouteError />} />
         <Route
           path="login"
           element={<LoginPage />}
-          errorElement={<RouteError />}
-        />
-        <Route
-          path="reset-password"
-          element={
-            <RequireAuth GD={false} FM={false} Admin={true}>
-              <ResetPasswordPage />
-            </RequireAuth>
-          }
           errorElement={<RouteError />}
         />
       </Route>
@@ -64,6 +54,16 @@ const router = createBrowserRouter(
         }
         errorElement={<RouteError />}
       >
+        <Route
+          path="auth/reset-password"
+          element={
+            <RequireAuth GD={false} FM={false}>
+              <ResetPasswordPage />
+            </RequireAuth>
+          }
+          errorElement={<RouteError />}
+        />
+
         <Route
           index
           element={
@@ -187,12 +187,20 @@ const router = createBrowserRouter(
   )
 );
 
+const theme = createTheme({
+  typography: {
+    fontFamily: "Poppins, sans-serif",
+  },
+});
+
 const queryClient = new QueryClient();
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <RouterProvider router={router} />
+        <ThemeProvider theme={theme}>
+          <RouterProvider router={router} />
+        </ThemeProvider>
       </AuthProvider>
     </QueryClientProvider>
   );

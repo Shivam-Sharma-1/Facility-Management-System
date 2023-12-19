@@ -19,7 +19,6 @@ import ListItemText from "@mui/material/ListItemText";
 import ApprovalIcon from "@mui/icons-material/Approval";
 import EventBusyIcon from "@mui/icons-material/EventBusy";
 import PasswordIcon from "@mui/icons-material/Password";
-import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 
 import ErrorComponent from "./Error";
 import { useAuth } from "../hooks/useAuth";
@@ -75,7 +74,7 @@ const Navigation: FC = (): JSX.Element => {
   }
 
   return (
-    <div className="w-[400px] h-full min-h-[100dvh] bg-primary text-white pt-5 overflow-y-hidden sticky top-0">
+    <div className="w-[400px] h-[100dvh]  h-{100vh} bg-primary text-white pt-5 overflow-y-scroll sticky top-0">
       <div className="w-full flex flex-col justify-between items-center pt-4 pb-8 gap-2 flex-wrap">
         <Avatar
           sx={{ width: "80px", height: "80px" }}
@@ -357,76 +356,35 @@ const Navigation: FC = (): JSX.Element => {
             <Divider color="#0c0051" />
           </>
         )}
-        {/* 
-        {role === "ADMIN" && (
-          <>
-            <NavLink to="/auth/reset-password">
-              {({ isActive }) => (
-                <ListItemButton
-                  className="flex gap-3"
-                  sx={{
-                    paddingLeft: "1.4em",
-                    paddingBlock: "1.4em",
-                    borderLeft: isActive ? "4px solid white" : "",
-                    color: "white",
-                    backgroundColor: isActive
-                      ? " rgb(255, 255, 255, 0.02)"
-                      : "",
-                  }}
-                >
-                  <ListItemIcon sx={{ minWidth: "0px" }}>
-                    <PasswordIcon
-                      sx={{ width: "26px", height: "26px", color: "white" }}
-                    />
-                  </ListItemIcon>
-                  <ListItemText
-                    primaryTypographyProps={{
-                      variant: "h6",
-                      component: "li",
-                    }}
-                    primary="Reset Password"
-                  />
-                </ListItemButton>
-              )}
-            </NavLink>
-            <Divider color="#0c0051" />
-          </>
-        )}
 
-        {role !== "ADMIN" && (
-          <>
-            <NavLink to="/auth/login">
-              {({ isActive }) => (
-                <ListItemButton
-                  className="flex gap-3"
-                  sx={{
-                    paddingLeft: "1.4em",
-                    paddingBlock: "1.4em",
-                    borderLeft: isActive ? "4px solid white" : "",
-                    color: "white",
-                    backgroundColor: isActive
-                      ? " rgb(255, 255, 255, 0.02)"
-                      : "",
-                  }}
-                >
-                  <ListItemIcon sx={{ minWidth: "0px" }}>
-                    <AdminPanelSettingsIcon
-                      sx={{ width: "26px", height: "26px", color: "white" }}
-                    />
-                  </ListItemIcon>
-                  <ListItemText
-                    primaryTypographyProps={{
-                      variant: "h6",
-                      component: "li",
-                    }}
-                    primary="Log in as admin"
-                  />
-                </ListItemButton>
-              )}
-            </NavLink>
-            <Divider color="#0c0051" />
-          </>
-        )} */}
+        <NavLink to="/auth/reset-password">
+          {({ isActive }) => (
+            <ListItemButton
+              className="flex gap-3"
+              sx={{
+                paddingLeft: "1.4em",
+                paddingBlock: "1.4em",
+                borderLeft: isActive ? "4px solid white" : "",
+                color: "white",
+                backgroundColor: isActive ? " rgb(255, 255, 255, 0.02)" : "",
+              }}
+            >
+              <ListItemIcon sx={{ minWidth: "0px" }}>
+                <PasswordIcon
+                  sx={{ width: "26px", height: "26px", color: "white" }}
+                />
+              </ListItemIcon>
+              <ListItemText
+                primaryTypographyProps={{
+                  variant: "h6",
+                  component: "li",
+                }}
+                primary="Reset Password"
+              />
+            </ListItemButton>
+          )}
+        </NavLink>
+        <Divider color="#0c0051" />
 
         <ListItemButton
           className="flex gap-3"
