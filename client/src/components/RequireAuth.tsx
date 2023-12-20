@@ -14,7 +14,7 @@ export const RequireAuth: FC<RequireAuthProps> = ({
   const auth = useAuth();
 
   if (!auth!.user) {
-    window.open("http://localhost:5000", "_self");
+    return <Navigate to="/auth/login" />;
   }
 
   try {
