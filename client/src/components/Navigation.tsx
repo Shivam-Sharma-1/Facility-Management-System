@@ -78,7 +78,7 @@ const Navigation: FC = (): JSX.Element => {
       <div className="w-full flex flex-col justify-between items-center pt-4 pb-8 gap-2 flex-wrap">
         <Avatar
           sx={{ width: "80px", height: "80px" }}
-          src={"/" + auth?.user?.image}
+          src={auth?.user?.image}
           alt="avatar-image"
         />
         <div className="w-fit flex flex-col justify-center">
@@ -114,7 +114,7 @@ const Navigation: FC = (): JSX.Element => {
                   </ListItemIcon>
                   <ListItemText
                     primaryTypographyProps={{
-                      variant: "h6",
+                      variant: "body1",
                       component: "li",
                     }}
                     primary="Facilities"
@@ -149,7 +149,7 @@ const Navigation: FC = (): JSX.Element => {
                   </ListItemIcon>
                   <ListItemText
                     primaryTypographyProps={{
-                      variant: "h6",
+                      variant: "body1",
                       component: "li",
                     }}
                     primary="Manage Facilities"
@@ -179,7 +179,7 @@ const Navigation: FC = (): JSX.Element => {
                   </ListItemIcon>
                   <ListItemText
                     primaryTypographyProps={{
-                      variant: "h6",
+                      variant: "body1",
                       component: "li",
                     }}
                     primary="Manage Bookings"
@@ -214,7 +214,7 @@ const Navigation: FC = (): JSX.Element => {
                   </ListItemIcon>
                   <ListItemText
                     primaryTypographyProps={{
-                      variant: "h6",
+                      variant: "body1",
                       component: "li",
                     }}
                     primary="My Bookings"
@@ -258,7 +258,7 @@ const Navigation: FC = (): JSX.Element => {
                   </ListItemIcon>
                   <ListItemText
                     primaryTypographyProps={{
-                      variant: "h6",
+                      variant: "body1",
                       component: "li",
                     }}
                     primary="Approval Requests"
@@ -302,7 +302,7 @@ const Navigation: FC = (): JSX.Element => {
                   </ListItemIcon>
                   <ListItemText
                     primaryTypographyProps={{
-                      variant: "h6",
+                      variant: "body1",
                       component: "li",
                     }}
                     primary="Cancellation Requests"
@@ -345,7 +345,7 @@ const Navigation: FC = (): JSX.Element => {
                   </ListItemIcon>
                   <ListItemText
                     primaryTypographyProps={{
-                      variant: "h6",
+                      variant: "body1",
                       component: "li",
                     }}
                     primary="Report"
@@ -376,7 +376,7 @@ const Navigation: FC = (): JSX.Element => {
               </ListItemIcon>
               <ListItemText
                 primaryTypographyProps={{
-                  variant: "h6",
+                  variant: "body1",
                   component: "li",
                 }}
                 primary="Reset Password"
@@ -405,7 +405,7 @@ const Navigation: FC = (): JSX.Element => {
           </ListItemIcon>
           <ListItemText
             primaryTypographyProps={{
-              variant: "h6",
+              variant: "body1",
               component: "li",
             }}
             primary="Logout"
