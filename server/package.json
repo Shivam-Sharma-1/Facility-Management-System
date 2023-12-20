@@ -3,6 +3,9 @@
 	"version": "1.0.0",
 	"description": "",
 	"main": "index.js",
+	"prisma": {
+		"seed": "ts-node --transpile-only prisma/seed.ts"
+	},
 	"scripts": {
 		"watch": "tsc -w",
 		"start": "node dist/app.js",
@@ -22,12 +25,14 @@
 		"dotenv": "^16.3.1",
 		"express": "^4.18.2",
 		"express-session": "^1.17.3",
+		"faker": "^6.6.6",
 		"http-errors": "^2.0.0",
 		"joi": "^17.11.0",
 		"winston": "^3.11.0",
 		"winston-daily-rotate-file": "^4.7.1"
 	},
 	"devDependencies": {
+		"@faker-js/faker": "^8.3.1",
 		"@types/cors": "^2.8.15",
 		"@types/express": "^4.17.20",
 		"@types/express-session": "^1.17.9",
