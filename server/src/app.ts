@@ -19,14 +19,8 @@ import logger from "./utils/logger";
 
 const PORT = process.env.PORT || 3000;
 const corsOptions = {
-  origin: [
-    "http://localhost:5173",
-    `${process.env.CLIENT_URL}`,
-    `https://facility-bookings-manager.vercel.app`,
-    "http://localhost:5000",
-    "http://localhost:8000",
-  ],
-  // methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
+  origin: "*",
+  methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
   credentials: true,
 };
 
