@@ -26,7 +26,7 @@ const corsOptions = {
     "http://localhost:5000",
     "http://localhost:8000",
   ],
-  methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
+  // methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
   credentials: true,
 };
 
