@@ -34,18 +34,7 @@ const PORT = process.env.PORT || 3000;
 const app: Express = express();
 
 app.use(function (req, res, next) {
-  const allowedOrigins = [
-    "http://localhost:5173",
-    process.env.CLIENT_URL,
-    `${process.env.CLIENT_URL}/auth/login`,
-    "https://facility-bookings-manager.vercel.app",
-    "http://localhost:5000",
-    "http://localhost:8000",
-  ];
-  const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
-    res.setHeader("Access-Control-Allow-Origin", origin!);
-  }
+  res.header("Access-Control-Allow-Origin", "*");
   res.header(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
