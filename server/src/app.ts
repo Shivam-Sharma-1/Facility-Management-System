@@ -37,6 +37,7 @@ app.use(function (req, res, next) {
   const allowedOrigins = [
     "http://localhost:5173",
     process.env.CLIENT_URL,
+    `${process.env.CLIENT_URL}/auth/login`,
     "https://facility-bookings-manager.vercel.app",
     "http://localhost:5000",
     "http://localhost:8000",
