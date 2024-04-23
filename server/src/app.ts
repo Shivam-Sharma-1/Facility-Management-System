@@ -18,14 +18,42 @@ import facilityRouter from "./routes/facility.routes";
 import logger from "./utils/logger";
 
 const PORT = process.env.PORT || 3000;
-const corsOptions = {
-  origin: "*",
-  methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
-};
+// const corsOptions = {
+//   origin: [
+//     "http://localhost:5173",
+//     process.env.CLIENT_URL,
+//     "https://facility-bookings-manager.vercel.app",
+//     "http://localhost:5000",
+//     "http://localhost:8000",
+//   ],
+//   credentials: true,
+//   allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept"],
+//   methods: ["GET", "POST", "PUT", "DELETE"],
+// };
 
 const app: Express = express();
 
-app.use(cors(corsOptions));
+app.use(function (req, res, next) {
+  const allowedOrigins = [
+    "http://localhost:5173",
+    process.env.CLIENT_URL,
+    "https://facility-bookings-manager.vercel.app",
+    "http://localhost:5000",
+    "http://localhost:8000",
+  ];
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin!);
+  }
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.header("Access-Control-Allow-Credentials", "true");
+  next();
+});
+
 app.use(express.json());
 app.use(
   expressSession({
