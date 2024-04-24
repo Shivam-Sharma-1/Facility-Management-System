@@ -129,6 +129,8 @@ Here's the updated features section with the mention of admin powers:
 - **FullCalendar**: JavaScript event calendar for displaying bookings.
 - **Material-UI**: React UI components for modern web applications.
 - **React Router DOM**: Declarative routing for React applications.
+- **Tailwind CSS**: Utility-first CSS framework for styling.
+- **React Query**: Data fetching and caching library for React applications.
 
 ### Backend
 
@@ -144,9 +146,11 @@ Here's the updated features section with the mention of admin powers:
 - **[@emotion/react](https://emotion.sh/docs/introduction)**: Library for CSS-in-JS styling.
 - **[@mui/icons-material](https://mui.com/components/material-icons/)**, **[@mui/material](https://mui.com/getting-started/installation/)**: Material-UI components for UI design.
 - **[@fullcalendar/react](https://fullcalendar.io/docs/react)**: React wrapper for FullCalendar.
+- **[tailwindcss](https://tailwindcss.com/)**: Utility-first CSS framework for styling.
 - **[axios](https://axios-http.com/)**: Promise-based HTTP client for the browser and Node.js.
 - **[dayjs](https://day.js.org/)**: Library for date and time formatting.
 - **[react-to-pdf](https://www.npmjs.com/package/react-to-pdf)**: Library for generating PDF documents from React components.
+- **[react-query](https://react-query.tanstack.com/)**: Data fetching and caching library for React applications.
 
 ### Server-side
 
@@ -275,6 +279,8 @@ The client-side application will run on `http://localhost:3000`, and the server-
 - **[FullCalendar Documentation](https://fullcalendar.io/docs)**: Explore FullCalendar documentation for JavaScript event calendar functionality.
 - **[Material-UI Documentation](https://mui.com/getting-started/installation/)**: Dive into Material-UI documentation for React UI components.
 - **[React Router DOM Documentation](https://reactrouter.com/web/guides/quick-start)**: Learn about React Router DOM for declarative routing in React applications.
+- **[Tailwind CSS Documentation](https://tailwindcss.com/docs)**: Explore Tailwind CSS documentation for utility-first CSS framework for styling.
+- **[React Query Documentation](https://react-query.tanstack.com/)**: Discover Tanstack React Query documentation for data fetching and caching in React applications.
 - **[Node.js Documentation](https://nodejs.org/en/docs/)**: Explore Node.js documentation for server-side JavaScript runtime environment.
 - **[Express.js Documentation](https://expressjs.com/en/starter/installing.html)**: Discover Express.js documentation for web application framework in Node.js.
 - **[PostgreSQL Documentation](https://www.postgresql.org/docs/)**: Learn more about PostgreSQL for relational database management.
