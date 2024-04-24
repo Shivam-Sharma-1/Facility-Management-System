@@ -34,33 +34,34 @@ const PORT = process.env.PORT || 3000;
 const app: Express = express();
 
 app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-  res.header("Access-Control-Allow-Credentials", "true");
-  next();
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header(
+		"Access-Control-Allow-Headers",
+		"Origin, X-Requested-With, Content-Type, Accept"
+	);
+	res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+	res.header("Access-Control-Allow-Credentials", "true");
+	next();
 });
 
+app.use(cors());
 app.use(express.json());
 app.use(
-  expressSession({
-    name: "sid",
-    cookie: {
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
-    },
-    secret: process.env.SESSION_SECRET!,
-    resave: true,
-    saveUninitialized: true,
-    // @ts-ignore
-    store: new PrismaSessionStore(prisma, {
-      checkPeriod: 2 * 60 * 1000, // 2 mins
-      dbRecordIdIsSessionId: true,
-      dbRecordIdFunction: undefined,
-    }),
-  })
+	expressSession({
+		name: "sid",
+		cookie: {
+			maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
+		},
+		secret: process.env.SESSION_SECRET!,
+		resave: true,
+		saveUninitialized: true,
+		// @ts-ignore
+		store: new PrismaSessionStore(prisma, {
+			checkPeriod: 2 * 60 * 1000, // 2 mins
+			dbRecordIdIsSessionId: true,
+			dbRecordIdFunction: undefined,
+		}),
+	})
 );
 // app.use(function (request, response, next) {
 //   response.header("Access-Control-Allow-Origin", "*");
@@ -81,23 +82,23 @@ app.use(notFound);
 app.use(errorHandler);
 
 const startServer = () => {
-  app.listen(PORT, () => {
-    console.log(`Server listening at http://localhost:${PORT}`);
-    logger.info(
-      `Starting Server on port ${PORT}, Server URL: http://localhost:${PORT}, database: ${process.env.DATABASE}, database URL: ${process.env.DATABASE_URL}`
-    );
-  });
+	app.listen(PORT, () => {
+		console.log(`Server listening at http://localhost:${PORT}`);
+		logger.info(
+			`Starting Server on port ${PORT}, Server URL: http://localhost:${PORT}, database: ${process.env.DATABASE}, database URL: ${process.env.DATABASE_URL}`
+		);
+	});
 };
 
 process.on("unhandledRejection", (err: any) => {
-  console.error(err);
-  logger.error(err.message);
-  process.exit(1);
+	console.error(err);
+	logger.error(err.message);
+	process.exit(1);
 });
 
 process.on("SIGINT", () => {
-  logger.info("SIGINT received, shutting down gracefully");
-  process.exit(0);
+	logger.info("SIGINT received, shutting down gracefully");
+	process.exit(0);
 });
 
 startServer();
