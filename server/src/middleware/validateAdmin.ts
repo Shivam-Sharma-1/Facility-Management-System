@@ -2,7 +2,7 @@ import { Role } from "@prisma/client";
 import { NextFunction, Request, Response } from "express";
 import createHttpError from "http-errors";
 import prisma from "../db/prisma";
-import { corsOptions } from "src/app";
+import { corsOptions } from "../app";
 import cors from "cors";
 
 const validateAdmin = async (

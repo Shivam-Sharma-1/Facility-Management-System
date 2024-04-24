@@ -1,7 +1,7 @@
 import cors from "cors";
 import { NextFunction, Request, Response } from "express";
 import createHttpError from "http-errors";
-import { corsOptions } from "src/app";
+import { corsOptions } from "../app";
 
 const validateSession = (req: Request, res: Response, next: NextFunction) => {
   cors(corsOptions)(req, res, () => {
