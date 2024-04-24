@@ -15,7 +15,7 @@
     "ts.check": "tsc --project tsconfig.json",
     "add-build": "git add dist",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rimraf dist && tsc"
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
