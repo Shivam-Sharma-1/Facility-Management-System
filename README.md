@@ -193,13 +193,13 @@ Be sure to replace `*YOUR POSTGRES DATABASE URL*` with your actual postgress dat
 to your local machine:
 
 ```bash
-git clone https://github.com/Shivam-Sharma-1/Facility-Bookings-Manager.git
+git clone https://github.com/Shivam-Sharma-1/Facility-Management-System.git
 ```
 
 2. Change to the project directory:
 
 ```bash
-cd facility-bookings-manager
+cd facility-management-system
 ```
 
 3. Install client dependencies and start the client:
@@ -225,7 +225,7 @@ npm run devT ##in separate terminal
 The project structure is organized as follows:
 
 ```
-facility-bookings-manager/
+facility-management-system/
 ├── client/               # Client-side codebase (React)
 │   ├── .env              # Environment variables (not committed to version control)
 │   ├── constants/        # Constants or configurations
