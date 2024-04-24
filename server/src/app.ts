@@ -19,11 +19,7 @@ import logger from "./utils/logger";
 
 const PORT = process.env.PORT || 3000;
 export const corsOptions = {
-  origin:
-    "http://localhost:5173" ||
-    process.env.CLIENT_URL ||
-    "http://localhost:5000" ||
-    "http://localhost:8000",
+  origin: process.env.CLIENT_URL,
   methods: ["GET", "OPTIONS", "PATCH", "DELETE", "POST", "PUT"],
   allowedHeaders: [
     "X-CSRF-Token",
