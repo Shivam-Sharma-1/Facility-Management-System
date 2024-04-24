@@ -1,6 +1,6 @@
-# Facility Bookings Manager
+# Facility Management System
 
-The Facility Bookings Manager is a comprehensive management solution developed using the MERN (MongoDB, Express.js, React, Node.js) stack. It allows users to book time slots in facilities and provides role-based access control for various functionalities. This tool was created as a project for DRDO Cabs during an internship. With four distinct roles, users can manage bookings, approvals, cancellations, and generate reports based on their permissions and responsibilities.
+The Facility Management System is a comprehensive management solution developed using the MERN (MongoDB, Express.js, React, Node.js) stack. It allows users to book time slots in facilities and provides role-based access control for various functionalities. This tool is a modified version of the one which was created as a project for DRDO Cabs during an internship. With four distinct roles, users can manage bookings, approvals, cancellations, and generate reports based on their permissions and responsibilities.
 
 ## Table of Contents
 
@@ -56,7 +56,7 @@ Admin Manage Bookings Page
 
 ## Demo
 
-You can see a live demo of the Facility Bookings Manager at [Demo Link](https://facility-bookings-manager.vercel.app/).
+You can see a live demo of the Facility Management System at [Demo Link](https://facility-bookings-manager.vercel.app/).
 
 ## Features
 
@@ -114,7 +114,7 @@ Here's the updated features section with the mention of admin powers:
   - Navigation options are tailored based on the user's role.
   - Users have easy access to relevant features and functionalities based on their permissions.
 
-- **Single Sign-Out**:
+- **Single Sign-Out**(only in dev branch):
 
   - Integration with a Java Spring Boot project enables seamless single sign-out functionality across both the Java and Node.js servers.
 
