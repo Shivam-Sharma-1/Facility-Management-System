@@ -40,7 +40,6 @@ export const corsOptions = {
 };
 
 const app: Express = express();
-app.use(cors());
 
 app.use(cors(corsOptions));
 
