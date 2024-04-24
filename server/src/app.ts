@@ -18,7 +18,7 @@ import facilityRouter from "./routes/facility.routes";
 import logger from "./utils/logger";
 
 const PORT = process.env.PORT || 3000;
-const corsOptions = {
+export const corsOptions = {
   origin:
     "http://localhost:5173" ||
     process.env.CLIENT_URL ||
@@ -62,14 +62,6 @@ app.use(
     }),
   })
 );
-// app.use(function (request, response, next) {
-//   response.header("Access-Control-Allow-Origin", "*");
-//   response.header(
-//     "Access-Control-Allow-Headers",
-//     "Origin, X-Requested-With, Content-Type, Accept"
-//   );
-//   next();
-// });
 
 app.use("/auth", authRouter);
 app.use("/dashboard", dashboardRouter);
