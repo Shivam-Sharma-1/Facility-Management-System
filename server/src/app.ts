@@ -38,6 +38,7 @@ export const corsOptions = {
 const app: Express = express();
 
 app.use(cors(corsOptions));
+app.set("trust proxy", 1);
 
 app.use(express.json());
 app.use(
