@@ -56,11 +56,7 @@ Admin Manage Bookings Page
 
 ## Demo
 
-You can see a live demo of the Facility Management System at [Demo Link](https://facility-bookings-manager.vercel.app/).
-
-## Features
-
-Here's the updated features section with the mention of admin powers:
+This project cannot be deployed as it requires a backend server to set cookie which is blocked by services offering hosting unless you are using a paid domain. However, you can follow the steps below to run the application on your local machine.
 
 ## Features
 
